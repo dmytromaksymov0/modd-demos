@@ -1,6 +1,6 @@
 # Kestrel Roofing Co. — concept site
 
-Live: **https://kestrel-roofing.pages.dev** · Portfolio demo by **modd.** — a lead-generation site for a fictional roofing company in Columbus, Ohio.
+Live: **https://kestrel-roofing-co.pages.dev** · Portfolio demo by **modd.** — a lead-generation site for a fictional roofing company in Columbus, Ohio.
 Astro 7 + Tailwind CSS 4, static build with one Cloudflare Pages Function for the lead form.
 
 **Pages:** Home · Roof Replacement · Storm & Hail Damage · Roof Cost Calculator · Projects · About + Service Area · Free Inspection · Privacy · 404 · `/styleguide` (noindex)
@@ -63,7 +63,10 @@ npx wrangler pages dev
    | Framework preset | Astro |
    | Build command | `npm run build` |
    | Build output directory | `dist` |
-   | Root directory | `/` (or `kestrel-roofing` if the repo holds all modd demos) |
+   | Project name | `kestrel-roofing-co` (must match `name` in `wrangler.toml`) |
+   | Production branch | `main` |
+   | Root directory | `kestrel-roofing` (the repo `dmytromaksymov0/modd-demos` holds all modd demos) |
+   | Build watch paths | include `kestrel-roofing/*` — commits to other demos don't rebuild this site |
    | Node version | from `.node-version` (22); or set `NODE_VERSION` = `22` |
 
 4. **Settings → Variables and Secrets** → add, as *Secret*, for Production (and Preview if you want test leads there):
@@ -81,9 +84,9 @@ npx wrangler pages dev
 ```bash
 npx wrangler login
 npm run build
-npx wrangler pages project create kestrel-roofing --production-branch main
-npx wrangler pages secret put TELEGRAM_BOT_TOKEN --project-name kestrel-roofing
-npx wrangler pages secret put TELEGRAM_CHAT_ID --project-name kestrel-roofing
+npx wrangler pages project create kestrel-roofing-co --production-branch main
+npx wrangler pages secret put TELEGRAM_BOT_TOKEN --project-name kestrel-roofing-co
+npx wrangler pages secret put TELEGRAM_CHAT_ID --project-name kestrel-roofing-co
 npx wrangler pages deploy
 ```
 

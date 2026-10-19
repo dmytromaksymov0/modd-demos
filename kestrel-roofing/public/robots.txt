@@ -3,4 +3,4 @@ Allow: /
 Disallow: /styleguide/
 Disallow: /thanks/
 
-Sitemap: https://kestrel-roofing.pages.dev/sitemap-index.xml
+Sitemap: https://kestrel-roofing-co.pages.dev/sitemap-index.xml
