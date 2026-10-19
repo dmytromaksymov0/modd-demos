@@ -3,4 +3,4 @@ Allow: /
 Disallow: /styleguide/
 Disallow: /thanks/
 
-Sitemap: https://brightwater-dental.pages.dev/sitemap-index.xml
+Sitemap: https://brightwater-dental-ba5.pages.dev/sitemap-index.xml

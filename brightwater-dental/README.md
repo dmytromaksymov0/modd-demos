@@ -1,6 +1,6 @@
 # Brightwater Family Dental — concept site
 
-Live: **https://brightwater-dental.pages.dev** (after the Cloudflare Pages project is connected — see below) · Portfolio demo by **modd.**
+Live: **https://brightwater-dental-ba5.pages.dev** · Portfolio demo by **modd.**
 A booking-first site for a fictional three-dentist family practice in Mueller, Austin, Texas.
 Astro 7 + Tailwind CSS 4, static build with one Cloudflare Pages Function for booking requests.
 
@@ -67,7 +67,7 @@ Deploy **only** through the Pages Git integration. Do not use Direct Upload / `w
 
    | Setting | Value |
    |---|---|
-   | Project name | **`brightwater-dental`** (fixed — it is the `*.pages.dev` address and matches `name` in `wrangler.toml` and `site` in `astro.config.mjs`) |
+   | Project name | **`brightwater-dental`** (fixed; matches `name` in `wrangler.toml`). The subdomain `brightwater-dental.pages.dev` is owned by another Cloudflare account, so Pages assigned **`brightwater-dental-ba5.pages.dev`** — that address is `site` in `astro.config.mjs` and the `Sitemap:` line in `public/robots.txt` |
    | Production branch | `main` |
    | Framework preset | Astro |
    | Root directory | **`brightwater-dental`** |
@@ -139,4 +139,4 @@ Everything below is demo content. Most of it lives in one or two files.
 | Analytics & consent | Off | Plausible or GA4; cookie notice if GA4 | `src/config/site.ts` |
 | Privacy page | Concept-site wording | Lawyer-reviewed policy incl. HIPAA notice of privacy practices | `src/pages/privacy/index.astro` |
 | Footer disclaimer | “Concept site · fictional company · designed & built by modd.” | Remove | `src/components/layout/Footer.astro` |
-| Domain | `brightwater-dental.pages.dev` | Custom domain | `astro.config.mjs`, `public/robots.txt` |
+| Domain | `brightwater-dental-ba5.pages.dev` | Custom domain | `astro.config.mjs`, `public/robots.txt` |

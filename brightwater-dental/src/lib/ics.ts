@@ -14,7 +14,7 @@ export function buildIcs(o: { date: string; time: string; minutes: number; peopl
   return [
     'BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//Brightwater Family Dental//Booking//EN', 'CALSCALE:GREGORIAN', 'METHOD:PUBLISH',
     'BEGIN:VEVENT',
-    `UID:${o.uid}@brightwater-dental.pages.dev`,
+    `UID:${o.uid}@brightwater-dental-ba5.pages.dev`,
     `DTSTAMP:${stamp(o.now ?? new Date())}`,
     `DTSTART;TZID=America/Chicago:${d}T${t(start)}`,
     `DTEND;TZID=America/Chicago:${d}T${t(end)}`,

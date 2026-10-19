@@ -83,7 +83,7 @@ Moto G Power, simulated slow 4G, 2 прогона на страницу, `report
   - `wrangler.toml` (`name = "brightwater-dental"`, `pages_build_output_dir = "./dist"`);
   - `.node-version` = 22;
   - `.dev.vars.example`;
-  - `astro.config.mjs` `site = https://brightwater-dental.pages.dev`.
+  - `astro.config.mjs` `site = https://brightwater-dental-ba5.pages.dev` (после деплоя: адрес `brightwater-dental.pages.dev` занят чужим аккаунтом, Cloudflare выдал суффикс `-ba5`, см. п. 8).
 - **Документы:** `README.md` (запуск, деплой через Git-интеграцию, Telegram-бот, таблица «что меняется для реального клиента»), `CREDITS.md` (30 фото, все файлы в `src/assets/photos/`), `docs/phase-0…6`.
 
 ## 5. Ограничения и честные оговорки
@@ -101,3 +101,22 @@ Moto G Power, simulated slow 4G, 2 прогона на страницу, `report
 
 ## 7. Коммит
 Коммит только папки `brightwater-dental/` в `main` репозитория `dmytromaksymov0/modd-demos`. Хеш — в сообщении сессии. После коммита сборка проверена ещё раз на `git archive HEAD:brightwater-dental` → `npm ci` → `npm run build`.
+
+## 8. После деплоя (19.10.2026)
+- Pages-проект `brightwater-dental` создан пользователем через Git-интеграцию. Секреты добавлены.
+- **Адрес — `https://brightwater-dental-ba5.pages.dev`.** По `brightwater-dental.pages.dev` открывается чужое React-приложение другого аккаунта (свой `/assets/index-*.js`, нет наших страниц и `/api/lead`). Имена `*.pages.dev` глобальные, поэтому Cloudflare добавил суффикс.
+- **Исправлено:** `site` в `astro.config.mjs` (canonical, sitemap, OG-ссылки, JSON-LD), `Sitemap:` в `robots.txt`, UID в `.ics`, README. До исправления canonical живого сайта указывал на чужой домен.
+- **Проверено на живом сайте без отправки заявки:** все страницы 200, 404 отдаёт 404, `_headers` применены, `GET /api/lead` → 405, невалидный `POST` → 422 с сообщениями у полей. Секреты и Telegram не задействованы.
+- **Lighthouse mobile на живом сайте** (до исправления адреса, по одному прогону, `reports/live-*`):
+
+  | Страница | Perf / A11y / BP / SEO | LCP |
+  |---|---|---|
+  | Home | 98 / 100 / 100 / 100 | 2.14 s |
+  | New Patients | 100 / 100 / 100 / 100 | 1.73 s |
+  | Services | 99 / 100 / 100 / 100 | 2.01 s |
+  | Emergency | 98 / 100 / 100 / 100 | 2.17 s |
+  | Insurance & Financing | 99 / 100 / 100 / 100 | 2.03 s |
+  | Our Team | 99 / 100 / 100 / 100 | 2.18 s |
+  | Book Online | 99 / 100 / 100 / 100 | 1.96 s |
+
+  CLS 0–0.004, TBT ≤ 26 ms, вес 97–237 KB. На живом CDN LCP на 0.1–0.2 s выше, чем локально: добавляется реальный TTFB. Пять страниц на 2.01–2.18 s — чуть выше цели 2.0 s. Категории в целях. Медиана рынка ~11 s.
