@@ -1,0 +1,65 @@
+---
+import '@fontsource-variable/gabarito/wght.css';
+import '@fontsource-variable/atkinson-hyperlegible-next/wght.css';
+import '../styles/global.css';
+import Header from '../components/layout/Header.astro';
+import Footer from '../components/layout/Footer.astro';
+import StickyBar from '../components/layout/StickyBar.astro';
+import { site } from '../config/site';
+import { dentist } from '../lib/schema';
+import gabaritoWoff2 from '@fontsource-variable/gabarito/files/gabarito-latin-wght-normal.woff2?url';
+import atkinsonWoff2 from '@fontsource-variable/atkinson-hyperlegible-next/files/atkinson-hyperlegible-next-latin-wght-normal.woff2?url';
+interface Props { title: string; description: string; noindex?: boolean; stickyBar?: boolean; schema?: Record<string, unknown> | Record<string, unknown>[] }
+const { title, description, noindex = false, stickyBar = true, schema } = Astro.props;
+const canonical = new URL(Astro.url.pathname, Astro.site);
+const ogPages = ['new-patients', 'services', 'insurance-financing', 'team', 'book'];
+const seg = Astro.url.pathname.split('/').filter(Boolean);
+const ogSlug = seg[0] === 'services' && seg[1] === 'emergency-dentist' ? 'emergency' : ogPages.includes(seg[0]) ? seg[0] : 'home';
+const ogImage = new URL(`/og/${ogSlug}.jpg`, Astro.site);
+const jsonld = [dentist(Astro.site), ...(schema ? [schema].flat() : [])];
+// Every digit, $, % and : on the site renders in Gabarito: Atkinson's slashed zero reads like a typo in prices and times.
+const figures = `@font-face{font-family:"BW Figures";src:url(${gabaritoWoff2}) format("woff2-variations");font-weight:400 900;font-display:swap;unicode-range:U+0024-0025,U+0030-003A}`;
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script is:inline>document.documentElement.classList.add('js')</script>
+    <link rel="preload" href={gabaritoWoff2} as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href={atkinsonWoff2} as="font" type="font/woff2" crossorigin />
+    <style set:html={figures}></style>
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    {noindex && <meta name="robots" content="noindex, nofollow" />}
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href="/favicon-32.png" sizes="32x32" type="image/png" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+    <meta name="theme-color" content="#F7F8F6" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={site.name} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content={title} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
+    {jsonld.map((s) => <script type="application/ld+json" set:html={JSON.stringify(s)} />)}
+  </head>
+  <body class="flex min-h-dvh flex-col">
+    <a href="#main" class="sr-only-focusable fixed left-3 top-3 z-50 inline-flex min-h-12 items-center rounded-full bg-ink px-5 font-display font-[650] text-white">Skip to content</a>
+    <Header />
+    <main id="main" class="flex-1"><slot /></main>
+    <Footer />
+    {stickyBar && <StickyBar />}
+  </body>
+</html>

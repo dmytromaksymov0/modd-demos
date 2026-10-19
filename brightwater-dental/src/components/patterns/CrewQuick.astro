@@ -1,0 +1,18 @@
+---
+// Compact entry to the family booking for small screens: pick who's coming, land on /book with it prefilled.
+interface Props { class?: string }
+const { class: cls = '' } = Astro.props;
+const options = [
+  { label: 'Just me', crew: '1' },
+  { label: 'Me + kids', crew: 'kids' },
+  { label: 'Whole family', crew: 'family' },
+];
+---
+<nav class={`grid gap-2 ${cls}`} aria-label="Start a booking">
+  <p class="font-display text-small font-[700]">Who's coming in?</p>
+  <div class="grid grid-cols-3 gap-2">
+    {options.map((o) => (
+      <a href={`/book/?crew=${o.crew}`} class="flex min-h-12 items-center justify-center rounded-sm border border-line-strong bg-white px-2 text-center font-display text-small font-[650] leading-tight no-underline hover:border-ink">{o.label}</a>
+    ))}
+  </div>
+</nav>

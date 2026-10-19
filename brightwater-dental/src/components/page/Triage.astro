@@ -1,0 +1,85 @@
+---
+// "Is this an emergency?" — symptom triage with conservative wording. Works without JS: all
+// verdicts are listed with the conditions that lead to them. With JS, answering shows just the match.
+import { site } from '../../config/site';
+const symptoms = [
+  ['pain', 'Toothache'], ['broken', 'Broken or chipped tooth'], ['knocked', 'Knocked-out tooth'],
+  ['crown', 'Crown or filling came out'], ['swelling', 'Swollen gum or face'], ['bleeding', 'Bleeding after an extraction'],
+];
+const verdicts = [
+  { id: 'er', tone: 'bg-alert text-white', label: 'Go to the ER or call 911 now', when: 'Swelling that makes it hard to breathe, swallow or open your mouth — or a jaw injury from a fall or accident.',
+    now: ['Don’t wait for a dental appointment. This can be a spreading infection.', 'After the ER, call us — we’ll see you for the tooth itself.'] },
+  { id: 'now', tone: 'bg-sun text-ink', label: 'Come in now — call us on the way', when: 'A knocked-out adult tooth. The first 30–60 minutes matter most.',
+    now: ['Pick it up by the crown, not the root. Rinse gently, don’t scrub.', 'Put it back in the socket if you can, or in a cup of milk.', `Call ${site.phone.display} so we’re ready when you arrive.`] },
+  { id: 'today', tone: 'bg-spring text-white', label: 'Come in today', when: 'Pain that keeps you up, a fever, swelling of the gum, a broken tooth with pain, or bleeding that won’t stop after 30 minutes of pressure.',
+    now: ['Ibuprofen or acetaminophen as the label says — no aspirin on the gum.', 'A cold pack on the cheek, 15 minutes on, 15 off.', 'Bite on folded gauze for bleeding.'] },
+  { id: 'soon', tone: 'bg-spring-50 text-ink', label: 'Can usually wait until tomorrow', when: 'A crown or filling came out, or a small chip — with no pain and no swelling.',
+    now: ['Keep the crown in a bag and bring it — we can often re-cement it.', 'Dental wax or sugar-free gum over a sharp edge.', 'Chew on the other side.'] },
+];
+---
+<section class="wrap py-(--spacing-section)" aria-labelledby="triage-h">
+  <div class="grid gap-10 lg:grid-cols-12 lg:gap-12">
+    <form class="flex flex-col gap-6 lg:col-span-5" data-triage aria-labelledby="triage-h">
+      <div class="flex flex-col gap-3">
+        <p class="t-label text-stone">Not sure how urgent it is?</p>
+        <h2 id="triage-h" class="t-h2">Is this an emergency?</h2>
+        <p class="text-small text-stone">Three quick questions. This is general guidance, not medical advice — when in doubt, call us or 911.</p>
+      </div>
+      <fieldset class="flex flex-col gap-2">
+        <legend class="mb-2 font-display font-[700]">What’s going on?</legend>
+        <div class="flex flex-wrap gap-2">
+          {symptoms.map(([v, l]) => (
+            <label class="chip-radio relative inline-flex min-h-11 cursor-pointer items-center rounded-full border border-line-strong bg-white px-4 font-display text-small font-[600] has-checked:border-spring has-checked:bg-spring-50 has-checked:text-spring-ink has-focus-visible:outline-3 has-focus-visible:outline-ink">
+              <input type="radio" name="symptom" value={v} class="sr-only" />{l}
+            </label>
+          ))}
+        </div>
+      </fieldset>
+      {[['airway', 'Is there swelling that makes it hard to breathe, swallow or open your mouth?'], ['fever', 'Do you have a fever, or is the pain keeping you up at night?']].map(([n, q]) => (
+        <fieldset class="flex flex-col gap-2">
+          <legend class="mb-2 font-display font-[700]">{q}</legend>
+          <div class="grid grid-cols-2 gap-2 sm:max-w-xs">
+            {['yes', 'no'].map((v) => (
+              <label class="relative inline-flex min-h-11 cursor-pointer items-center justify-center rounded-sm border border-line-strong bg-white font-display text-small font-[650] capitalize has-checked:border-ink has-checked:bg-ink has-checked:text-white has-focus-visible:outline-3 has-focus-visible:outline-ink">
+                <input type="radio" name={n} value={v} class="sr-only" />{v}
+              </label>
+            ))}
+          </div>
+        </fieldset>
+      ))}
+    </form>
+    <div class="flex flex-col gap-4 lg:col-span-7" aria-live="polite" data-verdicts>
+      <p class="text-small text-stone" data-hint>Answer the three questions, or read all four answers.</p>
+      {verdicts.map((v) => (
+        <article class="verdict overflow-hidden rounded-md border border-line bg-white" data-verdict={v.id}>
+          <h3 class={`flex min-h-14 items-center px-5 font-display text-[1.25rem] font-[750] ${v.tone}`}>{v.label}</h3>
+          <div class="grid gap-3 p-5">
+            <p class="text-small"><b class="font-display font-[650]">When:</b> {v.when}</p>
+            <ul class="grid gap-1.5 text-small text-stone">{v.now.map((n) => <li class="flex gap-2.5"><span class="mt-2 size-1.5 shrink-0 rounded-full bg-stone" aria-hidden="true"></span>{n}</li>)}</ul>
+            {(v.id === 'today' || v.id === 'soon') && <a href="/book/?visit=emergency" class="inline-flex min-h-11 items-center self-start rounded-full bg-spring px-5 font-display font-[650] text-white no-underline">See today’s emergency times</a>}
+            {v.id === 'now' && <a href={site.phone.href} class="inline-flex min-h-11 items-center self-start rounded-full bg-ink px-5 font-display font-[650] text-white no-underline tabular-nums">Call {site.phone.display}</a>}
+          </div>
+        </article>
+      ))}
+    </div>
+  </div>
+</section>
+<script>
+  const form = document.querySelector<HTMLFormElement>('[data-triage]');
+  const box = document.querySelector<HTMLElement>('[data-verdicts]');
+  if (form && box) {
+    form.addEventListener('change', () => {
+      const d = new FormData(form);
+      const s = d.get('symptom'), airway = d.get('airway'), fever = d.get('fever');
+      let v = '';
+      if (airway === 'yes') v = 'er';
+      else if (s === 'knocked') v = 'now';
+      else if (s === 'swelling' || s === 'bleeding' || s === 'pain' || fever === 'yes') v = 'today';
+      else if (s === 'broken' || s === 'crown') v = 'soon';
+      if (!v) return;
+      box.dataset.result = v;
+      box.querySelectorAll<HTMLElement>('[data-verdict]').forEach((el) => { el.hidden = el.dataset.verdict !== v; });
+      box.querySelector<HTMLElement>('[data-hint]')!.textContent = 'Based on your answers:';
+    });
+  }
+</script>

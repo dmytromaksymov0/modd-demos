@@ -1,0 +1,18 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Button from '../components/ui/Button.astro';
+import Rope from '../components/ui/Rope.astro';
+const links = [['Book online', '/book/'], ['New patients · $99 first visit', '/new-patients/'], ['Emergency — seen today', '/services/emergency-dentist/'], ['Insurance & financing', '/insurance-financing/']];
+---
+<BaseLayout title="Page not found | Brightwater Family Dental" description="This page doesn’t exist. Book online, see new patient info or get emergency help." noindex>
+  <section class="wrap flex flex-col gap-6 py-(--spacing-section)" data-hero>
+    <p class="t-label text-stone">404</p>
+    <h1 class="t-display max-w-[14ch]">This lane is closed.</h1>
+    <p class="t-lead measure text-stone">The page you were looking for isn’t here. These are the ones people usually need:</p>
+    <Rope variant="lane" class="max-w-xl" />
+    <ul class="grid max-w-xl gap-1">
+      {links.map(([l, h]) => <li><a href={h} class="flex min-h-12 items-center justify-between border-b border-line font-display text-[1.125rem] font-[650] no-underline hover:text-spring">{l}<span aria-hidden="true">→</span></a></li>)}
+    </ul>
+    <div><Button href="/">Back to the home page</Button></div>
+  </section>
+</BaseLayout>

@@ -1,0 +1,58 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHero from '../../components/page/PageHero.astro';
+import CtaBand from '../../components/page/CtaBand.astro';
+import Photo from '../../components/ui/Photo.astro';
+import Button from '../../components/ui/Button.astro';
+import { services } from '../../data/services';
+import room from '../../assets/photos/clinic-operatory.jpg';
+const more = [
+  ['Tooth-colored fillings', 'Usually one visit, usually 80% covered after the deductible.'],
+  ['Root canals', 'Front and most back teeth in-house; a crown afterwards, same day.'],
+  ['Kids’ dentistry', 'Cleanings, sealants, fluoride, first visits from age one.'],
+  ['Extractions', 'Simple and most wisdom teeth; complex surgical cases referred.'],
+  ['Whitening', 'Custom take-home trays, about $350.'],
+  ['Night guards', 'Custom-fit for grinding and TMJ, from a quick scan.'],
+  ['Sealants', 'A thin coating on kids’ molars, about ten minutes per tooth.'],
+  ['Bridges & dentures', 'Planned with you on the screen, priced in writing.'],
+];
+---
+<BaseLayout title="Dental services in Austin | Brightwater Family Dental" description="Cleanings, same-day crowns, clear aligners and same-day emergency care for the whole family in Mueller, Austin. Evenings and Saturdays.">
+  <PageHero label="Services" title="Everything a family needs, in one office." lead="From a toddler’s first visit to a crown in a single afternoon. Not sure what you need? Book an exam — we’ll tell you, and what it costs." photo={room} alt="A bright treatment room at Brightwater with a wood floor and a white dental chair" position="50% 55%">
+    <div><Button href="/book/?visit=new" size="lg">Book an exam</Button></div>
+  </PageHero>
+
+  <section class="wrap flex flex-col gap-4 pb-(--spacing-section)" aria-label="Main services">
+    {services.map((s, i) => (
+      <article class="grid overflow-hidden rounded-lg border border-line bg-white md:grid-cols-2">
+        <div class={`relative aspect-[3/2] overflow-hidden md:aspect-auto md:min-h-[22rem] ${i % 2 ? 'md:order-2' : ''}`}>
+          <Photo src={s.photo} alt={s.alt} widths={[480, 720, 960, 1200]} sizes="(min-width: 48rem) 50vw, 100vw" position={s.position} class="absolute inset-0" />
+        </div>
+        <div class="flex flex-col justify-center gap-4 p-6 sm:p-10">
+          <h2 class="t-h2"><a href={`/services/${s.slug}/`} class="inline-flex min-h-11 items-center no-underline hover:underline hover:underline-offset-4">{s.title}</a></h2>
+          <p class="text-stone">{s.short}</p>
+          <dl class="grid grid-cols-3 gap-3 border-y border-line py-4">
+            {s.facts.map(([v, l]) => <div><dt class="sr-only">{l}</dt><dd class="font-display text-[1.5rem] font-[800] leading-none tracking-[-0.03em]">{v}</dd><dd class="mt-1 text-label font-normal text-stone">{l}</dd></div>)}
+          </dl>
+          <div class="flex flex-wrap items-center gap-4">
+            <Button href={`/services/${s.slug}/`} variant="secondary">How it works</Button>
+            <a href={`/book/?visit=${s.visit}`} class="inline-flex min-h-11 min-w-11 items-center justify-center font-display font-[650] text-spring underline decoration-2 decoration-spring/40 underline-offset-4">Book</a>
+          </div>
+        </div>
+      </article>
+    ))}
+  </section>
+
+  <section class="bg-white py-(--spacing-section)" aria-labelledby="more-h">
+    <div class="wrap grid gap-10 lg:grid-cols-12">
+      <div class="flex flex-col gap-4 lg:col-span-4">
+        <h2 id="more-h" class="t-h2">Also in our office</h2>
+        <p class="text-stone">No separate pages, same three dentists, same promise: you see it on screen and get the price before we start.</p>
+      </div>
+      <ul class="grid gap-x-8 gap-y-5 sm:grid-cols-2 lg:col-span-8">
+        {more.map(([t, d]) => <li class="flex flex-col gap-1 border-t border-line pt-4"><b class="font-display text-[1.125rem] font-[700]">{t}</b><span class="text-small text-stone">{d}</span></li>)}
+      </ul>
+    </div>
+  </section>
+  <CtaBand title="Not sure what you need?" text="Book an exam. We’ll show you what we see on the screen and tell you what matters now and what can wait." href="/book/?visit=new" label="Book an exam" />
+</BaseLayout>

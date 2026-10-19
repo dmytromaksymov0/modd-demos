@@ -1,0 +1,76 @@
+---
+// The quiet comfort section (from direction B, in A's language): more air, no sun yellow.
+// Entry point to the comfort plan (signature moment C).
+import ChipGroup from '../ui/ChipGroup.astro';
+import Button from '../ui/Button.astro';
+import Photo from '../ui/Photo.astro';
+import headphones from '../../assets/photos/comfort-headphones.jpg';
+import blanket from '../../assets/photos/comfort-blanket-knit.jpg';
+import shades from '../../assets/photos/comfort-sunglasses.jpg';
+import onscreen from '../../assets/photos/consult-onscreen.jpg';
+interface Props { class?: string; screen?: boolean }
+const { class: cls = '', screen = false } = Astro.props;
+const objects = [
+  { src: headphones, alt: 'Noise-canceling headphones held in two hands', caption: 'Noise-canceling headphones — your playlist', pos: '50% 45%' },
+  { src: blanket, alt: 'Close-up of a chunky olive knit blanket', caption: 'A weighted blanket in the chair', pos: '50% 70%' },
+  { src: shades, alt: 'Dark sunglasses on a wooden table', caption: 'Shades for the overhead light', pos: '50% 50%' },
+];
+---
+<section class={`rounded-lg bg-spring-25 px-5 py-12 sm:px-10 sm:py-16 lg:px-16 ${cls}`} aria-labelledby="comfort-h">
+  <div class="grid gap-10 lg:grid-cols-12 lg:gap-12">
+    <div class="flex flex-col gap-6 lg:col-span-6">
+      <p class="t-label text-stone">For the dentist-shy</p>
+      <h2 id="comfort-h" class="t-h1 max-w-[14ch]">Nothing happens until you say go.</h2>
+      <p class="t-lead measure text-stone">We show you what we see on screen before we touch a thing. No lectures about the years you skipped. Nitrous or oral sedation if you want it — you decide, not us.</p>
+      <div class="flex flex-col gap-3 pt-2">
+        <p class="font-display text-[1.25rem] font-[700] leading-tight">What makes the dentist hard for you?</p>
+        <ChipGroup label="What makes the dentist hard for you" multiple size="lg" class="comfort-chips"
+          options={['The sounds', 'Needles', 'Feeling out of control', 'Gagging', 'Being judged', 'Surprise bills']}
+          selected={['The sounds', 'Feeling out of control']} />
+      </div>
+      <div class="flex flex-wrap items-center gap-4 pt-2">
+        <Button href="/book/?comfort=sounds,control#comfort" data-comfort-cta>Build my comfort plan</Button>
+        <span class="text-small text-stone">Takes 30 seconds · goes with your booking</span>
+      </div>
+    </div>
+    <div class="flex flex-col gap-6 lg:col-span-6">
+      {screen && (
+        <figure class="flex flex-col gap-2">
+          <div class="aspect-[3/2] overflow-hidden rounded-md">
+            <Photo src={onscreen} alt="A dad and his daughter look at her X-ray on the screen while the dentist points to one tooth" widths={[480, 720, 960, 1280]} sizes="(min-width: 64rem) 40vw, 100vw" position="40% 45%" />
+          </div>
+          <figcaption class="text-small"><b class="font-display font-[700]">We show you on screen first.</b> <span class="text-stone">Your X-rays and photos, explained before anything happens.</span></figcaption>
+        </figure>
+      )}
+      <ul class="grid grid-cols-3 gap-3">
+        {objects.map((o) => (
+          <li class="flex flex-col gap-2">
+            <div class={`${screen ? 'aspect-square' : 'aspect-[3/4]'} overflow-hidden rounded-md bg-white`}>
+              <Photo src={o.src} alt={o.alt} widths={[240, 360, 480]} sizes="(min-width: 64rem) 13rem, 30vw" position={o.pos} />
+            </div>
+            <p class="text-label font-normal text-ink">{o.caption}</p>
+          </li>
+        ))}
+      </ul>
+      <div class="flex items-start gap-4 rounded-md bg-white p-5">
+        <svg class="mt-0.5 size-9 shrink-0 text-spring" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 11V6a2 2 0 0 0-4 0v5" /><path d="M14 10V4a2 2 0 0 0-4 0v6" /><path d="M10 10.5V6a2 2 0 0 0-4 0v8" /><path d="M18 8a2 2 0 1 1 4 0v6a8 8 0 0 1-8 8h-2c-2.8 0-4.5-.86-5.99-2.34l-3.6-3.6a2 2 0 0 1 2.83-2.82L7 15" /></svg>
+        <div>
+          <p class="font-display text-[1.25rem] font-[750] leading-tight">Raise a hand — we stop.</p>
+          <p class="mt-1 text-small text-stone">Every time, mid-cleaning or mid-filling, no questions asked. We agree on it before we start.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<script>
+  // Chips feed the comfort-plan link, so the booking opens with the right comforts already picked.
+  const keys: Record<string, string> = { 'The sounds': 'sounds', Needles: 'needles', 'Feeling out of control': 'control', Gagging: 'gagging', 'Being judged': 'judged', 'Surprise bills': 'bills' };
+  document.querySelectorAll<HTMLElement>('.comfort-chips').forEach((group) => {
+    const cta = group.closest('section')?.querySelector<HTMLAnchorElement>('[data-comfort-cta]');
+    if (!cta) return;
+    group.addEventListener('click', () => requestAnimationFrame(() => {
+      const on = [...group.querySelectorAll('button[aria-pressed="true"]')].map((b) => keys[b.textContent!.trim()]).filter(Boolean);
+      cta.href = `/book/${on.length ? `?comfort=${on.join(',')}` : ''}#comfort`;
+    }));
+  });
+</script>

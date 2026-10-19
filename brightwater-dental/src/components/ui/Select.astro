@@ -1,0 +1,15 @@
+---
+import type { HTMLAttributes } from 'astro/types';
+interface Props extends HTMLAttributes<'select'> { id: string; label: string; options: readonly string[]; hint?: string }
+const { id, label, options, hint, class: cls = '', ...rest } = Astro.props;
+---
+<div class={`flex flex-col gap-1.5 ${cls}`}>
+  <label for={id} class="t-label text-ink">{label}</label>
+  <div class="relative">
+    <select id={id} class="h-12 w-full appearance-none rounded-sm border border-line-strong bg-white pl-3.5 pr-10 text-body text-ink hover:border-ink focus:border-spring" aria-describedby={hint ? `${id}-hint` : undefined} {...rest}>
+      {options.map((o) => <option>{o}</option>)}
+    </select>
+    <svg class="pointer-events-none absolute right-3.5 top-1/2 size-5 -translate-y-1/2 text-stone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6" /></svg>
+  </div>
+  {hint && <p id={`${id}-hint`} class="t-small text-stone">{hint}</p>}
+</div>

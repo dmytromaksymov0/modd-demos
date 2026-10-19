@@ -1,0 +1,31 @@
+{
+  "name": "brightwater-dental",
+  "type": "module",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro",
+    "test": "node --test tests/*.test.ts",
+    "qa": "node scripts/qa.cjs http://localhost:4321 / /new-patients/ /services/ /services/cleanings-exams/ /services/same-day-crowns/ /services/clear-aligners/ /services/emergency-dentist/ /insurance-financing/ /team/ /book/ /thanks/ /privacy/ /404/ && node scripts/test-home.cjs && node scripts/test-pages.cjs && node scripts/check-links.cjs",
+    "e2e": "node scripts/e2e-lead.cjs",
+    "og": "node scripts/make-og.cjs"
+  },
+  "dependencies": {
+    "@astrojs/sitemap": "^3.7.4",
+    "@fontsource-variable/atkinson-hyperlegible-next": "^5.2.0",
+    "@fontsource-variable/gabarito": "^5.2.0",
+    "@lucide/astro": "^1.59.0",
+    "@tailwindcss/vite": "^4.3.3",
+    "astro": "^7.4.0",
+    "tailwindcss": "^4.3.3"
+  },
+  "devDependencies": {
+    "wrangler": "^4.151.1"
+  },
+  "engines": {
+    "node": ">=22.22.0"
+  }
+}

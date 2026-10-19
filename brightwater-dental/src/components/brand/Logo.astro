@@ -1,0 +1,19 @@
+---
+// Brightwater wordmark. Outlines generated from Gabarito by design/phase-2/make_logo.py — no font needed.
+import paths from './logo-paths.json';
+interface Props { tone?: 'ink' | 'light'; subline?: boolean; markOnly?: boolean; class?: string }
+const { tone = 'ink', subline = true, markOnly = false, class: cls = '' } = Astro.props;
+const word = tone === 'ink' ? 'var(--color-ink)' : 'var(--color-tile)';
+const sub = tone === 'ink' ? 'var(--color-stone)' : 'var(--color-mist)';
+const mark = paths.mark
+  .replaceAll('@SUN', 'var(--color-sun)')
+  .replaceAll('@WATER', 'var(--color-spring)')
+  .replaceAll('@ROPE', 'var(--color-tile)');
+const h = subline ? 62 : 46;
+const vb = markOnly ? '0 5 52 52' : `0 0 ${paths.width} ${h}`;
+---
+<svg class={cls} viewBox={vb} role="img" aria-label="Brightwater Family Dental" xmlns="http://www.w3.org/2000/svg">
+  <Fragment set:html={mark} />
+  {!markOnly && <path d={paths.word} fill={word} />}
+  {!markOnly && subline && <path d={paths.sub} fill={sub} />}
+</svg>

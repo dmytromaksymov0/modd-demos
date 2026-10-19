@@ -1,0 +1,102 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHero from '../../components/page/PageHero.astro';
+import CtaBand from '../../components/page/CtaBand.astro';
+import Photo from '../../components/ui/Photo.astro';
+import Button from '../../components/ui/Button.astro';
+import Badge from '../../components/ui/Badge.astro';
+import Rope from '../../components/ui/Rope.astro';
+import { team } from '../../data/team';
+import springs from '../../assets/photos/austin-barton-springs.jpg';
+const crew = [
+  ['Rosa M.', 'Hygienist', '14 years, kids whisperer, bilingual'],
+  ['Devin K.', 'Hygienist', 'Quiet hands, great playlists'],
+  ['Priya S.', 'Dental assistant', 'Runs the crown mill'],
+  ['Jess T.', 'Front desk', 'Insurance questions, before you ask'],
+];
+const rules = [
+  ['No lectures', 'About flossing, sugar or how long it’s been.'],
+  ['Screen first', 'You see the photo before we recommend the treatment.'],
+  ['Price first', 'In writing, before anything is scheduled.'],
+  ['Hand up, we stop', 'Every time, agreed before we start.'],
+];
+---
+<BaseLayout title="Our dentists | Brightwater Family Dental, Austin" description="Meet Dr. Elena Ruiz, Dr. Mark Holloway and Dr. Hannah Kessler — three family dentists in Mueller, Austin who explain first. Hablamos español.">
+  <PageHero label="Our team" title="Three dentists who explain first." lead="Same three faces for the whole family, visit after visit. Pick one when you book, or take the earliest time with any of them.">
+    <ul slot="aside" class="grid grid-cols-3 gap-3 sm:gap-4" aria-label="Our dentists">
+      {team.map((d, i) => (
+        <li>
+          <a href={`#${d.slug}`} class="group flex flex-col gap-2 no-underline">
+            <div class="aspect-[4/5] overflow-hidden rounded-md bg-spring-50">
+              <Photo src={d.photo} alt={d.name} priority={i === 0} widths={[240, 360, 480, 640]} sizes="(min-width: 86rem) 13rem, (min-width: 64rem) 15vw, 30vw" quality={48} class="transition-transform duration-(--duration-base) group-hover:scale-[1.02]" />
+            </div>
+            <span class="font-display text-[clamp(0.9375rem,0.8rem+0.5vw,1.125rem)] font-[750] leading-tight group-hover:underline group-hover:underline-offset-4">{d.short}</span>
+            <span class="text-label font-normal leading-snug text-stone">{d.role}</span>
+          </a>
+        </li>
+      ))}
+    </ul>
+  </PageHero>
+
+  <section class="wrap flex flex-col gap-(--spacing-section) pb-(--spacing-section)" aria-label="Dentists">
+    {team.map((d, i) => (
+      <article id={d.slug} class="grid scroll-mt-24 gap-8 lg:grid-cols-12 lg:gap-12" aria-labelledby={`${d.slug}-h`}>
+        <div class={`lg:col-span-5 ${i % 2 ? 'lg:order-2 lg:col-start-8' : ''}`}>
+          <div class="aspect-[4/5] overflow-hidden rounded-lg bg-spring-50">
+            <Photo src={d.photo} alt={`${d.name}, ${d.role}`} widths={[360, 540, 720, 900]} sizes="(min-width: 86rem) 31rem, (min-width: 64rem) 36vw, calc(100vw - 2rem)" quality={48} />
+          </div>
+        </div>
+        <div class={`flex flex-col gap-5 lg:col-span-6 lg:pt-6 ${i % 2 ? 'lg:col-start-1 lg:row-start-1' : 'lg:col-start-7'}`}>
+          <p class="t-label text-stone">{d.role}</p>
+          <h2 id={`${d.slug}-h`} class="t-h1">{d.name}</h2>
+          <p class="text-small text-stone">{d.school}</p>
+          {'languages' in d && <Badge tone="spring" class="self-start">{d.languages}</Badge>}
+          <blockquote class="t-lead border-l-4 border-sun pl-5">“{d.why}”</blockquote>
+          <div class="grid gap-2">
+            <p class="font-display font-[700]">Most often asked</p>
+            <p class="text-stone">{d.asked}</p>
+          </div>
+          <ul class="flex flex-wrap gap-2">{d.focus.map((f) => <li class="rounded-full bg-white px-3.5 py-1.5 text-small font-display font-[600] ring-1 ring-line">{f}</li>)}</ul>
+          {'atWork' in d && (
+            <figure class="flex flex-col gap-2">
+              <div class="aspect-[3/2] overflow-hidden rounded-md"><Photo src={d.atWork} alt={`${d.short} shows a teenage patient how to brush on a model`} widths={[480, 720, 960]} sizes="(min-width: 64rem) 40vw, 100vw" position="60% 45%" /></div>
+              <figcaption class="text-small text-stone">{d.short} at work: the two-minute brushing lesson every teen gets.</figcaption>
+            </figure>
+          )}
+          <div><Button href={`/book/?doctor=${d.slug}`} variant="secondary">Book with {d.short}</Button></div>
+        </div>
+      </article>
+    ))}
+  </section>
+
+  <section class="bg-white py-(--spacing-section)" aria-labelledby="crew-h">
+    <div class="wrap grid gap-10 lg:grid-cols-12">
+      <div class="flex flex-col gap-4 lg:col-span-4">
+        <h2 id="crew-h" class="t-h2">And the people you’ll see first</h2>
+        <p class="text-stone">Hygienists do most of your visit. Ours stay for years — ask for the same one every time.</p>
+      </div>
+      <ul class="grid gap-x-8 gap-y-5 sm:grid-cols-2 lg:col-span-8">
+        {crew.map(([n, r, d]) => <li class="flex flex-col gap-1 border-t border-line pt-4"><b class="font-display text-[1.125rem] font-[700]">{n} <span class="font-[500] text-stone">· {r}</span></b><span class="text-small text-stone">{d}</span></li>)}
+      </ul>
+    </div>
+  </section>
+
+  <section class="wrap py-(--spacing-section)" aria-labelledby="rules-h">
+    <div class="mb-(--spacing-section) grid gap-8 lg:grid-cols-12 lg:items-center lg:gap-12">
+      <figure class="lg:col-span-7">
+        <div class="aspect-[3/2] overflow-hidden rounded-lg"><Photo src={springs} alt="Swimmers at Barton Springs Pool in Austin on a sunny day" widths={[480, 720, 960, 1280]} sizes="(min-width: 86rem) 48rem, (min-width: 64rem) 56vw, 100vw" position="50% 60%" quality={45} /></div>
+      </figure>
+      <div class="flex flex-col gap-4 lg:col-span-5">
+        <p class="t-label text-stone">Why “Brightwater”</p>
+        <h2 class="t-h2">Named after the springs we swim in.</h2>
+        <p class="text-stone">Barton Springs stays 68 degrees and clear enough to see the bottom. That’s the idea: clear water, no surprises underneath. You see what we see, you know the price, and nothing happens until you say go.</p>
+      </div>
+    </div>
+    <Rope variant="lane" class="mb-10" />
+    <h2 id="rules-h" class="t-h2 mb-8">Four house rules</h2>
+    <ul class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      {rules.map(([t, d]) => <li class="flex flex-col gap-2 rounded-md border border-line bg-white p-5"><b class="font-display text-[1.25rem] font-[750]">{t}</b><span class="text-small text-stone">{d}</span></li>)}
+    </ul>
+  </section>
+  <CtaBand title="Pick your dentist, or let us." text="Any of the three can see the whole family. Choose one in the booking or leave it open for the earliest time." />
+</BaseLayout>

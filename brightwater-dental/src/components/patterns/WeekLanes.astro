@@ -1,0 +1,44 @@
+---
+// Opening hours drawn as pool lanes, 7 am → 7 pm. Saturday swims in the sun lane.
+// variant="full"    — desktop hero: one lane per day with a live "now" marker.
+// variant="compact" — mobile, right under the hero buttons: six day pills with closing times.
+import { hours } from '../../config/site';
+import { fmt } from '../../lib/hours';
+import OpenStatus from '../layout/OpenStatus.astro';
+interface Props { variant?: 'full' | 'compact'; class?: string }
+const { variant = 'full', class: cls = '' } = Astro.props;
+const pct = (m: number) => ((m - 420) / 720) * 100;
+
+---
+{variant === 'full' ? (
+  <figure class={`grid gap-2 ${cls}`} aria-label={`Opening hours: ${hours.summary}`}>
+    <div class="grid grid-cols-[2.5rem_1fr_7rem] gap-3 text-label text-stone" aria-hidden="true">
+      <span></span><div class="flex justify-between"><span>7 am</span><span>1 pm</span><span>7 pm</span></div><span></span>
+    </div>
+    {hours.days.map((d) => (
+      <div class="grid grid-cols-[2.5rem_1fr_7rem] items-center gap-3 text-small">
+        <span class={`justify-self-start font-display font-[700] ${d.day === 6 ? 'rounded-sm bg-sun px-1.5' : ''}`}>{d.short}</span>
+        <div class="relative h-2.5 rounded-full bg-spring-50">
+          <div class={`absolute inset-y-0 rounded-full ${d.day === 6 ? 'bg-sun' : 'bg-spring'}`} style={`left:${pct(d.open)}%;right:${100 - pct(d.close)}%`}></div>
+          <span class="now-mark absolute -top-1.5 h-5.5 w-0.5 bg-buoy" data-now-day={d.day} hidden><span class="absolute -top-4.5 -left-2.5 font-display text-[0.8125rem] font-[700] text-buoy">now</span></span>
+        </div>
+        <span class="text-right text-stone tabular-nums">{fmt(d.open)}–{fmt(d.close)}</span>
+      </div>
+    ))}
+  </figure>
+) : (
+  <figure class={`grid gap-2 ${cls}`} aria-label={`Opening hours: ${hours.summary}`}>
+    <figcaption class="flex flex-wrap items-center justify-between gap-x-3 gap-y-1 text-small"><OpenStatus /></figcaption>
+    <ol class="grid grid-cols-6 gap-1" aria-hidden="true">
+      {hours.days.map((d) => (
+        <li class={`day-pill flex flex-col items-center rounded-sm py-1.5 font-display leading-tight ${d.day === 6 ? 'bg-sun' : 'bg-spring-50'}`} data-today-day={d.day}>
+          <span class="text-label font-[700]">{d.short}</span>
+          <span class="whitespace-nowrap text-[0.8125rem] tabular-nums">to {fmt(d.close)}</span>
+        </li>
+      ))}
+    </ol>
+  </figure>
+)}
+<style is:global>
+  .day-pill[data-today] { outline: 2px solid var(--color-ink); outline-offset: -2px; }
+</style>

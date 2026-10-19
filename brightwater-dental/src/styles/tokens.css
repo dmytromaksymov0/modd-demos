@@ -1,0 +1,90 @@
+/*
+  Brightwater Family Dental — design tokens (direction A · Spring-Fed).
+  Single source of truth: Tailwind 4 theme variables, so every token is both a CSS custom
+  property (var(--color-spring)) and a utility (bg-spring, text-stone, font-display…).
+  Components never hard-code colours, fonts, radii, shadows or spacing — use these.
+*/
+@theme {
+  /* Only brand colours exist on this site. */
+  --color-*: initial;
+
+  /* Surfaces & text */
+  --color-tile: #F7F8F6;          /* page background — cool white pool tile, not cream */
+  --color-white: #FFFFFF;         /* cards, fields, overlays on photos */
+  --color-ink: #10231F;           /* text, dark surfaces — 15.4:1 on tile */
+  --color-ink-2: #23403A;         /* hover on ink surfaces */
+  --color-stone: #5B6B67;         /* secondary text — 5.3:1 on tile, 5.6:1 on white */
+  --color-mist: #B9CFC9;          /* text on ink surfaces only — 10.0:1 on ink */
+  --color-line: #D9E2DF;          /* hairlines, field borders, tracks */
+  --color-line-strong: #7E908B;   /* field borders, chip outlines — 3.4:1 on white, 3.2:1 on tile (WCAG 1.4.11) */
+
+  /* Brand: spring water, sun, buoy */
+  --color-spring: #0A6B5D;        /* primary CTA, links, open hours — white on it 6.4:1 */
+  --color-spring-ink: #08574C;    /* CTA hover / pressed — white on it 8.5:1 */
+  --color-spring-50: #DCEDE8;     /* tints, lanes, selected chips — ink on it 13.5:1 */
+  --color-spring-25: #EEF6F3;     /* quiet section background (comfort) */
+  --color-sun: #F5C842;           /* Saturdays + highlighter only; text on it is always ink (10.3:1) */
+  --color-sun-50: #FCF1CC;        /* soft sun tint */
+  --color-buoy: #C73A23;          /* lane-rope floats and the "now" marker — never body text */
+
+  /* Status */
+  --color-alert: #B42318;         /* errors — 6.0:1 on white */
+  --color-alert-50: #FCEBE9;
+
+  /* Typography — every digit is set in Gabarito via the "BW Figures" face (see BaseLayout):
+     Atkinson's slashed zero reads like a typo in times and prices. */
+  --font-display: "Gabarito Variable", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "BW Figures", "Atkinson Hyperlegible Next Variable", ui-sans-serif, system-ui, sans-serif;
+
+  /* Type scale — fluid between 375px and 1440px. Body 17px. */
+  --text-display: clamp(2.75rem, 1.95rem + 3.4vw, 5rem);       /* 44 → 80px, hero */
+  --text-display--line-height: 0.98;
+  --text-display--letter-spacing: -0.035em;
+  --text-h1: clamp(2.375rem, 1.85rem + 2.25vw, 3.75rem);       /* 38 → 60px */
+  --text-h1--line-height: 1.02;
+  --text-h1--letter-spacing: -0.03em;
+  --text-h2: clamp(1.875rem, 1.55rem + 1.4vw, 2.75rem);        /* 30 → 44px */
+  --text-h2--line-height: 1.06;
+  --text-h2--letter-spacing: -0.025em;
+  --text-h3: clamp(1.3125rem, 1.18rem + 0.55vw, 1.625rem);     /* 21 → 26px */
+  --text-h3--line-height: 1.18;
+  --text-h3--letter-spacing: -0.015em;
+  --text-lead: clamp(1.125rem, 1.07rem + 0.25vw, 1.25rem);     /* 18 → 20px */
+  --text-lead--line-height: 1.5;
+  --text-body: 1.0625rem;                                       /* 17px */
+  --text-body--line-height: 1.6;
+  --text-small: 0.9375rem;                                      /* 15px */
+  --text-small--line-height: 1.5;
+  --text-label: 0.8125rem;                                      /* 13px — minimum on the site */
+  --text-label--line-height: 1.35;
+  --text-figure: clamp(2.25rem, 1.9rem + 1.5vw, 3.25rem);       /* 36 → 52px, big numbers ($0, 7 pm) */
+
+  /* Spacing: Tailwind's 4px step (p-4 = 16px) + section rhythm. */
+  --spacing: 0.25rem;
+  --spacing-gutter: clamp(1rem, 0.6rem + 1.8vw, 2rem);         /* side padding 16 → 32px */
+  --spacing-section: clamp(4rem, 2.8rem + 5vw, 8rem);          /* 64 → 128px between sections */
+
+  /* Layout */
+  --container-page: 86rem;        /* 1376px max content width */
+  --container-measure: 65ch;      /* max text line length */
+
+  /* Shape — soft and friendly, like rounded pool tile. */
+  --radius-sm: 6px;               /* fields, small chips */
+  --radius-md: 14px;              /* cards, panels */
+  --radius-lg: 28px;              /* large photos */
+  --radius-full: 9999px;          /* buttons, pills */
+
+  /* Elevation: one shadow, only for things that float over a photo. Everything else is flat. */
+  --shadow-float: 0 1px 0 rgb(16 35 31 / 0.06), 0 18px 40px -18px rgb(16 35 31 / 0.35);
+
+  /* Motion */
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --duration-fast: 150ms;
+  --duration-base: 240ms;
+
+  --breakpoint-sm: 40rem;
+  --breakpoint-md: 48rem;
+  --breakpoint-lg: 64rem;
+  --breakpoint-xl: 80rem;
+  --breakpoint-2xl: 96rem;
+}

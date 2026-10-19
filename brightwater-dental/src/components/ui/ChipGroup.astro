@@ -1,0 +1,30 @@
+---
+// Toggle chips (aria-pressed). `multiple` lets several stay on (comfort plan); otherwise one at a time.
+// Without JS the chips still render; the real forms use hidden inputs (phase 5).
+interface Props { label: string; options: readonly string[]; selected?: readonly string[]; multiple?: boolean; size?: 'md' | 'lg'; class?: string }
+const { label, options, selected = [], multiple = false, size = 'md', class: cls = '' } = Astro.props;
+const h = size === 'lg' ? 'min-h-12 px-5 text-body' : 'min-h-11 px-4 text-small';
+---
+<div class={`flex flex-wrap gap-2 ${cls}`} role="group" aria-label={label} data-chips={multiple ? 'multi' : 'single'}>
+  {options.map((o) => (
+    <button type="button" aria-pressed={selected.includes(o) ? 'true' : 'false'}
+      class={`chip inline-flex items-center gap-2 rounded-full border bg-white font-display font-[600] text-ink transition-colors duration-(--duration-fast) border-line-strong hover:border-ink aria-pressed:border-spring aria-pressed:bg-spring-50 aria-pressed:text-spring-ink ${h}`}>
+      <svg class="chip-tick hidden size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5" /></svg>
+      {o}
+    </button>
+  ))}
+</div>
+<style is:global>
+  .chip[aria-pressed='true'] .chip-tick { display: block; }
+</style>
+<script>
+  document.querySelectorAll<HTMLElement>('[data-chips]').forEach((group) => {
+    group.addEventListener('click', (e) => {
+      const btn = (e.target as HTMLElement).closest<HTMLButtonElement>('button.chip');
+      if (!btn) return;
+      const on = btn.getAttribute('aria-pressed') !== 'true';
+      if (group.dataset.chips === 'single') group.querySelectorAll('button.chip').forEach((b) => b.setAttribute('aria-pressed', 'false'));
+      btn.setAttribute('aria-pressed', String(on));
+    });
+  });
+</script>

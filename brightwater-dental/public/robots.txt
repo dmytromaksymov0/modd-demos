@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+Disallow: /styleguide/
+Disallow: /thanks/
+
+Sitemap: https://brightwater-dental.pages.dev/sitemap-index.xml

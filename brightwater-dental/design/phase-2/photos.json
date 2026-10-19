@@ -1,0 +1,242 @@
+[
+ {
+  "f": "hero-1-mom-daughter-checkup",
+  "g": "Hero — candidates",
+  "by": "Ông Ngọc Dư",
+  "src": "Pexels",
+  "url": "https://www.pexels.com/photo/women-and-dentist-over-child-19854753/",
+  "note": "Mom leans in during her daughter's check-up, daylight, plants. − masks and an instrument in the mouth; readable clinic name on the coat → needs retouch. Reserve."
+ },
+ {
+  "f": "hero-2-mom-girl-chair",
+  "g": "Hero — candidates",
+  "by": "Mufid Majnun",
+  "src": "Unsplash",
+  "url": "https://unsplash.com/photos/_9b4WKR_u9I",
+  "note": "Huge laugh, no masks. − the woman is the dentist, not the parent; yellow light, cluttered 2010s room. Rejected for hero."
+ },
+ {
+  "f": "hero-3-dad-daughter-xray",
+  "g": "Hero — candidates",
+  "by": "cottonbro studio",
+  "src": "Pexels",
+  "url": "https://www.pexels.com/photo/a-man-and-a-girl-having-a-dental-consultation-with-a-dentist-6502163/",
+  "note": "Dad + daughter + dentist looking at her X-ray together: parent and child in the clinic, no instruments, no masks. − cool light, desk not chair. Best in-clinic option."
+ },
+ {
+  "f": "hero-4-dad-kids-brushing",
+  "g": "Hero — candidates",
+  "by": "Pavel Danilyuk",
+  "src": "Pexels",
+  "url": "https://www.pexels.com/photo/a-father-brushing-his-teeth-with-his-kids-inside-the-bathroom-8762977/",
+  "note": "Literally a Saturday morning: dad and two kids brushing, bright, warm, real. − not a clinic. Strongest mood for 'Dentistry on family time'."
+ },
+ {
+  "f": "consult-onscreen",
+  "g": "Comfort & 'nothing until you say go'",
+  "by": "cottonbro studio",
+  "src": "Pexels",
+  "url": "https://www.pexels.com/photo/a-man-and-a-girl-having-a-dental-consultation-with-a-dentist-6502163/",
+  "note": "hero-3 retouched for the comfort section: the Russian menu bar and patient name on the monitor are blurred (design/phase-3/retouch_onscreen.py); the X-ray stays."
+ },
+ {
+  "f": "consult-dentist-talk",
+  "g": "Comfort & 'nothing until you say go'",
+  "by": "Harold Hisona",
+  "src": "Unsplash",
+  "url": "https://unsplash.com/photos/Bg81yWKZlMg",
+  "note": "Dentist and patient talking before anything starts. Bright, wood, no masks."
+ },
+ {
+  "f": "consult-scan-on-screen",
+  "g": "Comfort & 'nothing until you say go'",
+  "by": "Filip Rankovic Grobgaard",
+  "src": "Unsplash",
+  "url": "https://unsplash.com/photos/Bd0RmCsJOCc",
+  "note": "'We show you on screen first' — dentist walks the patient through her 3D scan."
+ },
+ {
+  "f": "comfort-headphones",
+  "g": "Comfort & 'nothing until you say go'",
+  "by": "cottonbro studio",
+  "src": "Pexels",
+  "url": "https://www.pexels.com/photo/person-holding-black-cordless-headphones-3945669/",
+  "note": "Object shot: noise-canceling headphones, white ground, no logo."
+ },
+ {
+  "f": "comfort-blanket-knit",
+  "g": "Comfort & 'nothing until you say go'",
+  "by": "Mike Murray",
+  "src": "Pexels",
+  "url": "https://www.pexels.com/photo/knitted-sweater-in-close-up-view-5908413/",
+  "note": "Object shot: chunky knit in olive — sits next to spring green."
+ },
+ {
+  "f": "comfort-sunglasses",
+  "g": "Comfort & 'nothing until you say go'",
+  "by": "Ryutaro Tsukata",
+  "src": "Pexels",
+  "url": "https://www.pexels.com/photo/stylish-sunglasses-placed-on-wooden-table-5472300/",
+  "note": "Object shot: sunglasses against the chair light."
+ },
+ {
+  "f": "comfort-man-headphones",
+  "g": "Comfort & 'nothing until you say go'",
+  "by": "Kindel Media",
+  "src": "Pexels",
+  "url": "https://www.pexels.com/photo/a-man-in-gray-sleeves-listening-to-music-7651737/",
+  "note": "Calm adult with headphones (from direction B) — for the comfort plan step."
+ },
+ {
+  "f": "team-dr-1",
+  "g": "Our team (3 dentists)",
+  "by": "Manuel Toledo",
+  "src": "Pexels",
+  "url": "https://www.pexels.com/photo/confident-female-dentist-in-professional-attire-31043310/",
+  "note": "Dr. #1 — family & anxious patients, Spanish-speaking. Clean scrubs, no clinic logo."
+ },
+ {
+  "f": "team-dr-2",
+  "g": "Our team (3 dentists)",
+  "by": "Kaboompics.com",
+  "src": "Pexels",
+  "url": "https://www.pexels.com/photo/6627836/",
+  "note": "Dr. #2 — same dentist as the at-work shot; source for the unified portrait."
+ },
+ {
+  "f": "team-dr-3",
+  "g": "Our team (3 dentists)",
+  "by": "Antoni Shkraba",
+  "src": "Pexels",
+  "url": "https://www.pexels.com/photo/woman-with-eyeglasses-wearing-a-white-long-sleeve-shirt-6076115/",
+  "note": "Dr. #3 — clear aligners & kids. Warm interior, no text."
+ },
+ {
+  "f": "service-cleaning",
+  "g": "Services",
+  "by": "Andrea Piacquadio",
+  "src": "Pexels",
+  "url": "https://www.pexels.com/photo/cheerful-young-female-dentist-talking-with-patient-in-modern-clinic-3884101/",
+  "note": "Cleanings & Exams — hygienist with mask down, relaxed patient."
+ },
+ {
+  "f": "service-crown-scan",
+  "g": "Services",
+  "by": "cottonbro studio",
+  "src": "Pexels",
+  "url": "https://www.pexels.com/photo/close-up-shot-of-a-man-having-a-dental-checkup-6501920/",
+  "note": "Same-Day Crowns — digital scan, no goop impressions."
+ },
+ {
+  "f": "service-crown-veneers",
+  "g": "Services",
+  "by": "TARIK BAYRAM",
+  "src": "Pexels",
+  "url": "https://www.pexels.com/photo/close-up-of-dental-veneers-on-reflective-surface-33748047/",
+  "note": "Same-Day Crowns — milled restorations, detail shot."
+ },
+ {
+  "f": "service-aligners",
+  "g": "Services",
+  "by": "Arvind Philomin",
+  "src": "Pexels",
+  "url": "https://www.pexels.com/photo/woman-with-corrective-brace-11887613/",
+  "note": "Clear Aligners — a real hand putting in an aligner, smiling."
+ },
+ {
+  "f": "service-emergency",
+  "g": "Services",
+  "by": "Pavel Danilyuk",
+  "src": "Pexels",
+  "url": "https://www.pexels.com/photo/a-woman-having-a-toothache-6193195/",
+  "note": "Emergency — toothache at the front desk, calm not dramatic."
+ },
+ {
+  "f": "service-emergency-2",
+  "g": "Services",
+  "by": "Pavel Danilyuk",
+  "src": "Pexels",
+  "url": "https://www.pexels.com/photo/patient-with-toothache-6809670/",
+  "note": "Emergency — alternate, man holding his jaw."
+ },
+ {
+  "f": "clinic-operatory",
+  "g": "Clinic & Austin",
+  "by": "Kari Bjorn Photography",
+  "src": "Unsplash",
+  "url": "https://unsplash.com/photos/Fdku_oMrDvk",
+  "note": "Bright operatory, wood floor, white — the 'Brightwater room'."
+ },
+ {
+  "f": "clinic-stone-wall",
+  "g": "Clinic & Austin",
+  "by": "Jose Vazquez",
+  "src": "Unsplash",
+  "url": "https://unsplash.com/photos/4SUyx4KQ5Ik",
+  "note": "Limestone wall + garden window — reads Texas Hill Country."
+ },
+ {
+  "f": "kids-brushing",
+  "g": "Clinic & Austin",
+  "by": "Mieke Campbell",
+  "src": "Unsplash",
+  "url": "https://unsplash.com/photos/1BZ_8GfumyU",
+  "note": "Kid brushing, close — for kids' cleaning / New Patients."
+ },
+ {
+  "f": "proof-high-five",
+  "g": "Clinic & Austin",
+  "by": "Gustavo Fring",
+  "src": "Pexels",
+  "url": "https://www.pexels.com/photo/dentist-and-patient-doing-high-five-5622280/",
+  "note": "Patient high-fives the hygienist — sample-review moment."
+ },
+ {
+  "f": "austin-barton-springs",
+  "g": "Clinic & Austin",
+  "by": "Tomek Baginski",
+  "src": "Unsplash",
+  "url": "https://unsplash.com/photos/2g7CAh4jzeY",
+  "note": "Barton Springs Pool — brand story 'spring-fed' (footer / Our Team intro), not used as the clinic location."
+ },
+ {
+  "f": "team-portrait-ruiz",
+  "g": "Our team (3 dentists)",
+  "by": "Manuel Toledo",
+  "src": "Pexels",
+  "url": "https://www.pexels.com/photo/confident-female-dentist-in-professional-attire-31043310/",
+  "note": "Unified portrait (design/phase-4/team_portraits.py): head-and-shoulders crop, eyes on one line, shared grade; scrubs logo on the sleeve painted out. Source team-dr-1."
+ },
+ {
+  "f": "team-portrait-holloway",
+  "g": "Our team (3 dentists)",
+  "by": "Kaboompics.com",
+  "src": "Pexels",
+  "url": "https://www.pexels.com/photo/6627836/",
+  "note": "Unified portrait from team-dr-2."
+ },
+ {
+  "f": "team-portrait-kessler",
+  "g": "Our team (3 dentists)",
+  "by": "Antoni Shkraba",
+  "src": "Pexels",
+  "url": "https://www.pexels.com/photo/woman-with-eyeglasses-wearing-a-white-long-sleeve-shirt-6076115/",
+  "note": "Unified portrait from team-dr-3."
+ },
+ {
+  "f": "team-holloway-at-work",
+  "g": "Our team (3 dentists)",
+  "by": "Kaboompics.com",
+  "src": "Pexels",
+  "url": "https://www.pexels.com/photo/6627320/",
+  "note": "Dr. Holloway at work — showing a teen patient how to brush on a model. Cropped to remove a wall sign."
+ },
+ {
+  "f": "service-emergency-exam",
+  "g": "Services",
+  "by": "Kaboompics.com",
+  "src": "Pexels",
+  "url": "https://www.pexels.com/photo/6627447/",
+  "note": "Emergency hero — Dr. Holloway (same model as the team page) adjusts the light for a calm patient. Replaces the cheek-holding cliché."
+ }
+]

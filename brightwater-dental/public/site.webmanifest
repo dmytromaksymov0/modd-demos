@@ -1,0 +1,1 @@
+{ "name": "Brightwater Family Dental", "short_name": "Brightwater", "icons": [{ "src": "/icon-512.png", "sizes": "512x512", "type": "image/png" }], "theme_color": "#F7F8F6", "background_color": "#F7F8F6", "display": "browser" }

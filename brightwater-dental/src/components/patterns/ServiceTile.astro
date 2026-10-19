@@ -1,0 +1,26 @@
+---
+// Service entries are deliberately different in form (not four identical cards):
+// variant="photo" — photo-led tile; variant="fact" — one big fact, no photo.
+import type { ImageMetadata } from 'astro';
+import Photo from '../ui/Photo.astro';
+interface Props { variant?: 'photo' | 'fact'; title: string; href: string; fact: string; factLabel: string; text: string; photo?: ImageMetadata; alt?: string; position?: string; class?: string }
+const { variant = 'photo', title, href, fact, factLabel, text, photo, alt = '', position = '50% 50%', class: cls = '' } = Astro.props;
+---
+{variant === 'photo' && photo ? (
+  <a href={href} class={`group flex flex-col overflow-hidden rounded-md bg-white no-underline ${cls}`}>
+    <div class="aspect-[4/3] overflow-hidden"><Photo src={photo} alt={alt} widths={[400, 640, 900]} sizes="(min-width: 64rem) 30vw, 90vw" position={position} class="transition-transform duration-(--duration-base) group-hover:scale-[1.02]" /></div>
+    <div class="flex flex-col gap-2 p-5">
+      <h3 class="t-h3 group-hover:underline group-hover:underline-offset-4">{title}</h3>
+      <p class="text-small text-stone">{text}</p>
+      <p class="mt-1 font-display text-small font-[650]"><span class="num">{fact}</span> {factLabel}</p>
+    </div>
+  </a>
+) : (
+  <a href={href} class={`group flex flex-col justify-between gap-6 rounded-md border border-line bg-white p-6 no-underline hover:border-ink ${cls}`}>
+    <div class="flex flex-col gap-2">
+      <h3 class="t-h3 group-hover:underline group-hover:underline-offset-4">{title}</h3>
+      <p class="text-small text-stone">{text}</p>
+    </div>
+    <p><span class="t-figure">{fact}</span><span class="mt-1 block text-small text-stone">{factLabel}</span></p>
+  </a>
+)}

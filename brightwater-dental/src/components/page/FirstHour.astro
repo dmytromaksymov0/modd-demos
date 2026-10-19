@@ -1,0 +1,69 @@
+---
+// "Your first hour, minute by minute" — a 60-minute dial (not a horizontal timeline):
+// each arc is proportional to the step. Hovering or opening a step lights its arc (CSS :has, no JS).
+const steps = [
+  { from: 0, to: 5, title: 'Welcome', text: 'Forms are already done online, so no clipboard. We read your comfort plan, offer a blanket and water, and you sit down within five minutes of arriving.' },
+  { from: 5, to: 10, title: 'Meet your chair', text: 'We agree on the stop signal — raise a hand and we stop. Headphones on if you want them. Nothing touches your teeth yet.' },
+  { from: 10, to: 20, title: 'X-rays', text: 'Low-dose digital X-rays: four small bitewings, plus a panoramic if you haven’t had one in five years. A lead-free thyroid collar, no film in your mouth.' },
+  { from: 20, to: 30, title: 'Exam, on the screen', text: 'The dentist looks at every tooth with a small camera and puts the pictures on the screen above you, so you see exactly what we see. Gums, bite, oral cancer screening.' },
+  { from: 30, to: 50, title: 'Cleaning', text: 'Your hygienist removes plaque and tartar, polishes and flosses. Sensitive? We use numbing gel and slow down. Gum disease found? We stop and explain before doing a deeper cleaning.' },
+  { from: 50, to: 57, title: 'Your plan, with prices', text: 'If you need anything else, you get a written plan with the price and what your insurance will likely pay — before any treatment is scheduled. No pressure to decide today.' },
+  { from: 57, to: 60, title: 'Out the door', text: 'We file your insurance claim. Book your next cleaning now or later — your choice.' },
+];
+const R = 120, C = 2 * Math.PI * R, GAP = 2.2;
+const arc = (from: number, to: number) => ({ len: ((to - from) / 60) * C - GAP, off: -((from / 60) * C) });
+---
+<section class="wrap py-(--spacing-section)" aria-labelledby="hour-h">
+  <div class="grid gap-10 lg:grid-cols-12 lg:gap-12">
+    <div class="flex flex-col gap-6 lg:col-span-5">
+      <p class="t-label text-stone">Your first visit</p>
+      <h2 id="hour-h" class="t-h1">Your first hour, minute by minute.</h2>
+      <p class="t-lead text-stone">No surprises is a promise we can only keep if you know the plan. Here is the whole $99 visit.</p>
+      <div class="dial relative mx-auto aspect-square w-full max-w-[22rem] lg:sticky lg:top-8 lg:mx-0">
+        <svg viewBox="0 0 300 300" class="size-full -rotate-90" aria-hidden="true">
+          <circle cx="150" cy="150" r={R} fill="none" stroke="var(--color-spring-25)" stroke-width="34" />
+          {steps.map((s, i) => {
+            const a = arc(s.from, s.to);
+            return <circle class={`seg seg-${i}`} cx="150" cy="150" r={R} fill="none" stroke-width="34" stroke-dasharray={`${a.len} ${C}`} stroke-dashoffset={a.off} />;
+          })}
+        </svg>
+        <div class="absolute inset-0 grid place-items-center text-center">
+          <div><p class="t-figure">60<span class="text-lead font-[650]"> min</span></p><p class="mt-1 text-small text-stone">exam · X-rays · cleaning</p></div>
+        </div>
+        {[0, 15, 30, 45].map((m) => {
+          const ang = (m / 60) * 2 * Math.PI - Math.PI / 2;
+          return <span class="absolute -translate-x-1/2 -translate-y-1/2 font-display text-label font-[650] text-stone" style={`left:${50 + Math.cos(ang) * 50.5}%;top:${50 + Math.sin(ang) * 50.5}%`} aria-hidden="true">{m === 0 ? '0' : m}</span>;
+        })}
+      </div>
+    </div>
+    <ol class="steps flex flex-col lg:col-span-7">
+      {steps.map((s, i) => (
+        <li class={`step step-${i} border-t border-line last:border-b`}>
+          <details open={i === 0}>
+            <summary class="grid min-h-16 cursor-pointer list-none grid-cols-[5.5rem_1fr_auto] items-center gap-4 py-4">
+              <span class="num text-small text-stone">{s.from}–{s.to} min</span>
+              <span class="font-display text-[1.25rem] font-[700] leading-tight">{s.title}</span>
+              <svg class="size-5 text-spring transition-transform" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="m6 9 6 6 6-6" /></svg>
+            </summary>
+            <p class="measure pb-5 pl-0 text-stone sm:pl-[6.5rem]">{s.text}</p>
+          </details>
+        </li>
+      ))}
+    </ol>
+  </div>
+</section>
+<style>
+  .seg { stroke: var(--color-spring); opacity: 0.35; transition: opacity var(--duration-base) var(--ease-out), stroke var(--duration-base); }
+  summary::-webkit-details-marker { display: none; }
+  details[open] summary svg { transform: rotate(180deg); }
+  .step:hover summary, details[open] summary { color: var(--color-ink); }
+  /* light the arc of every open or hovered step */
+  section:has(.step-0 details[open], .step-0:hover) .seg-0,
+  section:has(.step-1 details[open], .step-1:hover) .seg-1,
+  section:has(.step-2 details[open], .step-2:hover) .seg-2,
+  section:has(.step-3 details[open], .step-3:hover) .seg-3,
+  section:has(.step-4 details[open], .step-4:hover) .seg-4,
+  section:has(.step-5 details[open], .step-5:hover) .seg-5,
+  section:has(.step-6 details[open], .step-6:hover) .seg-6 { opacity: 1; }
+  section:has(.step-5:hover) .seg-5, section:has(.step-5 details[open]) .seg-5 { stroke: var(--color-sun); }
+</style>

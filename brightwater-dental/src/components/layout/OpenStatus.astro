@@ -1,0 +1,41 @@
+---
+// "Open now · until 7 pm" — computed in the visitor's browser against Austin time (America/Chicago).
+// Without JS it shows the plain weekly hours. Also positions every "now" marker in WeekLanes.
+import { hours } from '../../config/site';
+interface Props { class?: string; showHours?: boolean; short?: boolean }
+const { class: cls = '', showHours = false, short = false } = Astro.props;
+---
+<span class={`open-status inline-flex items-center gap-2 ${cls}`} data-open-status data-short={short ? '' : undefined}>
+  <span class="size-2.5 shrink-0 rounded-full bg-line-strong" data-dot aria-hidden="true"></span>
+  <span class="leading-tight">
+    <span class="font-display font-[650]" data-text>{hours.summary}</span>
+    {showHours && <span class="block text-label text-stone">{hours.summary}</span>}
+  </span>
+</span>
+<script>
+  import { hours } from '../../config/site';
+  import { nowIn, status } from '../../lib/hours';
+  function update() {
+    const { day, min } = nowIn(hours.tz);
+    const s = status(hours.days, day, min);
+    document.querySelectorAll<HTMLElement>('[data-open-status]').forEach((el) => {
+      el.querySelector('[data-text]')!.textContent = el.hasAttribute('data-short') ? s.short : s.text;
+      const dot = el.querySelector<HTMLElement>('[data-dot]')!;
+      dot.classList.toggle('bg-spring', s.open);
+      dot.classList.toggle('ring-4', s.open);
+      dot.classList.toggle('ring-spring-50', s.open);
+      dot.classList.toggle('bg-line-strong', !s.open);
+    });
+    // "now" markers on the week lanes: only on today's row and only inside the 7 am – 7 pm scale.
+    document.querySelectorAll<HTMLElement>('[data-now-day]').forEach((m) => {
+      const show = Number(m.dataset.nowDay) === day && min >= 420 && min <= 1140;
+      m.hidden = !show;
+      if (show) m.style.left = `${((min - 420) / 720) * 100}%`;
+    });
+    document.querySelectorAll<HTMLElement>('[data-today-day]').forEach((d) => {
+      d.toggleAttribute('data-today', Number(d.dataset.todayDay) === day);
+    });
+  }
+  update();
+  setInterval(update, 60_000);
+</script>

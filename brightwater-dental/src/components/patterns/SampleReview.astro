@@ -1,0 +1,10 @@
+---
+// Reviews are samples until launch — the label is part of the component, not optional.
+interface Props { quote: string; who: string; context: string; class?: string }
+const { quote, who, context, class: cls = '' } = Astro.props;
+---
+<figure class={`flex flex-col gap-3 rounded-md bg-spring-25 p-5 ${cls}`}>
+  <p class="text-label text-stone">Sample review — replaced with real Google reviews at launch</p>
+  <blockquote class="t-lead">“{quote}”</blockquote>
+  <figcaption class="text-small"><b class="font-display font-[650]">{who}</b> · <span class="text-stone">{context}</span></figcaption>
+</figure>

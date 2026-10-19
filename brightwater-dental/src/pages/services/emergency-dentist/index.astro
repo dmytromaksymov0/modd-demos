@@ -1,0 +1,9 @@
+---
+import ServiceLayout from '../../../components/page/ServiceLayout.astro';
+import Triage from '../../../components/page/Triage.astro';
+import { services } from '../../../data/services';
+const s = services.find((x) => x.slug === 'emergency-dentist')!;
+---
+<ServiceLayout coreFirst s={s} title="Emergency dentist in Austin — seen today | Brightwater Family Dental" description="Toothache, broken or knocked-out tooth, swelling? Same-day emergency visits in Mueller, Austin, open until 7 pm Mon–Thu and Saturdays. $59 exam + X-ray.">
+  <Triage />
+</ServiceLayout>

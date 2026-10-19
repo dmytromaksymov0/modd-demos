@@ -1,0 +1,25 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { site } from '../../config/site';
+const sections = [
+  ['This is a concept site', `Brightwater Family Dental is a fictional practice. This website was designed and built by modd. as a portfolio piece. Do not send real medical information through it.`],
+  ['What the booking form collects', 'Names, visit types, preferred times, comfort choices, insurance carrier and plan type, your phone number and (optionally) email. We use them only to arrange the appointment.'],
+  ['Health information', 'In a real practice, booking details become part of your dental record and are protected under HIPAA. We never ask for diagnoses, Social Security numbers or member IDs in the online form.'],
+  ['Texts and calls', 'We text to confirm or move an appointment. No marketing messages. Reply STOP at any time.'],
+  ['Cookies and analytics', 'This site sets no tracking cookies. If privacy-friendly analytics are switched on at launch, they count visits without identifying you.'],
+  ['Third parties', 'Booking requests are delivered to the practice’s secure messaging. We don’t sell or share your details.'],
+  ['Questions', `Email ${site.email} or call ${site.phone.display}.`],
+];
+---
+<BaseLayout title="Privacy | Brightwater Family Dental" description="How Brightwater Family Dental handles the information you send through this website.">
+  <section class="wrap py-12 lg:py-16" data-hero>
+    <p class="t-label text-stone">Privacy</p>
+    <h1 class="t-h1 mt-3">Privacy, in plain English</h1>
+    <p class="t-lead measure mt-4 text-stone">Last updated October 19, 2026.</p>
+  </section>
+  <div class="wrap pb-(--spacing-section)">
+    <div class="measure flex flex-col gap-8">
+      {sections.map(([h, t]) => <section class="flex flex-col gap-2"><h2 class="t-h3">{h}</h2><p class="text-stone">{t}</p></section>)}
+    </div>
+  </div>
+</BaseLayout>

@@ -1,0 +1,212 @@
+---
+// Book Online — signature moments A (family booking), C (comfort plan) and B (insurance) in one form.
+// Without JS it is a plain POST form with a "preferred time" choice; with JS (src/lib/book-ui.ts,
+// loaded on idle or first interaction) it shows real days and side-by-side times and reads prefill
+// hints from the URL (?crew, ?visit, ?day, ?comfort, ?insurance, ?doctor). Submission → phase 5.
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Rope from '../../components/ui/Rope.astro';
+import OpenStatus from '../../components/layout/OpenStatus.astro';
+import { visitTypes } from '../../lib/booking';
+import { carriers } from '../../lib/insurance';
+import { team } from '../../data/team';
+import { site, hours, prices } from '../../config/site';
+
+const comforts = [
+  ['sounds', 'The sounds', 'Noise-canceling headphones, your playlist'],
+  ['needles', 'Needles', 'Numbing gel first, always; we tell you before each step'],
+  ['control', 'Feeling out of control', 'A hand signal that stops everything'],
+  ['gagging', 'Gagging', 'Smaller X-ray sensors, a scan instead of trays, breaks'],
+  ['judged', 'Being judged', 'No comments about how long it’s been'],
+  ['bills', 'Surprise bills', 'Every price in writing before treatment'],
+] as const;
+const field = 'h-12 w-full min-w-0 rounded-sm border border-line-strong bg-white px-3.5 text-body text-ink placeholder:text-stone/80 hover:border-ink focus:border-spring';
+const people = [0, 1, 2, 3, 4];
+---
+<BaseLayout stickyBar={false} title="Book online — the whole family in one go | Brightwater Family Dental" description="Book everyone at once: pick who’s coming, a weeknight or Saturday time side by side, your comfort plan and your insurance. We confirm by text in 15 minutes.">
+  <section class="wrap pb-6 pt-8 lg:pt-12" data-hero aria-labelledby="book-h">
+    <p class="t-label text-stone">Book online</p>
+    <h1 id="book-h" class="t-h1 mt-3 max-w-[20ch]">Book the whole crew in one go.</h1>
+    <p class="t-lead measure mt-4 text-stone">About a minute. We text to confirm within 15 minutes during office hours — <OpenStatus class="align-middle" />.</p>
+  </section>
+
+  <script is:inline>(function(){var c=new URLSearchParams(location.search).get("crew");document.documentElement.dataset.crew=c==="family"?"3":c==="kids"?"2":"1"})()</script>
+  <form id="booking" action="/api/lead" method="post" class="wrap grid grid-cols-1 gap-8 pb-(--spacing-section) lg:grid-cols-12 lg:gap-12" data-booking data-book novalidate>
+    <input type="hidden" name="form" value="booking" />
+    <div class="flex min-w-0 flex-col gap-6 lg:col-span-8">
+
+      <!-- 1 · Who -->
+      <fieldset class="step min-w-0 rounded-lg bg-white p-5 sm:p-8">
+        <legend class="sr-only">Who’s coming in</legend>
+        <p class="step-head"><span class="step-n" aria-hidden="true">1</span><span class="font-display text-[1.5rem] font-[750]">Who’s coming in?</span></p>
+        <p class="mt-2 text-small text-stone">Up to three people side by side; four or five back-to-back. One set of contact details for everyone.</p>
+        <ul class="mt-5 flex flex-col" data-people>
+          {people.map((i) => {
+            const row = (
+              <li class="person grid gap-3 py-3 sm:grid-cols-[1fr_1.3fr_5.5rem] sm:items-end" data-person={i} data-optional={i > 0 ? '' : undefined}>
+                <div class="flex flex-col gap-1.5">
+                  <label for={`p${i}-name`} class="t-label">{i === 0 ? 'First name' : `Person ${i + 1}`}{i > 0 && <span class="font-normal text-stone"> · optional</span>}</label>
+                  <input id={`p${i}-name`} name={`p${i}_name`} class={field} autocomplete={i === 0 ? 'given-name' : 'off'} placeholder={['Sam', 'Leo', 'Mia', '', ''][i]} required={i === 0} />
+                  {i === 0 && <p id="p0-name-error" class="field-error text-small font-[650] text-alert empty:hidden" role="alert"></p>}
+                </div>
+                <div class="flex flex-col gap-1.5">
+                  <label for={`p${i}-visit`} class="t-label">Visit</label>
+                  <select id={`p${i}-visit`} name={`p${i}_visit`} class={`${field} appearance-none bg-[length:1.25rem] bg-[right_0.75rem_center] bg-no-repeat pr-10`} style="background-image:url(&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%235B6B67' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E&quot;)">
+                    {visitTypes.map((v) => <option value={v.id} selected={(i === 0 && v.id === 'new') || (i > 0 && v.id === 'kids')}>{v.label}</option>)}
+                  </select>
+                </div>
+                {i === 0 ? <span class="hidden w-[5.5rem] sm:block" aria-hidden="true"></span> : <button type="button" class="remove hidden min-h-12 justify-center rounded-full px-3 font-display text-small font-[650] text-stone underline underline-offset-4 hover:text-ink" data-remove aria-label={`Remove person ${i + 1}`}>Remove</button>}
+              </li>
+            );
+            return i < 3 ? row : null;
+          })}
+          <li><details class="more-people" data-more>
+            <summary class="flex min-h-12 cursor-pointer list-none items-center font-display font-[650] text-spring">+ More than three people</summary>
+            <ul>{people.slice(3).map((i) => (
+              <li class="person grid gap-3 py-3 sm:grid-cols-[1fr_1.3fr_5.5rem] sm:items-end" data-person={i} data-optional>
+                <div class="flex flex-col gap-1.5"><label for={`p${i}-name`} class="t-label">Person {i + 1}<span class="font-normal text-stone"> · optional</span></label><input id={`p${i}-name`} name={`p${i}_name`} class={field} autocomplete="off" /></div>
+                <div class="flex flex-col gap-1.5"><label for={`p${i}-visit`} class="t-label">Visit</label>
+                  <select id={`p${i}-visit`} name={`p${i}_visit`} class={field}>{visitTypes.map((v) => <option value={v.id} selected={v.id === 'kids'}>{v.label}</option>)}</select></div>
+                <button type="button" class="remove hidden min-h-12 justify-center rounded-full px-3 font-display text-small font-[650] text-stone underline underline-offset-4 hover:text-ink" data-remove aria-label={`Remove person ${i + 1}`}>Remove</button>
+              </li>))}</ul>
+          </details></li>
+        </ul>
+        <p id="people-error" class="field-error text-small font-[650] text-alert empty:hidden" role="alert"></p>
+        <button type="button" class="mt-2 hidden min-h-12 items-center gap-2 font-display font-[650] text-spring" data-add>
+          <svg class="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14" /></svg>Add someone
+        </button>
+      </fieldset>
+
+      <!-- 2 · When -->
+      <fieldset class="step min-w-0 rounded-lg bg-white p-5 sm:p-8" data-when>
+        <legend class="sr-only">When</legend>
+        <p class="step-head"><span class="step-n" aria-hidden="true">2</span><span class="font-display text-[1.5rem] font-[750]">When?</span></p>
+        <div class="mt-5 grid gap-2 sm:grid-cols-2" data-pref>
+          {[['first', 'First available'], ['evening', 'Weeknight, after 4:30 pm'], ['saturday', 'Saturday morning'], ['day', 'Weekday daytime']].map(([v, l], i) => (
+            <label class="flex min-h-12 cursor-pointer items-center gap-3 rounded-sm border border-line-strong px-4 font-display font-[600] has-checked:border-spring has-checked:bg-spring-50 has-focus-visible:outline-3 has-focus-visible:outline-ink">
+              <input type="radio" name="preferred" value={v} checked={i === 0} class="size-4 accent-[var(--color-spring)]" />{l}
+            </label>
+          ))}
+          <p class="text-small text-stone sm:col-span-2">We’ll text you two exact times that fit everyone.</p>
+        </div>
+        <div class="mt-5 hidden flex-col gap-5" data-calendar>
+          <div class="-mx-5 overflow-x-auto px-5 sm:-mx-8 sm:px-8" data-days-scroll>
+            <div class="flex gap-2 pb-2" role="radiogroup" aria-label="Day" data-days></div>
+          </div>
+          <div class="flex flex-col gap-4" data-times aria-live="polite"></div>
+          <div class="hidden rounded-md bg-spring-25 p-4" data-lanes></div>
+        </div>
+        <p id="when-error" class="field-error text-small font-[650] text-alert empty:hidden" role="alert"></p>
+        <input type="hidden" name="date" data-date /><input type="hidden" name="time" data-time /><input type="hidden" name="mode" data-mode />
+      </fieldset>
+
+      <!-- 3 · Comfort (C) -->
+      <fieldset class="step min-w-0 rounded-lg bg-spring-25 p-5 sm:p-8" id="comfort">
+        <legend class="sr-only">Comfort plan</legend>
+        <p class="step-head"><span class="step-n" aria-hidden="true">3</span><span class="font-display text-[1.5rem] font-[750] leading-tight">Your comfort plan</span><span class="ml-auto rounded-full bg-white px-3 py-1 text-label font-normal text-stone">optional</span></p>
+        <p class="mt-2 text-stone">What makes the dentist hard for you? Pick any — it goes on your chart before you sit down.</p>
+        <div class="mt-5 grid gap-2 sm:grid-cols-2">
+          {comforts.map(([v, l, d]) => (
+            <label class="flex min-h-14 cursor-pointer items-start gap-3 rounded-md border border-line-strong bg-white p-4 has-checked:border-spring has-checked:ring-2 has-checked:ring-spring has-focus-visible:outline-3 has-focus-visible:outline-ink">
+              <input type="checkbox" name="comfort" value={v} class="mt-1 size-4 shrink-0 accent-[var(--color-spring)]" />
+              <span><b class="block font-display font-[650]">{l}</b><span class="text-small text-stone">{d}</span></span>
+            </label>
+          ))}
+        </div>
+        <label class="mt-3 flex min-h-12 cursor-pointer items-center gap-3 font-display font-[600]">
+          <input type="checkbox" name="sedation" value="ask" class="size-4 accent-[var(--color-spring)]" />Ask me about nitrous or oral sedation
+        </label>
+      </fieldset>
+
+      <!-- 4 · Insurance (B) + dentist -->
+      <fieldset class="step min-w-0 rounded-lg bg-white p-5 sm:p-8">
+        <legend class="sr-only">Insurance and dentist</legend>
+        <p class="step-head"><span class="step-n" aria-hidden="true">4</span><span class="font-display text-[1.5rem] font-[750]">Insurance & dentist</span></p>
+        <div class="mt-5 grid gap-4 sm:grid-cols-2">
+          <div class="flex flex-col gap-1.5">
+            <label for="b-carrier" class="t-label">Dental insurance</label>
+            <select id="b-carrier" name="carrier" class={field}>{carriers.map((c) => <option value={c.id}>{c.label}</option>)}</select>
+          </div>
+          <div class="flex flex-col gap-1.5">
+            <label for="b-plan" class="t-label">Plan type</label>
+            <select id="b-plan" name="plan" class={field}><option value="ppo">PPO</option><option value="dhmo">DHMO</option><option value="unsure">Not sure</option></select>
+          </div>
+          <p class="text-small text-stone sm:col-span-2" data-ins-note>We check your benefits before you come in. Estimate only — exact benefits confirmed before your visit.</p>
+          <div class="flex flex-col gap-1.5 sm:col-span-2">
+            <label for="b-doctor" class="t-label">Dentist</label>
+            <select id="b-doctor" name="doctor" class={field}><option value="">Any — earliest time</option>{team.map((d) => <option value={d.slug}>{d.name}{'languages' in d ? ' · español' : ''}</option>)}</select>
+          </div>
+        </div>
+      </fieldset>
+
+      <!-- 5 · Contact -->
+      <fieldset class="step min-w-0 rounded-lg bg-white p-5 sm:p-8">
+        <legend class="sr-only">Contact</legend>
+        <p class="step-head"><span class="step-n" aria-hidden="true">5</span><span class="font-display text-[1.5rem] font-[750]">Your contact details</span></p>
+        <div class="mt-5 grid gap-4 sm:grid-cols-2">
+          <div class="flex flex-col gap-1.5"><label for="b-name" class="t-label">Your full name</label><input id="b-name" name="name" class={field} autocomplete="name" required aria-describedby="name-error" /><p id="name-error" class="field-error text-small font-[650] text-alert empty:hidden" role="alert"></p></div>
+          <div class="flex flex-col gap-1.5"><label for="b-phone" class="t-label">Mobile phone</label><input id="b-phone" name="phone" type="tel" class={field} autocomplete="tel" inputmode="tel" placeholder="(512) 555-0123" required aria-describedby="b-phone-hint phone-error" /><p id="b-phone-hint" class="text-small text-stone">We text to confirm — no marketing.</p><p id="phone-error" class="field-error text-small font-[650] text-alert empty:hidden" role="alert"></p></div>
+          <div class="flex flex-col gap-1.5 sm:col-span-2"><label for="b-email" class="t-label">Email <span class="font-normal text-stone">· optional, for forms and reminders</span></label><input id="b-email" name="email" type="email" class={field} autocomplete="email" aria-describedby="email-error" /><p id="email-error" class="field-error text-small font-[650] text-alert empty:hidden" role="alert"></p></div>
+          <div class="hidden" aria-hidden="true"><label for="b-company">Company</label><input id="b-company" name="company" tabindex="-1" autocomplete="off" /></div>
+        </div>
+        <div id="form-error" class="form-error mt-6 rounded-md bg-alert-50 p-4 text-small font-[650] text-alert" role="alert" tabindex="-1" data-form-error>Something in the form needs a look — please check the fields above, or call us at {site.phone.display}.</div>
+        <button type="submit" data-submit class="mt-6 inline-flex min-h-14 w-full items-center justify-center rounded-full bg-spring px-7 font-display text-lead font-[650] text-white hover:bg-spring-ink sm:w-auto">Request these times</button>
+        <p class="mt-3 text-small text-stone">Nothing is charged online. Can’t make it? Reply to the text to move it.</p>
+      </fieldset>
+    </div>
+
+    <!-- Summary -->
+    <aside class="lg:col-span-4" aria-label="Your booking">
+      <div class="flex flex-col gap-4 rounded-lg border border-line bg-white p-5 sm:p-6 lg:sticky lg:top-6">
+        <p class="font-display text-[1.25rem] font-[750]">Your booking</p>
+        <ul class="flex flex-col" data-sum-people><li class="py-2 text-small text-stone">Add who’s coming in.</li></ul>
+        <Rope variant="quiet" />
+        <p class="text-small" data-sum-when><b class="font-display">When:</b> <span class="text-stone">first available</span></p>
+        <p class="text-small" data-sum-comfort><b class="font-display">Comfort plan:</b> <span class="text-stone">none yet</span></p>
+        <p class="text-small" data-sum-ins><b class="font-display">Insurance:</b> <span class="text-stone">we’ll check</span></p>
+        <div class="border-t border-line pt-4 text-small text-stone">
+          <p>New patient without insurance: <b class="num text-ink">${prices.newPatient}</b> per person. Kids’ cleanings with PPO: usually <b class="num text-ink">$0</b>.</p>
+          <p class="mt-2">{site.address.street}, {site.address.city} · <a href={site.phone.href} class="font-display font-[650] text-ink tabular-nums">{site.phone.display}</a></p>
+          <p class="mt-1">{hours.summary}</p>
+        </div>
+      </div>
+    </aside>
+  </form>
+</BaseLayout>
+<style is:global>
+  .form-error { display: none; }
+  .form-error:target, .form-error.is-shown { display: block; }
+  [data-book] [aria-invalid='true'] { border-color: var(--color-alert); background: var(--color-alert-50); }
+  .step-head { display: flex; align-items: center; gap: 0.75rem; line-height: 1.15; }
+  [data-book] select:not([multiple]) { appearance: none; padding-right: 2.5rem; background: var(--color-white) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%235B6B67' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E") no-repeat right 0.75rem center / 1.25rem; }
+  .step-n { display: grid; place-items: center; width: 2.25rem; height: 2.25rem; border-radius: 9999px; background: var(--color-ink); color: var(--color-white); font-family: var(--font-display); font-weight: 750; flex: none; }
+  .more-people summary::-webkit-details-marker { display: none; }
+  .js [data-book] [data-optional].is-empty { display: none; }
+  /* Before book-ui runs, the inline script below sets html[data-crew] from ?crew so the right rows are
+     already shown at first paint (no layout shift when the module arrives). */
+  html.js:not([data-book-ready]) [data-book] [data-optional] { display: none; }
+  html.js[data-crew='2']:not([data-book-ready]) [data-book] [data-person='1'],
+  html.js[data-crew='3']:not([data-book-ready]) [data-book] [data-person='1'],
+  html.js[data-crew='3']:not([data-book-ready]) [data-book] [data-person='2'] { display: grid; }
+  .js [data-book] [data-add] { display: inline-flex; }
+  .js [data-book] [data-add].is-full { display: none; }
+  .js [data-book] .remove { display: inline-flex; }
+  .js [data-book] [data-more] > summary { display: none; }
+  .js [data-book] [data-pref] { display: none; }
+  .js [data-book] [data-calendar] { display: flex; min-height: 34rem; }
+  @media (min-width: 40rem) { .js [data-book] [data-calendar] { min-height: 24rem; } }
+  [data-book] .day, [data-book] .time { border-color: var(--color-line-strong); background: var(--color-white); color: var(--color-ink); cursor: pointer; }
+  [data-book] .day[data-sat] { background: var(--color-sun-50); }
+  [data-book] .day:hover:not(:disabled), [data-book] .time:hover { border-color: var(--color-ink); }
+  [data-book] .day[aria-checked='true'], [data-book] .time[aria-checked='true'] { background: var(--color-ink); border-color: var(--color-ink); color: var(--color-white); }
+  [data-book] .day[aria-checked='true'] .text-stone, [data-book] .time[aria-checked='true'] .text-stone { color: var(--color-mist); }
+  [data-book] .day:disabled { opacity: 0.45; cursor: not-allowed; }
+</style>
+<script>
+  const form = document.querySelector<HTMLFormElement>('[data-book]');
+  if (form) {
+    let started = false;
+    const start = () => { if (started) return; started = true; import('../../lib/book-ui').then((m) => m.init(form)); };
+    ['pointerdown', 'focusin', 'keydown'].forEach((e) => form.addEventListener(e, start, { once: true }));
+    ('requestIdleCallback' in window ? requestIdleCallback : setTimeout)(start as () => void, { timeout: 1200 } as never);
+  }
+</script>

@@ -1,0 +1,67 @@
+---
+// Section 2 — the clinic on the first scroll (the hero is shot at home) + how family booking works.
+// Three chair lanes on one Saturday hour; steps are a real sequence, so they are numbered.
+import Photo from '../ui/Photo.astro';
+import Button from '../ui/Button.astro';
+import room from '../../assets/photos/clinic-operatory.jpg';
+const lanes = [
+  { chair: 'Chair 1', who: 'Sam, 38', what: 'Cleaning & exam', from: 0, to: 55 },
+  { chair: 'Chair 2', who: 'Leo, 6', what: "Kids' cleaning", from: 0, to: 35 },
+  { chair: 'Chair 3', who: 'Mia, 8', what: "Kids' cleaning", from: 0, to: 35 },
+];
+const steps = [
+  ['Who’s coming in', 'Add everyone — kids, partner, grandma. Each gets their own visit type.'],
+  ['Pick a day', 'Weeknights until 7 pm or Saturday 8–2. We show days where everyone fits.'],
+  ['Side by side or back-to-back', 'Up to three chairs at once, or one after another after school.'],
+  ['One set of contact details', 'One name, one phone. We text to confirm in 15 minutes during office hours.'],
+];
+---
+<section class="wrap py-(--spacing-section)" aria-labelledby="family-h">
+  <!-- DOM order = mobile order: heading → clinic photo → lanes → steps. Desktop: media left, text right. -->
+  <div class="grid gap-x-12 gap-y-8 lg:grid-cols-12 lg:grid-rows-[auto_1fr]">
+    <div class="flex flex-col gap-5 lg:col-span-5 lg:col-start-8 lg:row-start-1 lg:pt-4">
+      <p class="t-label text-stone">Family booking</p>
+      <h2 id="family-h" class="t-h1">Book the whole crew in one go.</h2>
+      <p class="t-lead text-stone">Most offices book one person at a time. We book families — the way you actually live.</p>
+    </div>
+    <div class="lg:col-span-7 lg:col-start-1 lg:row-span-2 lg:row-start-1">
+      <div class="aspect-[3/2] overflow-hidden rounded-lg">
+        <Photo src={room} alt="A bright treatment room at Brightwater with a wood floor, a white chair and daylight" widths={[480, 720, 960, 1280, 1600]} sizes="(min-width: 86rem) 48rem, (min-width: 64rem) 56vw, 100vw" position="50% 55%" />
+      </div>
+      <figure class="mt-6 rounded-md border border-line bg-white p-5 sm:p-6" aria-labelledby="lanes-cap">
+        <figcaption id="lanes-cap" class="flex flex-wrap items-baseline justify-between gap-2">
+          <span class="font-display text-[1.25rem] font-[750] leading-tight">Saturday, 9:00 — three chairs, one hour</span>
+          <span class="text-small text-stone">Everyone out by <span class="num">10:00</span></span>
+        </figcaption>
+        <div class="mt-4 grid grid-cols-[4.25rem_1fr] gap-x-3 gap-y-2.5 text-small">
+          <span></span>
+          <div class="flex justify-between text-label font-normal text-stone" aria-hidden="true"><span>9:00</span><span>9:30</span><span>10:00</span></div>
+          {lanes.map((l) => (
+            <>
+              <span class="self-center font-display font-[650] leading-tight"><span class="sm:hidden">{l.who}</span><span class="hidden sm:inline">{l.chair}</span></span>
+              <div class="relative h-11 rounded-sm bg-spring-25">
+                <div class="absolute inset-y-1 flex items-center overflow-hidden rounded-[0.375rem] bg-spring px-3 text-white" style={`left:${(l.from / 60) * 100}%;width:${((l.to - l.from) / 60) * 100}%`}>
+                  <span class="truncate"><b class="hidden font-display font-[650] sm:inline">{l.who} · </b>{l.what}</span>
+                </div>
+              </div>
+            </>
+          ))}
+        </div>
+      </figure>
+    </div>
+    <div class="flex flex-col gap-6 lg:col-span-5 lg:col-start-8 lg:row-start-2">
+      <ol class="grid gap-5">
+        {steps.map(([t, d], i) => (
+          <li class="grid grid-cols-[2.5rem_1fr] gap-3">
+            <span class="grid size-10 place-items-center rounded-full bg-spring-50 font-display font-[750] text-spring-ink" aria-hidden="true">{i + 1}</span>
+            <div><p class="font-display text-[1.125rem] font-[700] leading-snug">{t}</p><p class="text-small text-stone">{d}</p></div>
+          </li>
+        ))}
+      </ol>
+      <div class="flex flex-wrap items-center gap-4 pt-2">
+        <Button href="/book/?crew=family" size="lg">Book for my family</Button>
+        <a href="/book/" class="inline-flex min-h-11 items-center font-display font-[650] text-spring underline decoration-2 decoration-spring/40 underline-offset-4 hover:decoration-spring">Just me</a>
+      </div>
+    </div>
+  </div>
+</section>

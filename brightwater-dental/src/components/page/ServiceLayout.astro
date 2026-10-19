@@ -1,0 +1,74 @@
+---
+// Shared skeleton for the four service pages: hero + facts → who it's for → steps with time →
+// the page's own core block (slot) → comfort → price & coverage → FAQ → CTA with the visit type prefilled.
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHero from './PageHero.astro';
+import Faq from './Faq.astro';
+import CtaBand from './CtaBand.astro';
+import Button from '../ui/Button.astro';
+import type { Service } from '../../data/services';
+import { breadcrumbs } from '../../lib/schema';
+interface Props { s: Service; title: string; description: string; coreFirst?: boolean }
+const { s, title, description, coreFirst = false } = Astro.props;
+const book = `/book/?visit=${s.visit}`;
+---
+<BaseLayout title={title} description={description} schema={breadcrumbs(Astro.site, [{ name: 'Services', path: '/services/' }, { name: s.title, path: `/services/${s.slug}/` }])}>
+  <PageHero label={s.title} parent={{ label: 'Services', href: '/services/' }} title={s.title} lead={s.lead} photo={s.photo} alt={s.alt} position={s.position}>
+    <dl class="grid grid-cols-3 gap-3 border-y border-line py-4">
+      {s.facts.map(([v, l]) => (
+        <div class="flex flex-col gap-1"><dt class="sr-only">{l}</dt><dd class="font-display text-[clamp(1.375rem,1.1rem+1vw,2rem)] font-[800] leading-none tracking-[-0.03em]">{v}</dd><dd class="text-label font-normal text-stone">{l}</dd></div>
+      ))}
+    </dl>
+    <div class="flex flex-wrap gap-3">
+      <Button href={book} size="lg">Book {s.visit === 'emergency' ? 'an emergency visit' : 'online'}</Button>
+      <Button href="/insurance-financing/#check" variant="secondary" size="lg">Check my insurance</Button>
+    </div>
+  </PageHero>
+
+  {coreFirst && <slot />}
+
+  <section class="bg-white py-(--spacing-section)" aria-labelledby="how-h">
+    <div class="wrap grid gap-10 lg:grid-cols-12 lg:gap-12">
+      <div class="flex flex-col gap-5 lg:col-span-4">
+        <h2 class="t-h3">Who it’s for</h2>
+        <ul class="grid gap-3">
+          {s.forWho.map((w) => <li class="flex gap-3 text-body"><span class="mt-2.5 size-2 shrink-0 rounded-full bg-spring" aria-hidden="true"></span>{w}</li>)}
+        </ul>
+      </div>
+      <div class="flex flex-col gap-6 lg:col-span-8">
+        <h2 id="how-h" class="t-h2">How the visit goes</h2>
+        <ol class="grid gap-0 border-t border-line">
+          {s.steps.map((st, i) => (
+            <li class="grid grid-cols-[2.5rem_1fr] gap-x-4 gap-y-1 border-b border-line py-5 sm:grid-cols-[2.5rem_1fr_8rem]">
+              <span class="grid size-10 place-items-center rounded-full bg-spring-50 font-display font-[750] text-spring-ink" aria-hidden="true">{i + 1}</span>
+              <div><p class="font-display text-[1.1875rem] font-[700] leading-snug">{st.t}</p><p class="text-small text-stone">{st.d}</p></div>
+              <p class="col-start-2 text-small font-[700] text-spring-ink sm:col-start-3 sm:text-right"><span class="num">{st.time}</span></p>
+            </li>
+          ))}
+        </ol>
+      </div>
+    </div>
+  </section>
+
+  {!coreFirst && <slot />}
+
+  <section class="wrap py-(--spacing-section)" aria-labelledby="price-h">
+    <div class="grid gap-6 lg:grid-cols-12">
+      <div class="flex flex-col gap-4 rounded-lg bg-spring-25 p-6 sm:p-10 lg:col-span-5">
+        <p class="t-label text-stone">For the nervous</p>
+        <p class="font-display text-[1.5rem] font-[750] leading-tight">Nothing happens until you say go.</p>
+        <p class="text-stone">{s.comfort}</p>
+        <a href="/#comfort-h" class="inline-flex min-h-11 items-center self-start font-display font-[650] text-spring underline decoration-2 decoration-spring/40 underline-offset-4">How comfort plans work</a>
+      </div>
+      <div class="flex flex-col gap-5 rounded-lg border border-line bg-white p-6 sm:p-10 lg:col-span-7">
+        <h2 id="price-h" class="t-label text-stone">Price & insurance</h2>
+        <p class="flex flex-wrap items-baseline gap-x-3"><span class="t-figure">{s.price.amount}</span><span class="text-small font-[700]">{s.price.label}</span></p>
+        <ul class="grid gap-2 text-small">{s.price.lines.map((l) => <li class="flex gap-3"><span class="mt-2 size-1.5 shrink-0 rounded-full bg-stone" aria-hidden="true"></span>{l}</li>)}</ul>
+        <p class="text-label font-normal text-stone">Estimate only — we confirm your exact benefits before your visit.</p>
+      </div>
+    </div>
+  </section>
+
+  <Faq items={s.faq} />
+  <CtaBand title={s.visit === 'emergency' ? 'In pain? Let’s get you seen today.' : 'Book it in about a minute.'} href={book} label={s.visit === 'emergency' ? 'Book an emergency visit' : 'Book online'} />
+</BaseLayout>

@@ -1,0 +1,52 @@
+---
+// Brightwater Plan family calculator. Default family (2 adults, 2 kids) is rendered at build time,
+// so the numbers are right without JS; with JS the steppers recalculate.
+import { yearly, cash } from '../../lib/plan';
+import { prices } from '../../config/site';
+const d = yearly(2, 2);
+const money = (n: number) => `$${n.toLocaleString('en-US')}`;
+---
+<form class="grid gap-6 rounded-lg bg-white p-6 sm:p-8" data-plan-calc aria-labelledby="calc-h" onsubmit="return false">
+  <h3 id="calc-h" class="font-display text-[1.5rem] font-[750] leading-tight">Your family, one year</h3>
+  <div class="grid gap-4 sm:grid-cols-2">
+    {[['adults', 'Adults', 2, `$${prices.planAdult}/mo each`], ['kids', 'Kids under 18', 2, `$${prices.planKid}/mo each`]].map(([n, l, v, hint]) => (
+      <div class="flex flex-col gap-2">
+        <label for={`calc-${n}`} class="t-label">{l}</label>
+        <div class="grid grid-cols-[3rem_1fr_3rem] overflow-hidden rounded-sm border border-line-strong">
+          <button type="button" class="min-h-12 font-display text-[1.25rem] font-[700] hover:bg-spring-25" data-step={`${n}:-1`} aria-label={`One fewer ${String(l).toLowerCase()}`}>−</button>
+          <input id={`calc-${n}`} name={String(n)} type="number" inputmode="numeric" min="0" max="8" value={v} class="min-w-0 border-x border-line-strong text-center font-display text-[1.25rem] font-[750] [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none" />
+          <button type="button" class="min-h-12 font-display text-[1.25rem] font-[700] hover:bg-spring-25" data-step={`${n}:1`} aria-label={`One more ${String(l).toLowerCase()}`}>+</button>
+        </div>
+        <p class="text-label font-normal text-stone">{hint}</p>
+      </div>
+    ))}
+  </div>
+  <dl class="grid gap-0 border-t border-line" aria-live="polite">
+    <div class="flex items-baseline justify-between gap-4 border-b border-line py-3"><dt class="text-small">Cleanings, exams & X-rays without a plan</dt><dd class="num text-lead font-[700] text-stone line-through decoration-1" data-without>{money(d.without)}</dd></div>
+    <div class="flex items-baseline justify-between gap-4 border-b border-line py-3"><dt class="text-small">With the Brightwater Plan</dt><dd class="num text-lead font-[750]" data-plan>{money(d.plan)}</dd></div>
+    <div class="flex items-baseline justify-between gap-4 py-3"><dt class="font-display font-[700]">You keep</dt><dd class="t-figure text-spring" data-saved>{money(d.saved)}</dd></div>
+  </dl>
+  <p class="text-small text-stone">That’s <b class="num text-ink" data-month>{money(d.perMonth)}</b> a month for the family — plus 15% off fillings, crowns and everything else. Cash prices used: cleaning & exam {money(cash.adult.visit)} adult / {money(cash.kid.visit)} kid per visit, X-rays {money(cash.adult.xrays)} / {money(cash.kid.xrays)} a year.</p>
+</form>
+<script>
+  import { yearly } from '../../lib/plan';
+  const money = (n: number) => `$${n.toLocaleString('en-US')}`;
+  document.querySelectorAll<HTMLFormElement>('[data-plan-calc]').forEach((f) => {
+    const a = f.querySelector<HTMLInputElement>('[name=adults]')!, k = f.querySelector<HTMLInputElement>('[name=kids]')!;
+    const clamp = (el: HTMLInputElement) => { el.value = String(Math.max(0, Math.min(8, Number(el.value) || 0))); };
+    const render = () => {
+      clamp(a); clamp(k);
+      const y = yearly(Number(a.value), Number(k.value));
+      f.querySelector('[data-without]')!.textContent = money(y.without);
+      f.querySelector('[data-plan]')!.textContent = money(y.plan);
+      f.querySelector('[data-saved]')!.textContent = money(Math.max(0, y.saved));
+      f.querySelector('[data-month]')!.textContent = money(y.perMonth);
+    };
+    f.addEventListener('click', (e) => {
+      const b = (e.target as HTMLElement).closest<HTMLButtonElement>('[data-step]'); if (!b) return;
+      const [n, d] = b.dataset.step!.split(':'); const el = n === 'adults' ? a : k;
+      el.value = String(Number(el.value) + Number(d)); render();
+    });
+    f.addEventListener('input', render);
+  });
+</script>

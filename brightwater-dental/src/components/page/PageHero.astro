@@ -1,0 +1,27 @@
+---
+// Inner-page hero: label (with optional parent link), H1, lead, CTAs, optional photo or slot content.
+import type { ImageMetadata } from 'astro';
+import Photo from '../ui/Photo.astro';
+interface Props { label: string; parent?: { label: string; href: string }; title: string; lead: string; photo?: ImageMetadata; alt?: string; position?: string; quality?: number; class?: string }
+const { label, parent, title, lead, photo, alt = '', position = '50% 50%', quality = 55, class: cls = '' } = Astro.props;
+const hasAside = !!photo || Astro.slots.has('aside');
+---
+<section class={`wrap grid gap-8 pb-12 pt-8 lg:grid-cols-12 lg:gap-x-12 lg:pb-16 lg:pt-14 ${cls}`} data-hero aria-labelledby="page-h">
+  <div class={`flex flex-col gap-5 ${hasAside ? 'lg:col-span-6' : 'lg:col-span-9'}`}>
+    <p class="t-label text-stone">
+      {parent && <><a href={parent.href} class="inline-flex min-h-11 items-center underline decoration-1 underline-offset-4 hover:text-ink">{parent.label}</a><span aria-hidden="true"> / </span></>}{label}
+    </p>
+    <h1 id="page-h" class="t-h1 max-w-[18ch]">{title}</h1>
+    <p class="t-lead measure text-stone">{lead}</p>
+    <slot />
+  </div>
+  {hasAside && (
+    <div class="lg:col-span-6">
+      {photo ? (
+        <div class="aspect-[3/2] overflow-hidden rounded-md lg:rounded-lg">
+          <Photo src={photo} alt={alt} priority quality={quality} widths={[480, 720, 960, 1280, 1600]} sizes="(min-width: 86rem) 41rem, (min-width: 64rem) 48vw, 100vw" position={position} />
+        </div>
+      ) : <slot name="aside" />}
+    </div>
+  )}
+</section>

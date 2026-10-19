@@ -1,0 +1,62 @@
+---
+// "Am I covered?" — signature moment B. Works as a plain GET form without JS (goes to the
+// Insurance & Financing page); with JS the answer updates in place. The JS module is imported
+// only on the first interaction with the form.
+import { carriers, answer } from '../../lib/insurance';
+interface Props { class?: string; id?: string; headingLevel?: 'h2' | 'h3' }
+const { class: cls = '', id, headingLevel: H = 'h3' } = Astro.props;
+const a = answer('delta', 'ppo');
+---
+<form id={id} action="/insurance-financing/" method="get" class={`scroll-mt-24 grid gap-5 rounded-md bg-white p-5 sm:p-7 ${cls}`} data-insurance aria-labelledby="ins-h">
+  <div class="flex items-baseline justify-between gap-3">
+    <H id="ins-h" class="font-display text-[1.5rem] font-[750] leading-tight tracking-[-0.02em]">Am I covered?</H>
+    <span class="text-small text-stone">Answer in 10 seconds</span>
+  </div>
+  <div class="grid gap-1.5">
+    <label for="ins-carrier" class="t-label">Your dental insurance</label>
+    <div class="relative">
+      <select id="ins-carrier" name="carrier" class="h-12 w-full appearance-none rounded-sm border border-line-strong bg-white pl-3.5 pr-10 text-body hover:border-ink focus:border-spring">
+        {carriers.map((c) => <option value={c.id} selected={c.id === 'delta'}>{c.label}</option>)}
+      </select>
+      <svg class="pointer-events-none absolute right-3.5 top-1/2 size-5 -translate-y-1/2 text-stone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6" /></svg>
+    </div>
+  </div>
+  <fieldset class="grid gap-1.5" data-plan-row>
+    <legend class="t-label mb-1.5">Plan type <span class="font-normal text-stone">· it’s on your card</span></legend>
+    <div class="grid grid-cols-3 overflow-hidden rounded-sm border border-line-strong">
+      {[['ppo', 'PPO'], ['dhmo', 'DHMO'], ['unsure', 'Not sure']].map(([v, l], i) => (
+        <label class={`seg relative flex min-h-12 cursor-pointer items-center justify-center font-display text-small font-[650] ${i ? 'border-l border-line-strong' : ''}`}>
+          <input type="radio" name="plan" value={v} checked={v === 'ppo'} class="peer absolute inset-0 cursor-pointer opacity-0" />
+          <span class="pointer-events-none absolute inset-0 peer-checked:bg-ink peer-focus-visible:outline-3 peer-focus-visible:-outline-offset-4 peer-focus-visible:outline-sun"></span>
+          <span class="pointer-events-none relative peer-checked:text-white">{l}</span>
+        </label>
+      ))}
+    </div>
+  </fieldset>
+  <button type="submit" class="min-h-12 rounded-full border-2 border-ink font-display font-[650]" data-submit>Check my plan</button>
+  <div class="answer grid gap-3 border-t border-line pt-5 outline-none" data-answer data-tone={a.tone} tabindex="-1" aria-live="polite">
+    <p class="flex items-start gap-2 font-display font-[650] text-spring" data-headline-wrap>
+      <svg class="mt-0.5 size-5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5" /></svg>
+      <span data-headline>{a.headline}</span>
+    </p>
+    <div class="grid grid-cols-[auto_1fr] items-center gap-4">
+      <p class="t-figure" data-amount>{a.amount}</p>
+      <p class="text-small font-[700] leading-snug" data-amount-label>{a.amountLabel}</p>
+    </div>
+    <p class="text-small text-stone" data-detail>{a.detail}</p>
+    <a href={a.cta.href} class="inline-flex min-h-12 items-center justify-center self-start rounded-full bg-spring px-5.5 font-display font-[650] text-white no-underline hover:bg-spring-ink" data-cta>{a.cta.label}</a>
+    <p class="text-label font-normal text-stone">Estimate only — we confirm your exact benefits before your visit.</p>
+  </div>
+</form>
+<style is:global>
+  .answer[data-tone='no'] [data-headline-wrap], .answer[data-tone='maybe'] [data-headline-wrap] { color: var(--color-ink); }
+  .answer[data-tone='no'] [data-headline-wrap] svg, .answer[data-tone='maybe'] [data-headline-wrap] svg, .answer[data-tone='plan'] [data-headline-wrap] svg { display: none; }
+</style>
+<script>
+  document.querySelectorAll<HTMLFormElement>('[data-insurance]').forEach((form) => {
+    const start = () => import('../../lib/insurance-ui').then((m) => m.init(form));
+    let started = false;
+    const once = () => { if (!started) { started = true; start(); } };
+    ['pointerdown', 'focusin', 'change'].forEach((ev) => form.addEventListener(ev, once, { once: true }));
+  });
+</script>

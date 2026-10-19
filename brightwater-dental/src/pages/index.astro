@@ -1,0 +1,143 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import HomeHero from '../components/home/HomeHero.astro';
+import ChairLanes from '../components/home/ChairLanes.astro';
+import ComfortPanel from '../components/patterns/ComfortPanel.astro';
+import InsuranceCheck from '../components/patterns/InsuranceCheck.astro';
+import ServiceTile from '../components/patterns/ServiceTile.astro';
+import DoctorCard from '../components/patterns/DoctorCard.astro';
+import SampleReview from '../components/patterns/SampleReview.astro';
+import CrewQuick from '../components/patterns/CrewQuick.astro';
+import Button from '../components/ui/Button.astro';
+import Photo from '../components/ui/Photo.astro';
+import Badge from '../components/ui/Badge.astro';
+import Rope from '../components/ui/Rope.astro';
+import { site, hours, prices } from '../config/site';
+import { fmt } from '../lib/hours';
+import { team } from '../data/team';
+import cleaning from '../assets/photos/service-cleaning.jpg';
+import aligners from '../assets/photos/service-aligners.jpg';
+import stoneWall from '../assets/photos/clinic-stone-wall.jpg';
+
+const neighborhoods = ['Mueller', 'Windsor Park', 'Cherrywood', 'Hyde Park', 'Upper Boggy Creek', 'Pflugerville commuters'];
+---
+<BaseLayout
+  title="Brightwater Family Dental — Austin dentist, evenings & Saturdays"
+  description="Family dentist in Mueller, Austin. Open until 7 pm Mon–Thu and every Saturday. Book the whole family online in one go, check your insurance in seconds, $99 first visit."
+>
+  <!-- 1 · Hero -->
+  <HomeHero />
+
+  <!-- 2 · The clinic + family booking (signature A) -->
+  <ChairLanes />
+
+  <!-- 3 · Comfort (signature C) — the quiet section -->
+  <div class="wrap">
+    <ComfortPanel screen />
+  </div>
+
+  <!-- 4 · Insurance & price (signature B) -->
+  <section id="insurance" class="wrap scroll-mt-24 py-(--spacing-section)" aria-labelledby="money-h">
+    <Rope variant="lane" class="mb-(--spacing-section)" />
+    <div class="grid gap-10 lg:grid-cols-12 lg:gap-12">
+      <div class="flex flex-col gap-6 lg:col-span-5">
+        <p class="t-label text-stone">Insurance & price</p>
+        <h2 id="money-h" class="t-h1">You’ll know the price before you sit down.</h2>
+        <p class="t-lead text-stone">Pick your plan and get an answer in dollars — not “call us to check”. We file every claim for you and put the estimate in writing before any treatment.</p>
+        <dl class="mt-2 grid divide-y divide-line border-y border-line">
+          <div class="grid grid-cols-[6.5rem_1fr] items-baseline gap-4 py-4">
+            <dt class="t-figure text-[2.25rem]">${prices.newPatient}</dt>
+            <dd class="text-small"><b class="font-display text-body font-[700]">First visit without insurance.</b> Exam, cleaning and X-rays. If you need a deep cleaning, you get the price before we start.</dd>
+          </div>
+          <div class="grid grid-cols-[6.5rem_1fr] items-baseline gap-4 py-4">
+            <dt class="t-figure text-[2.25rem]">${prices.planAdult}</dt>
+            <dd class="text-small"><b class="font-display text-body font-[700]">A month — the Brightwater Plan.</b> Under $1 a day; ${prices.planKid} for kids. Cleanings, exams, X-rays included, 15% off the rest.</dd>
+          </div>
+          <div class="grid grid-cols-[6.5rem_1fr] items-baseline gap-4 py-4">
+            <dt class="t-figure text-[2.25rem]">0%</dt>
+            <dd class="text-small"><b class="font-display text-body font-[700]">Financing on bigger work.</b> A ${prices.crownFrom.toLocaleString('en-US')} crown is about $96 a month over 12 months, on approved credit.</dd>
+          </div>
+        </dl>
+      </div>
+      <div class="lg:col-span-6 lg:col-start-7">
+        <InsuranceCheck class="border border-line lg:mt-10" />
+      </div>
+    </div>
+  </section>
+
+  <!-- 5 · Services -->
+  <section class="bg-white py-(--spacing-section)" aria-labelledby="services-h">
+    <div class="wrap flex flex-col gap-10">
+      <div class="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
+        <div class="flex flex-col gap-4">
+          <p class="t-label text-stone">What we do most</p>
+          <h2 id="services-h" class="t-h1 max-w-[18ch]">Four reasons families come in.</h2>
+        </div>
+        <a href="/services/" class="inline-flex min-h-11 items-center font-display font-[650] text-spring underline decoration-2 decoration-spring/40 underline-offset-4 hover:decoration-spring">All services, from fillings to night guards</a>
+      </div>
+      <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+        <ServiceTile title="Cleanings & Exams" href="/services/cleanings-exams/" photo={cleaning} alt="A hygienist with her mask down chats with a relaxed patient in the chair" fact="$0" factLabel="with most PPO plans" text="Every six months, about an hour. Kids from their first birthday." position="40% 40%" class="border border-line" />
+        <ServiceTile variant="fact" title="Same-Day Crowns" href="/services/same-day-crowns/" fact="~2 hrs" factLabel={`one visit, one numbing — from $${prices.crownFrom.toLocaleString('en-US')}`} text="We scan, design and mill the crown here. No goop impressions, no temporary crown for three weeks." />
+        <ServiceTile title="Clear Aligners" href="/services/clear-aligners/" photo={aligners} alt="A smiling woman puts in a clear aligner" fact={`From $${prices.alignersMonthlyFrom}/mo`} factLabel="· free 3D scan" text="Most adults finish in 6–18 months. We’ll tell you if you’re not a good fit." position="50% 35%" class="border border-line" />
+        <a href="/services/emergency-dentist/" class="group flex flex-col justify-between gap-6 rounded-md bg-ink p-6 text-white no-underline">
+          <div class="flex flex-col gap-2">
+            <h3 class="t-h3 group-hover:underline group-hover:underline-offset-4">Emergency Dentistry</h3>
+            <p class="text-small text-mist">Toothache, broken tooth, swelling, a crown that came off. Time is held every day for same-day visits.</p>
+          </div>
+          <div>
+            <p class="t-figure text-sun">Today</p>
+            <p class="mt-1 text-small text-mist">exam + X-ray ${prices.emergencyExam} · call <span class="whitespace-nowrap font-display font-[700] text-white">{site.phone.display}</span></p>
+          </div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- 6 · Team + proof -->
+  <section class="wrap py-(--spacing-section)" aria-labelledby="team-h">
+    <div class="flex flex-col gap-10">
+      <div class="grid gap-4 lg:grid-cols-12 lg:items-end">
+        <div class="flex flex-col gap-4 lg:col-span-7">
+          <p class="t-label text-stone">Our team</p>
+          <h2 id="team-h" class="t-h1">Three dentists who explain first.</h2>
+        </div>
+        <p class="t-lead text-stone lg:col-span-5">Same three faces for the whole family, visit after visit. One of them speaks Spanish; all of them will stop when you raise a hand.</p>
+      </div>
+      <div class="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+        {team.map((d) => <DoctorCard photo={d.photo} name={d.name} role={d.role} school={d.school} why={d.why} languages={'languages' in d ? d.languages : undefined} />)}
+      </div>
+      <div class="grid gap-4 md:grid-cols-2">
+        <SampleReview quote="We booked all three of us for Saturday at nine. Chairs side by side, out by ten, kids got stickers, I got my morning back." who="Sam R." context="Mueller · family of three" />
+        <SampleReview quote="First visit in eight years. Nobody said a word about it. They showed me every photo before doing anything." who="Jordan T." context="Windsor Park · new patient" />
+      </div>
+    </div>
+  </section>
+
+  <!-- 7 · Visit + final CTA -->
+  <section class="bg-spring-25 py-(--spacing-section)" aria-labelledby="visit-h">
+    <div class="wrap grid gap-10 lg:grid-cols-12 lg:gap-12">
+      <div class="flex flex-col gap-6 lg:col-span-5">
+        <p class="t-label text-stone">Visit us</p>
+        <h2 id="visit-h" class="t-h1">In Mueller, five minutes off I-35.</h2>
+        <address class="t-lead not-italic">{site.address.street}<br />{site.address.city}, {site.address.region} {site.address.zip}</address>
+        <p class="text-small text-stone">Free parking in the garage under the building, stroller-friendly elevator, the Mueller Lake trail right outside. Close to {neighborhoods.slice(0, -1).join(', ')} and {neighborhoods.at(-1)}.</p>
+        <dl class="grid max-w-sm grid-cols-[3rem_1fr] gap-x-4 gap-y-1.5 text-small">
+          {hours.days.map((d) => (<><dt class="font-display font-[650]">{d.short}</dt><dd class="tabular-nums">{fmt(d.open)} – {fmt(d.close)} {d.day === 6 && <Badge tone="sun" class="ml-2 min-h-6">Saturday</Badge>}</dd></>))}
+          <dt class="font-display font-[650]">Sun</dt><dd class="text-stone">Closed</dd>
+        </dl>
+      </div>
+      <div class="flex flex-col gap-6 lg:col-span-7">
+        <div class="aspect-[3/2] overflow-hidden rounded-lg">
+          <Photo src={stoneWall} alt="A treatment room with a limestone wall and a window onto a garden" widths={[480, 720, 960, 1280, 1600]} sizes="(min-width: 86rem) 48rem, (min-width: 64rem) 56vw, 100vw" position="50% 50%" />
+        </div>
+        <div class="grid gap-5 rounded-md bg-white p-5 sm:p-7 md:grid-cols-[1fr_auto] md:items-end" data-booking>
+          <CrewQuick />
+          <div class="flex flex-col gap-2 md:items-end">
+            <Button href="/book/" size="lg">Book online</Button>
+            <a href={site.phone.href} class="inline-flex min-h-11 items-center font-display font-[650] no-underline tabular-nums hover:underline">or call {site.phone.display}</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

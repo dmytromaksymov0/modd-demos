@@ -1,0 +1,44 @@
+---
+// Mobile bottom bar: Book online · Call. Appears only after the hero ([data-hero]) has scrolled away,
+// hides while a booking widget ([data-booking]) is on screen or the keyboard is open.
+import { site, cta } from '../../config/site';
+interface Props { alwaysVisible?: boolean }
+const { alwaysVisible = false } = Astro.props;
+---
+<div class="sticky-bar fixed inset-x-0 bottom-0 z-40 border-t border-line bg-tile/95 px-4 pt-2.5 backdrop-blur-sm md:hidden"
+  style="padding-bottom: max(0.625rem, env(safe-area-inset-bottom))" data-sticky-bar data-visible={alwaysVisible ? 'true' : 'false'}>
+  <div class="grid grid-cols-[1fr_auto] gap-2">
+    <a href={cta.book.href} class="inline-flex min-h-12 items-center justify-center gap-2 rounded-full bg-spring font-display text-[1.0625rem] font-[650] text-white no-underline">
+      <svg class="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2" /><path d="M16 2v4M8 2v4M3 10h18" /></svg>{cta.book.label}
+    </a>
+    <a href={site.phone.href} class="inline-flex min-h-12 items-center justify-center gap-2 rounded-full border-2 border-ink px-5 font-display font-[650] no-underline" aria-label={`Call ${site.phone.display}`}>
+      <svg class="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.79 19.79 0 0 1 2.12 4.18 2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z" /></svg>Call
+    </a>
+  </div>
+</div>
+<style>
+  .sticky-bar { transform: translateY(110%); transition: transform var(--duration-base) var(--ease-out); }
+  .sticky-bar[data-visible='true'] { transform: none; }
+</style>
+<script>
+  const bar = document.querySelector<HTMLElement>('[data-sticky-bar]');
+  if (bar && bar.dataset.visible !== 'true') {
+    const hero = document.querySelector('[data-hero]');
+    let pastHero = !hero, bookingOnScreen = false, typing = false;
+    const render = () => {
+      const show = pastHero && !bookingOnScreen && !typing;
+      bar.dataset.visible = String(show);
+      bar.inert = !show;
+    };
+    if (hero) new IntersectionObserver(([e]) => { pastHero = !e.isIntersecting; render(); }).observe(hero);
+    const seen = new Set<Element>();
+    const bo = new IntersectionObserver((entries) => {
+      entries.forEach((e) => (e.isIntersecting ? seen.add(e.target) : seen.delete(e.target)));
+      bookingOnScreen = seen.size > 0; render();
+    });
+    document.querySelectorAll('[data-booking]').forEach((el) => bo.observe(el));
+    document.addEventListener('focusin', (e) => { typing = (e.target as HTMLElement).matches('input, textarea, select'); render(); });
+    document.addEventListener('focusout', () => { typing = false; render(); });
+    render();
+  }
+</script>

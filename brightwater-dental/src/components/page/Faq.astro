@@ -1,0 +1,24 @@
+---
+// FAQ as native <details> (works without JS) + FAQPage JSON-LD from the same data.
+import { faqSchema } from '../../lib/schema';
+interface Props { items: readonly { q: string; a: string }[]; title?: string; id?: string; class?: string }
+const { items, title = 'Questions people ask', id = 'faq', class: cls = '' } = Astro.props;
+---
+<script type="application/ld+json" set:html={JSON.stringify(faqSchema(items))} />
+<section class={`wrap grid gap-8 py-(--spacing-section) lg:grid-cols-12 ${cls}`} aria-labelledby={`${id}-h`}>
+  <h2 id={`${id}-h`} class="t-h2 lg:col-span-4">{title}</h2>
+  <div class="divide-y divide-line border-y border-line lg:col-span-8">
+    {items.map((it) => (
+      <details class="faq group">
+        <summary class="flex min-h-14 cursor-pointer list-none items-center justify-between gap-4 py-4 font-display text-[1.125rem] font-[650]">
+          {it.q}
+          <svg class="size-5 shrink-0 text-spring transition-transform group-open:rotate-45" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14" /></svg>
+        </summary>
+        <p class="measure pb-5 text-stone">{it.a}</p>
+      </details>
+    ))}
+  </div>
+</section>
+<style>
+  .faq summary::-webkit-details-marker { display: none; }
+</style>

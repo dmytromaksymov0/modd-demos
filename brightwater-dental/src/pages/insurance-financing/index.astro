@@ -1,0 +1,80 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHero from '../../components/page/PageHero.astro';
+import InsuranceCheck from '../../components/patterns/InsuranceCheck.astro';
+import PlanCalculator from '../../components/page/PlanCalculator.astro';
+import Faq from '../../components/page/Faq.astro';
+import CtaBand from '../../components/page/CtaBand.astro';
+import Rope from '../../components/ui/Rope.astro';
+import { carriers } from '../../lib/insurance';
+import { prices } from '../../config/site';
+const ppo = carriers.filter((c) => c.ppo);
+const columns = [
+  { name: 'With a PPO plan', tone: 'border border-line bg-white', lines: [['Cleanings, exams, X-rays', 'Usually $0'], ['Fillings', 'About 20% after deductible'], ['Crowns', 'About 50% after deductible'], ['Paperwork', 'We file every claim']] },
+  { name: 'Brightwater Plan', tone: 'bg-ink text-white', lines: [['Cleanings, exams, X-rays', `$${prices.planAdult}/mo adult · $${prices.planKid} kid`], ['Emergency exam', 'One a year included'], ['Everything else', '15% off'], ['Deductible / waiting period', 'None']] },
+  { name: 'Pay per visit', tone: 'border border-line bg-white', lines: [['First visit', `$${prices.newPatient}`], ['Emergency exam + X-ray', `$${prices.emergencyExam}`], ['Same-day crown', `from $${prices.crownFrom.toLocaleString('en-US')}`], ['Financing', '0% for 12 months, on approval']] },
+];
+const faq = [
+  { q: 'What if you’re out of network with my plan?', a: 'Most PPO plans still pay part of the fee out of network. We file the claim and give you a written estimate of your share first.' },
+  { q: 'Do you take DHMO or Medicaid plans?', a: 'Not at this time. DHMO plans only pay at the office they assign. If your employer offers a PPO option, it’s usually worth it for families.' },
+  { q: 'Can I use my HSA or FSA?', a: 'Yes — for visits, treatment and the Brightwater Plan.' },
+  { q: 'Is the Brightwater Plan insurance?', a: 'No. It’s a membership with our office: a monthly fee covers your cleanings, exams and X-rays and takes 15% off other treatment. Cancel anytime after the first three months.' },
+  { q: 'How does financing work?', a: 'For treatment over $500 you can apply for 0% financing for 12 months (on approved credit, through a third-party lender). Example: a $1,150 crown is about $96 a month.' },
+];
+---
+<BaseLayout title="Insurance & financing | Brightwater Family Dental, Austin" description="Check your dental insurance in seconds with an answer in dollars. Most PPO plans in network, the $29/month Brightwater Plan for families without insurance, 0% financing.">
+  <PageHero label="Insurance & financing" title="The price, before you sit down." lead="Check your plan and get an answer in dollars. No insurance? Our plan covers the basics for less than a dollar a day.">
+    <ul class="flex flex-wrap gap-2 text-small">
+      {['Most PPO plans in network', 'We file every claim', 'HSA / FSA welcome', 'Hablamos español'].map((t) => <li class="rounded-full border border-line bg-white px-3.5 py-1.5 font-display font-[600]">{t}</li>)}
+    </ul>
+    <InsuranceCheck slot="aside" id="check" headingLevel="h2" class="border border-line" />
+  </PageHero>
+
+  <section class="bg-white py-(--spacing-section)" aria-labelledby="nets-h">
+    <div class="wrap grid gap-10 lg:grid-cols-12">
+      <div class="flex flex-col gap-4 lg:col-span-4">
+        <h2 id="nets-h" class="t-h2">PPO plans we see most</h2>
+        <p class="text-stone">In-network with these PPO networks. Don’t see yours? We still file out of network — your plan usually pays part of it.</p>
+      </div>
+      <ul class="grid content-start gap-x-8 sm:grid-cols-2 lg:col-span-8">
+        {ppo.map((c) => <li class="flex min-h-12 items-center justify-between gap-3 border-b border-line text-body"><span>{c.label}</span><span class="font-display text-small font-[650] text-spring">In-network</span></li>)}
+      </ul>
+    </div>
+  </section>
+
+  <section class="wrap py-(--spacing-section)" aria-labelledby="plan-h">
+    <div class="grid gap-10 rounded-lg bg-spring-25 px-5 py-12 sm:px-10 lg:grid-cols-12 lg:gap-12 lg:px-16 lg:py-16">
+      <div class="flex flex-col gap-5 lg:col-span-6">
+        <p class="t-label flex items-center gap-3 text-stone"><Rope variant="segment" />No insurance?</p>
+        <h2 id="plan-h" class="t-h1">The Brightwater Plan</h2>
+        <p class="t-lead text-stone">${prices.planAdult} a month per adult, ${prices.planKid} per kid — under a dollar a day.</p>
+        <ul class="grid gap-3">
+          {['Two cleanings and two exams a year', 'All routine X-rays', 'One emergency exam a year', '15% off fillings, crowns, aligners and everything else', 'No deductible, no waiting period, no yearly maximum'].map((t) => (
+            <li class="flex gap-3"><svg class="mt-1 size-5 shrink-0 text-spring" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5" /></svg>{t}</li>
+          ))}
+        </ul>
+        <p class="text-small text-stone">Not insurance. Cancel anytime after three months. Join at your first visit.</p>
+      </div>
+      <div class="lg:col-span-6"><PlanCalculator /></div>
+    </div>
+  </section>
+
+  <section class="wrap pb-(--spacing-section)" aria-labelledby="ways-h">
+    <h2 id="ways-h" class="t-h2 mb-8">Three ways to pay</h2>
+    <div class="grid gap-4 md:grid-cols-3">
+      {columns.map((c) => (
+        <div class={`flex flex-col gap-4 rounded-md p-6 ${c.tone}`}>
+          <h3 class="font-display text-[1.375rem] font-[750]">{c.name}</h3>
+          <dl class="grid gap-3">{c.lines.map(([k, v]) => <div class="grid gap-0.5"><dt class="text-label font-normal opacity-75">{k}</dt><dd class="font-display font-[700]">{v}</dd></div>)}</dl>
+        </div>
+      ))}
+    </div>
+    <div class="mt-6 flex flex-col gap-2 rounded-md border-2 border-sun bg-sun-50 p-5 sm:flex-row sm:items-center sm:gap-6">
+      <p class="font-display text-[1.25rem] font-[750]">Use it before December 31.</p>
+      <p class="text-small">Most plans reset on January 1 — unused cleanings and your yearly maximum don’t carry over. Saturdays in December fill fast.</p>
+    </div>
+  </section>
+
+  <Faq items={faq} />
+  <CtaBand title="Book with your insurance." text="Pick your plan in the booking — we check your benefits before you come in." />
+</BaseLayout>

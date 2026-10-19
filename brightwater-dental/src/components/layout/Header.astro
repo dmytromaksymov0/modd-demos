@@ -1,0 +1,51 @@
+---
+// Desktop: logo · nav · live hours · phone · Book online. Mobile: logo · live status · menu (works without JS: <details>).
+import Logo from '../brand/Logo.astro';
+import Button from '../ui/Button.astro';
+import OpenStatus from './OpenStatus.astro';
+import { site, nav, cta, hours } from '../../config/site';
+const path = Astro.url.pathname;
+---
+<header class="relative z-30 border-b border-line bg-tile">
+  <!-- Utility line (desktop): live hours + phone + language — the brief wants hours visible in the header. -->
+  <div class="hidden border-b border-line lg:block">
+    <div class="wrap flex min-h-11 items-center gap-6 text-small">
+      <OpenStatus />
+      <span class="text-stone">{hours.summary}</span>
+      <span class="text-stone">{site.address.neighborhood}, {site.address.city}</span>
+      <span class="ml-auto text-stone">Hablamos español</span>
+      <a href={site.phone.href} class="inline-flex min-h-11 items-center font-display font-[700] no-underline tabular-nums hover:underline">{site.phone.display}</a>
+    </div>
+  </div>
+  <div class="wrap flex min-h-18 items-center gap-8 py-3 lg:min-h-20">
+    <a href="/" class="inline-flex min-h-11 shrink-0 items-center no-underline" aria-label="Brightwater Family Dental — home"><Logo class="h-10 w-auto sm:h-11 lg:h-12" /></a>
+    <nav aria-label="Main" class="hidden lg:block">
+      <ul class="flex gap-7 font-display text-[1.0625rem] font-[550]">
+        {nav.map((n) => (
+          <li><a href={n.href} class="inline-flex min-h-11 items-center whitespace-nowrap no-underline underline-offset-[6px] decoration-2 decoration-spring hover:underline aria-[current=page]:underline" aria-current={path.startsWith(n.href) ? 'page' : undefined}>{n.label}</a></li>
+        ))}
+      </ul>
+    </nav>
+    <div class="ml-auto flex items-center gap-4">
+      <a href={site.phone.href} class="hidden min-h-11 items-center font-display text-[1.0625rem] font-[700] no-underline tabular-nums hover:underline md:inline-flex lg:hidden">{site.phone.display}</a>
+      <span class="hidden md:block"><Button href={cta.book.href}>{cta.book.label}</Button></span>
+      <details class="menu lg:hidden">
+        <summary class="grid size-12 cursor-pointer list-none place-items-center rounded-full border border-line-strong bg-white" aria-label="Menu">
+          <svg class="size-5.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16" /></svg>
+        </summary>
+        <div class="absolute inset-x-0 top-full border-b border-line bg-tile shadow-(--shadow-float)">
+          <nav aria-label="Main (mobile)" class="wrap flex flex-col gap-1 py-4">
+            {nav.map((n) => <a href={n.href} class="flex min-h-12 items-center font-display text-[1.25rem] font-[650] no-underline">{n.label}</a>)}
+            <a href={site.phone.href} class="flex min-h-12 items-center font-display font-[650] no-underline tabular-nums">Call {site.phone.display}</a>
+            <p class="py-2 text-small text-stone">{hours.summary} · Hablamos español</p>
+            <Button href={cta.book.href} full>{cta.book.label}</Button>
+          </nav>
+        </div>
+      </details>
+    </div>
+  </div>
+</header>
+<style>
+  .menu summary::-webkit-details-marker { display: none; }
+  .menu[open] summary { background: var(--color-ink); color: var(--color-white); border-color: var(--color-ink); }
+</style>

@@ -1,0 +1,34 @@
+---
+import ServiceLayout from '../../../components/page/ServiceLayout.astro';
+import { services } from '../../../data/services';
+import { prices } from '../../../config/site';
+const s = services.find((x) => x.slug === 'clear-aligners')!;
+const plans = [
+  { name: 'Minor', months: '6 months or less', total: 3900, note: 'Small crowding or a gap, relapse after braces' },
+  { name: 'Moderate', months: '6–12 months', total: 4900, note: 'Most adults' },
+  { name: 'Comprehensive', months: '12–18 months', total: 5900, note: 'Crowding plus bite changes' },
+];
+const monthly = (t: number) => Math.round((t - 800) / 24);
+---
+<ServiceLayout s={s} title="Clear aligners in Austin — from $129/month | Brightwater Family Dental" description="Clear aligners for teens and adults in Mueller, Austin. Free 3D scan and consult, from $3,900 or $129 a month, retainers included.">
+  <section class="wrap py-(--spacing-section)" aria-labelledby="cost-h">
+    <div class="flex flex-col gap-8">
+      <div class="flex max-w-3xl flex-col gap-4">
+        <p class="t-label text-stone">What it costs</p>
+        <h2 id="cost-h" class="t-h2">Three honest price ranges.</h2>
+        <p class="text-stone">Your scan decides which one fits. Monthly amounts assume $800 down and 24 months at 0% on approved credit; refinements and first retainers are included in every range.</p>
+      </div>
+      <ul class="grid gap-4 md:grid-cols-3">
+        {plans.map((p, i) => (
+          <li class={`flex flex-col gap-3 rounded-md p-6 ${i === 1 ? 'bg-ink text-white' : 'border border-line bg-white'}`}>
+            <p class="font-display text-[1.25rem] font-[750]">{p.name}</p>
+            <p class={`text-small ${i === 1 ? 'text-mist' : 'text-stone'}`}>{p.months} · {p.note}</p>
+            <p class="t-figure mt-2">${p.total.toLocaleString('en-US')}</p>
+            <p class={`text-small ${i === 1 ? 'text-mist' : 'text-stone'}`}>or about <b class={`num ${i === 1 ? 'text-white' : 'text-ink'}`}>${monthly(p.total)}/mo</b></p>
+          </li>
+        ))}
+      </ul>
+      <p class="text-label font-normal text-stone">Starting price ${prices.alignersFrom.toLocaleString('en-US')} / from ${prices.alignersMonthlyFrom} a month. Example only; financing subject to approval.</p>
+    </div>
+  </section>
+</ServiceLayout>

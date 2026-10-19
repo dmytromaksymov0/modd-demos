@@ -1,0 +1,94 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHero from '../../components/page/PageHero.astro';
+import FirstHour from '../../components/page/FirstHour.astro';
+import Faq from '../../components/page/Faq.astro';
+import CtaBand from '../../components/page/CtaBand.astro';
+import Button from '../../components/ui/Button.astro';
+import Photo from '../../components/ui/Photo.astro';
+import Rope from '../../components/ui/Rope.astro';
+import { prices } from '../../config/site';
+import talk from '../../assets/photos/consult-dentist-talk.jpg';
+import kid from '../../assets/photos/kids-brushing.jpg';
+
+const bring = [
+  ['A photo ID', 'For you, or for the parent bringing a child.'],
+  ['Your insurance card', 'A photo of both sides works. We check benefits before you arrive.'],
+  ['Your medicines', 'A list or a photo of the bottles — some affect bleeding or sedation.'],
+  ['Old X-rays, if easy', 'Give us your last dentist’s name and we request them. Fewer new X-rays for you.'],
+];
+const faq = [
+  { q: 'Is the $99 visit really everything?', a: `It covers the exam, the X-rays and a regular cleaning. If we find gum disease that needs a deeper cleaning (scaling and root planing), we stop, show you on the screen and give you the price first — you can do it the same day or another day.` },
+  { q: 'I have insurance. Do I still pay $99?', a: 'No. With most PPO plans the first exam, X-rays and cleaning are covered at 100%, so you usually pay $0. The $99 price is for patients without insurance.' },
+  { q: 'It’s been years since I saw a dentist. Is that a problem?', a: 'Not for us. About a third of our new patients haven’t been in five years or more. No lectures — we start where you are.' },
+  { q: 'Can I bring my kids to the same visit?', a: 'Yes. Book everyone together and we seat you side by side, or back-to-back after school. Kids’ cleanings take about 30 minutes.' },
+  { q: 'What if I’m very nervous?', a: 'Tell us in the comfort plan when you book. You can ask for nitrous oxide (you can drive home after) or talk to Dr. Ruiz about oral sedation for longer visits.' },
+];
+---
+<BaseLayout title="New patients — $99 first visit | Brightwater Family Dental, Austin" description="New to Brightwater? Your first visit is $99 without insurance (usually $0 with PPO): exam, X-rays and cleaning. See the whole hour, minute by minute.">
+  <PageHero label="New patients" title="A first visit with no surprises." lead="An hour, start to finish. You’ll know what happens at every minute, and what anything costs before it happens." photo={talk} alt="A dentist sits and talks with a patient in the chair before the visit starts" position="50% 45%">
+    <div class="mt-2 grid gap-4 rounded-md border border-line bg-white p-5 sm:grid-cols-[auto_1fr] sm:items-start sm:p-6">
+      <p class="t-figure">${prices.newPatient}</p>
+      <div class="grid gap-2 text-small">
+        <p><b class="font-display text-body font-[700]">Exam, X-rays and cleaning</b> for new patients without insurance. With most PPO plans it’s usually <b>$0</b>.</p>
+        <p class="text-stone"><b class="font-display font-[650] text-ink">Not included:</b> deep cleaning if you have gum disease, or any treatment — you get those prices in writing first.</p>
+      </div>
+    </div>
+    <div class="flex flex-wrap gap-3">
+      <Button href="/book/?visit=new" size="lg">Book my first visit</Button>
+      <Button href="/insurance-financing/#check" variant="secondary" size="lg">Check my insurance</Button>
+    </div>
+  </PageHero>
+
+  <FirstHour />
+
+  <section class="bg-white py-(--spacing-section)" aria-labelledby="bring-h">
+    <div class="wrap grid gap-10 lg:grid-cols-12 lg:gap-12">
+      <div class="flex flex-col gap-4 lg:col-span-4">
+        <p class="t-label text-stone">Before you come</p>
+        <h2 id="bring-h" class="t-h2">What to bring</h2>
+        <p class="text-stone">Forms are online — we text you the link when you book. Fill them in on your phone in about five minutes.</p>
+      </div>
+      <ul class="grid gap-x-8 gap-y-6 sm:grid-cols-2 lg:col-span-8">
+        {bring.map(([t, d]) => (
+          <li class="flex flex-col gap-1 border-t-2 border-spring pt-4"><b class="font-display text-[1.125rem] font-[700]">{t}</b><span class="text-small text-stone">{d}</span></li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <section class="wrap py-(--spacing-section)" aria-labelledby="while-h">
+    <div class="grid gap-10 rounded-lg bg-spring-25 px-5 py-12 sm:px-10 lg:grid-cols-12 lg:px-16 lg:py-16">
+      <div class="flex flex-col gap-5 lg:col-span-7">
+        <p class="t-label flex items-center gap-3 text-stone"><Rope variant="segment" />It’s been a while?</p>
+        <h2 id="while-h" class="t-h1 max-w-[15ch]">Five years. Ten. Nobody here will make it a thing.</h2>
+        <p class="t-lead measure text-stone">It’s a rule, not a mood: no comments about how long it’s been, no “you should floss more” speeches. We tell you what we see, what matters now and what can wait — and you decide.</p>
+      </div>
+      <ul class="flex flex-col justify-center gap-4 lg:col-span-5">
+        {['We start with the exam and X-rays — the cleaning can wait if you want to go slowly.', 'You see every photo on the screen before we recommend anything.', 'If you need work, you get options and prices, ranked by what matters most.'].map((t) => (
+          <li class="flex gap-3 rounded-md bg-white p-4 text-small">
+            <svg class="mt-0.5 size-5 shrink-0 text-spring" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5" /></svg>{t}
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <section class="wrap pb-(--spacing-section)" aria-labelledby="kids-h">
+    <div class="grid gap-10 lg:grid-cols-12 lg:items-center lg:gap-12">
+      <div class="aspect-[4/3] overflow-hidden rounded-lg lg:col-span-5">
+        <Photo src={kid} alt="A smiling child brushing her teeth" widths={[400, 640, 900, 1200]} sizes="(min-width: 64rem) 36vw, 100vw" position="50% 72%" />
+      </div>
+      <div class="flex flex-col gap-5 lg:col-span-6 lg:col-start-7">
+        <p class="t-label text-stone">Kids</p>
+        <h2 id="kids-h" class="t-h2">A first visit by the first birthday.</h2>
+        <p class="text-stone">That’s the American Academy of Pediatric Dentistry’s advice, and it’s mostly a meet-and-greet: a parent holds the child, we count teeth, show you how to brush them, and add fluoride varnish if needed. About 20 minutes.</p>
+        <p class="text-stone">From age three, kids get their own 30-minute cleaning — in the chair next to yours if you book together.</p>
+        <div><Button href="/book/?crew=kids" variant="secondary">Book me + kids</Button></div>
+      </div>
+    </div>
+  </section>
+
+  <Faq items={faq} />
+  <CtaBand title="Your first hour starts here." href="/book/?visit=new" label="Book my first visit" />
+</BaseLayout>

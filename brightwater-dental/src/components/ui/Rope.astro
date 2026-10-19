@@ -1,0 +1,43 @@
+---
+// The lane rope — Brightwater's signature divider, drawn like a real pool lane line:
+// floats strung almost touching (1.5 px apart), in colour sections. Use at most 1–2 per screen.
+//   lane    — section divider: long spring sections, a pair of white floats, a red pair every ~200 px
+//   quiet   — default inside cards (between people in a booking): pale floats, one spring float in 12
+//   segment — 9 floats with red ends, next to a section label
+interface Props { variant?: 'lane' | 'quiet' | 'segment'; class?: string; label?: string }
+const { variant = 'quiet', class: cls = '', label } = Astro.props;
+const id = `rope-${Math.random().toString(36).slice(2, 8)}`;
+const W = 9, H = 4.5, GAP = 1.5, STEP = W + GAP;
+type Bead = 'spring' | 'pale' | 'white' | 'buoy';
+const fills: Record<Bead, string> = {
+  spring: 'var(--color-spring)',
+  pale: 'var(--color-spring-50)',
+  white: 'var(--color-white)',
+  buoy: 'var(--color-buoy)',
+};
+const pattern: Bead[] =
+  variant === 'lane'
+    ? ['buoy', 'buoy', ...Array(10).fill('spring'), 'white', 'white', ...Array(10).fill('spring')]
+    : variant === 'quiet'
+      ? ['spring', ...Array(11).fill('pale')]
+      : ['buoy', ...Array(7).fill('spring'), 'buoy'];
+const width = pattern.length * STEP;
+const a11y = label ? { role: 'img', 'aria-label': label } : { 'aria-hidden': 'true' };
+---
+{variant === 'segment' ? (
+  <svg class={`block h-2 shrink-0 ${cls}`} viewBox={`0 0 ${width - GAP} 8`} style={`width:${width - GAP}px`} {...a11y}>
+    {pattern.map((b, i) => <rect x={i * STEP} y="1.75" width={W} height={H} rx={H / 2} fill={fills[b]} stroke={b === 'white' ? 'var(--color-line-strong)' : 'none'} stroke-width="0.75" />)}
+  </svg>
+) : (
+  <svg class={`block h-2 w-full ${cls}`} {...a11y}>
+    <defs>
+      <pattern id={id} width={width} height="8" patternUnits="userSpaceOnUse">
+        {pattern.map((b, i) => (
+          <rect x={i * STEP + 0.375} y="1.75" width={W - 0.75} height={H} rx={H / 2} fill={fills[b]}
+            stroke={b === 'white' ? 'var(--color-line-strong)' : 'none'} stroke-width="0.75" />
+        ))}
+      </pattern>
+    </defs>
+    <rect width="100%" height="8" fill={`url(#${id})`} />
+  </svg>
+)}

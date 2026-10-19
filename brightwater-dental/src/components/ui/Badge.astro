@@ -1,0 +1,16 @@
+---
+type Tone = 'spring' | 'sun' | 'quiet' | 'ink' | 'alert';
+interface Props { tone?: Tone; dot?: boolean; class?: string }
+const { tone = 'quiet', dot = false, class: cls = '' } = Astro.props;
+const tones: Record<Tone, string> = {
+  spring: 'bg-spring-50 text-spring-ink',
+  sun: 'bg-sun text-ink',
+  quiet: 'bg-white text-ink border border-line',
+  ink: 'bg-ink text-white',
+  alert: 'bg-alert-50 text-alert',
+};
+---
+<span class={`inline-flex min-h-7 items-center gap-1.5 rounded-full px-3 font-display text-label font-[650] ${tones[tone]} ${cls}`}>
+  {dot && <span class="size-2 rounded-full bg-current" aria-hidden="true"></span>}
+  <slot />
+</span>

@@ -1,0 +1,24 @@
+---
+import type { HTMLAttributes } from 'astro/types';
+interface Props extends HTMLAttributes<'input'> {
+  id: string;
+  label: string;
+  hint?: string;
+  error?: string;
+  optional?: boolean;
+}
+const { id, label, hint, error, optional = false, class: cls = '', ...rest } = Astro.props;
+const describedBy = [hint && `${id}-hint`, `${id}-error`].filter(Boolean).join(' ');
+---
+<div class={`field flex flex-col gap-1.5 ${cls}`} data-field>
+  <label for={id} class="t-label text-ink">{label}{optional && <span class="font-normal text-stone"> · optional</span>}</label>
+  <input
+    id={id}
+    class="h-12 w-full min-w-0 rounded-sm border border-line-strong bg-white px-3.5 text-body text-ink placeholder:text-stone/80 hover:border-ink focus:border-spring aria-invalid:border-alert aria-invalid:bg-alert-50"
+    aria-describedby={describedBy}
+    aria-invalid={error ? 'true' : undefined}
+    {...rest}
+  />
+  {hint && <p id={`${id}-hint`} class="t-small text-stone">{hint}</p>}
+  <p id={`${id}-error`} class="field-error t-small font-semibold text-alert empty:hidden" role="alert">{error}</p>
+</div>

@@ -1,0 +1,67 @@
+---
+// After a booking request. The URL carries the requested slot (?d=YYYY-MM-DD&t=9:30 am&n=3) or the
+// no-JS preference (?p=saturday). With JS: summary + "Add to calendar" (.ics built in the browser).
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Button from '../../components/ui/Button.astro';
+import Rope from '../../components/ui/Rope.astro';
+import { site, hours } from '../../config/site';
+const next = [
+  ['Within 15 minutes', `We text ${'you'} to confirm the exact time (during office hours: ${hours.summary}). Reply to move it.`],
+  ['Tonight', 'A link to the new-patient forms — about five minutes on your phone. Kids’ forms are shorter.'],
+  ['Before you come', 'We check your insurance benefits and text you if anything will cost more than you expect.'],
+  ['On the day', 'Bring a photo ID and your insurance card. Your comfort plan is already on your chart.'],
+];
+---
+<BaseLayout title="Request received | Brightwater Family Dental" description="Your booking request is in. We confirm by text within 15 minutes during office hours." noindex stickyBar={false}>
+  <section class="wrap grid gap-10 py-(--spacing-section) lg:grid-cols-12 lg:gap-12" data-hero>
+    <div class="flex flex-col gap-5 lg:col-span-7">
+      <p class="t-label text-stone">Request received</p>
+      <h1 class="t-h1">Got it. We’ll text you to confirm.</h1>
+      <p class="t-lead measure text-stone" data-summary>Your request is with our front desk. Nothing is booked until we confirm by text — usually within 15 minutes during office hours.</p>
+      <div class="flex flex-wrap items-center gap-4" data-ics-wrap hidden>
+        <a href="#" download="brightwater-appointment.ics" class="inline-flex min-h-12 items-center gap-2.5 rounded-full bg-spring px-5.5 font-display font-[650] text-white no-underline hover:bg-spring-ink" data-ics>
+          <svg class="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2" /><path d="M16 2v4M8 2v4M3 10h18M12 14v4M10 16h4" /></svg>Add to calendar
+        </a>
+        <span class="text-small text-stone">Saved as “tentative” until we confirm.</span>
+      </div>
+      <p class="text-small text-stone">Need to change something? Call <a href={site.phone.href} class="font-display font-[650] text-ink tabular-nums">{site.phone.display}</a>.</p>
+    </div>
+    <div class="lg:col-span-5">
+      <div class="rounded-lg bg-white p-6 sm:p-8">
+        <h2 class="font-display text-[1.375rem] font-[750]">What happens next</h2>
+        <Rope variant="quiet" class="my-4" />
+        <ol class="grid gap-5">
+          {next.map(([t, d], i) => (
+            <li class="grid grid-cols-[2.25rem_1fr] gap-3">
+              <span class="grid size-9 place-items-center rounded-full bg-spring-50 font-display font-[750] text-spring-ink" aria-hidden="true">{i + 1}</span>
+              <div><p class="font-display font-[700]">{t}</p><p class="text-small text-stone">{d}</p></div>
+            </li>
+          ))}
+        </ol>
+      </div>
+      <div class="mt-4 flex flex-wrap gap-3"><Button href="/new-patients/" variant="secondary">What to expect</Button><Button href="/" variant="quiet">Home</Button></div>
+    </div>
+  </section>
+</BaseLayout>
+<script>
+  import { buildIcs } from '../../lib/ics';
+  import { PREFERRED } from '../../lib/lead';
+  const q = new URLSearchParams(location.search);
+  const d = q.get('d'), t = q.get('t'), n = Number(q.get('n') || 1), p = q.get('p') as keyof typeof PREFERRED | null;
+  let stored: { names?: string[]; minutes?: number } = {};
+  try { stored = JSON.parse(sessionStorage.getItem('bw-booking') || '{}'); } catch {}
+  const summary = document.querySelector<HTMLElement>('[data-summary]')!;
+  const who = stored.names?.filter(Boolean).length ? stored.names.filter(Boolean).join(', ') : `${n} ${n === 1 ? 'person' : 'people'}`;
+  if (d && t && /^\d{4}-\d{2}-\d{2}$/.test(d)) {
+    const day = new Date(`${d}T12:00:00Z`).toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', timeZone: 'UTC' });
+    summary.textContent = `${day} at ${t} — ${who}. We hold this time while we confirm by text, usually within 15 minutes during office hours.`;
+    try {
+      const ics = buildIcs({ date: d, time: t, minutes: stored.minutes ?? 60, people: n, uid: `${d}-${t.replace(/\W/g, '')}-${Date.now()}` });
+      const a = document.querySelector<HTMLAnchorElement>('[data-ics]')!;
+      a.href = URL.createObjectURL(new Blob([ics], { type: 'text/calendar' }));
+      document.querySelector<HTMLElement>('[data-ics-wrap]')!.hidden = false;
+    } catch {}
+  } else if (p && p in PREFERRED) {
+    summary.textContent = `${PREFERRED[p]} for ${who}. We’ll text you two exact times that fit everyone, usually within 15 minutes during office hours.`;
+  }
+</script>

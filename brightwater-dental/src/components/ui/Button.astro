@@ -1,0 +1,24 @@
+---
+import type { HTMLAttributes } from 'astro/types';
+type Variant = 'primary' | 'secondary' | 'quiet' | 'on-dark' | 'link';
+interface Props extends HTMLAttributes<'a'> {
+  href?: string;
+  variant?: Variant;
+  size?: 'md' | 'lg';
+  type?: 'button' | 'submit';
+  full?: boolean;
+}
+const { href, variant = 'primary', size = 'md', type = 'button', full = false, class: cls = '', ...rest } = Astro.props;
+const base = 'inline-flex items-center justify-center gap-2.5 font-display font-[650] no-underline rounded-full cursor-pointer select-none whitespace-nowrap transition-colors duration-(--duration-fast) disabled:opacity-60 disabled:cursor-not-allowed';
+const sizes = { md: 'min-h-12 px-5.5 text-[1.0625rem]', lg: 'min-h-14 px-7 text-lead' };
+const variants: Record<Variant, string> = {
+  primary: 'border-2 bg-spring border-spring text-white hover:bg-spring-ink hover:border-spring-ink',
+  secondary: 'border-2 bg-transparent border-ink text-ink hover:bg-ink hover:text-white',
+  quiet: 'border-2 bg-white border-line text-ink hover:border-line-strong',
+  'on-dark': 'border-2 bg-transparent border-mist text-white hover:bg-ink-2',
+  link: 'min-h-11 px-0 rounded-none text-spring underline underline-offset-4 decoration-2 decoration-spring/40 hover:decoration-spring',
+};
+const classes = [base, variant === 'link' ? '' : sizes[size], variants[variant], full ? 'w-full' : '', cls].join(' ');
+const Tag = href ? 'a' : 'button';
+---
+<Tag href={href} type={href ? undefined : type} class={classes} {...rest}><slot /></Tag>

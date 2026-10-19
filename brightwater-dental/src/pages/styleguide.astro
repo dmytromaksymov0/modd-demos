@@ -1,0 +1,286 @@
+---
+// Design system reference — noindex, excluded from the sitemap.
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Logo from '../components/brand/Logo.astro';
+import Button from '../components/ui/Button.astro';
+import Rope from '../components/ui/Rope.astro';
+import Badge from '../components/ui/Badge.astro';
+import Field from '../components/ui/Field.astro';
+import Select from '../components/ui/Select.astro';
+import ChipGroup from '../components/ui/ChipGroup.astro';
+import SectionHead from '../components/ui/SectionHead.astro';
+import Photo from '../components/ui/Photo.astro';
+import WeekLanes from '../components/patterns/WeekLanes.astro';
+import CrewCard from '../components/patterns/CrewCard.astro';
+import CrewQuick from '../components/patterns/CrewQuick.astro';
+import InsuranceResult from '../components/patterns/InsuranceResult.astro';
+import ComfortPanel from '../components/patterns/ComfortPanel.astro';
+import ServiceTile from '../components/patterns/ServiceTile.astro';
+import DoctorCard from '../components/patterns/DoctorCard.astro';
+import SampleReview from '../components/patterns/SampleReview.astro';
+import { prices } from '../config/site';
+import heroFamily from '../assets/photos/hero-4-dad-kids-brushing.jpg';
+import heroClinic from '../assets/photos/hero-3-dad-daughter-xray.jpg';
+import cleaning from '../assets/photos/service-cleaning.jpg';
+import aligners from '../assets/photos/service-aligners.jpg';
+import dr1 from '../assets/photos/team-portrait-ruiz.jpg';
+import dr2 from '../assets/photos/team-portrait-holloway.jpg';
+import dr3 from '../assets/photos/team-portrait-kessler.jpg';
+
+const colors = [
+  { token: 'tile', hex: '#F7F8F6', role: 'Page background — cool pool tile', on: 'ink 15.4:1', dark: false },
+  { token: 'white', hex: '#FFFFFF', role: 'Cards, fields, overlays', on: 'ink 16.4:1', dark: false },
+  { token: 'ink', hex: '#10231F', role: 'Text, dark surfaces', on: 'white 16.4:1', dark: true },
+  { token: 'stone', hex: '#5B6B67', role: 'Secondary text', on: '5.3:1 on tile', dark: true },
+  { token: 'line-strong', hex: '#7E908B', role: 'Field borders (UI ≥ 3:1)', on: '3.4:1 on white', dark: true },
+  { token: 'spring', hex: '#0A6B5D', role: 'CTA, links, open hours', on: 'white 6.4:1', dark: true },
+  { token: 'spring-ink', hex: '#08574C', role: 'CTA hover / pressed', on: 'white 8.5:1', dark: true },
+  { token: 'spring-50', hex: '#DCEDE8', role: 'Lanes, selected chips', on: 'ink 13.5:1', dark: false },
+  { token: 'spring-25', hex: '#EEF6F3', role: 'Quiet section (comfort)', on: 'stone 5.1:1', dark: false },
+  { token: 'sun', hex: '#F5C842', role: 'Saturdays + highlighter only', on: 'ink 10.3:1', dark: false },
+  { token: 'buoy', hex: '#C73A23', role: 'Rope floats, “now” marker', on: 'never text', dark: true },
+  { token: 'alert', hex: '#B42318', role: 'Errors', on: '6.6:1 on white', dark: true },
+];
+const scale = [
+  { cls: 't-display', name: 'Display', size: '44 → 80', sample: 'Dentistry on family time.' },
+  { cls: 't-h1', name: 'H1', size: '38 → 60', sample: 'Nothing happens until you say go.' },
+  { cls: 't-h2', name: 'H2', size: '30 → 44', sample: 'Am I covered?' },
+  { cls: 't-h3', name: 'H3', size: '21 → 26', sample: 'Same-day crowns in about two hours' },
+  { cls: 't-lead', name: 'Lead', size: '18 → 20', sample: 'Open until 7 pm Monday to Thursday and every Saturday morning.' },
+  { cls: '', name: 'Body', size: '17', sample: 'Bring your insurance card and a list of the medicines you take. Forms are online, so check-in takes two minutes.' },
+  { cls: 't-small', name: 'Small', size: '15', sample: 'Estimate only — we confirm your exact benefits before your visit.' },
+  { cls: 't-label', name: 'Label', size: '13', sample: 'Sample review — replaced with real Google reviews at launch' },
+];
+const sections = ['Brand', 'Color', 'Type', 'Space', 'Rope', 'Buttons', 'Forms', 'Badges', 'Signature', 'Cards', 'Photos'];
+---
+<BaseLayout title="Styleguide — Brightwater Family Dental" description="Design tokens and components for the Brightwater Family Dental concept site." noindex>
+  <!-- Hero pattern (doubles as [data-hero] so the mobile sticky bar appears only after it) -->
+  <section class="wrap grid gap-8 pb-12 pt-6 lg:grid-cols-12 lg:gap-8 lg:pb-16 lg:pt-10" data-hero>
+    <div class="flex flex-col gap-5 lg:col-span-5 lg:pt-6">
+      <p class="t-label text-stone">Three dentists, one family calendar · Mueller, Austin</p>
+      <h1 class="t-display">Dentistry on family time. Even <span class="hl-sun">Saturdays.</span></h1>
+      <p class="t-lead measure text-stone">Open <b class="text-ink">until 7&nbsp;pm</b> Monday to Thursday and <b class="text-ink">every Saturday morning</b>. Book the whole crew in one go: chairs side by side, everyone done in an hour.</p>
+      <div class="grid grid-cols-1 gap-3 sm:flex sm:flex-wrap">
+        <Button href="/book/" size="lg">
+          <svg class="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2" /><path d="M16 2v4M8 2v4M3 10h18" /></svg>Book online
+        </Button>
+        <Button href="/insurance-financing/#check" variant="secondary" size="lg">Check my insurance</Button>
+      </div>
+      <WeekLanes variant="compact" class="lg:hidden" />
+      <WeekLanes class="mt-2 hidden lg:grid" />
+    </div>
+    <div class="relative lg:col-span-7">
+      <div class="aspect-[4/3] overflow-hidden rounded-md lg:aspect-auto lg:h-full lg:min-h-[36rem] lg:rounded-lg">
+        <Photo src={heroFamily} alt="A dad and his two kids brushing their teeth together in a bright bathroom" priority sizes="(min-width: 64rem) 55vw, 100vw" position="38% 40%" quality={55} />
+      </div>
+      <CrewCard floating class="mt-4 lg:absolute lg:bottom-6 lg:right-6 lg:mt-0 lg:w-[23rem]" />
+    </div>
+  </section>
+
+  <div class="wrap">
+    <nav aria-label="Styleguide sections" class="flex flex-wrap gap-2 border-y border-line py-4">
+      {sections.map((s) => <a href={`#${s.toLowerCase()}`} class="inline-flex min-h-11 items-center rounded-full border border-line bg-white px-4 font-display text-small font-[600] no-underline hover:border-ink">{s}</a>)}
+    </nav>
+  </div>
+
+  <div class="wrap flex flex-col gap-(--spacing-section) py-(--spacing-section)">
+    <!-- 1 Brand -->
+    <section id="brand" class="flex flex-col gap-8">
+      <SectionHead label="Brand" title="Wordmark" lead="Sun over a spring with one lane rope — Barton Springs, Deep Eddy, Mueller Lake. Outlines from Gabarito, no font at runtime. No tooth icons anywhere." />
+      <div class="grid gap-4 md:grid-cols-2 [&>*]:min-w-0">
+        <div class="flex min-h-48 items-center justify-center rounded-md border border-line bg-white p-8"><Logo class="h-auto w-full max-w-72" /></div>
+        <div class="on-dark flex min-h-48 items-center justify-center rounded-md bg-ink p-8"><Logo tone="light" class="h-auto w-full max-w-72" /></div>
+        <div class="flex min-h-36 flex-wrap items-center justify-center gap-8 rounded-md border border-line bg-white p-8">
+          <Logo subline={false} class="h-11 w-auto" />
+          <Logo markOnly class="size-12" /><Logo markOnly class="size-8" /><Logo markOnly class="size-4" />
+        </div>
+        <ul class="flex flex-col justify-center gap-2 rounded-md bg-spring-25 p-6 text-small">
+          <li>Files: <code>public/brand/brightwater-logo.svg</code>, <code>-inverse.svg</code>, <code>-mark.svg</code>, favicon.</li>
+          <li>Minimum: 120 px wide with subline, 16 px for the mark.</li>
+          <li>Clear space: the height of the sun on every side.</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- 2 Color -->
+    <section id="color" class="flex flex-col gap-8">
+      <SectionHead label="Color" title="Tile, spring, sun — and a red buoy" lead="Tokens live in src/styles/tokens.css and are the only colors on the site. Sun is for Saturdays and one highlighter per screen; buoy is never text." />
+      <ul class="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">
+        {colors.map((c) => (
+          <li class="overflow-hidden rounded-md border border-line bg-white">
+            <div class="h-20" style={`background:${c.hex}`}></div>
+            <div class="flex flex-col gap-0.5 p-3 text-label font-normal">
+              <b class="font-display text-small font-[700]">{c.token}</b>
+              <span class="tabular-nums">{c.hex}</span>
+              <span class="text-stone">{c.role}</span>
+              <span class="text-stone">{c.on}</span>
+            </div>
+          </li>
+        ))}
+      </ul>
+    </section>
+
+    <!-- 3 Type -->
+    <section id="type" class="flex flex-col gap-8">
+      <SectionHead label="Type" title="Gabarito + Atkinson Hyperlegible Next" lead="Gabarito sets headings, buttons and every figure. Atkinson (Braille Institute) sets reading text. Both self-hosted variable fonts." />
+      <div class="grid gap-4 lg:grid-cols-2">
+        <div class="rounded-md border border-line bg-white p-6">
+          <p class="t-label text-stone">Figures — before / after</p>
+          <p class="mt-3 text-lead" style="font-family:'Atkinson Hyperlegible Next Variable'">Atkinson only: open 7:30 am – 7 pm · $99 · done by 10:00</p>
+          <p class="mt-2 text-lead">Site rule: open 7:30 am – 7 pm · $99 · done by 10:00</p>
+          <p class="mt-3 text-small text-stone">Every digit, $, % and colon is drawn from Gabarito through one <code>@font-face</code> with a <code>unicode-range</code>, so numbers inside running text need no extra markup.</p>
+        </div>
+        <div class="rounded-md border border-line bg-white p-6">
+          <p class="t-label text-stone">Big numbers (.t-figure, tabular)</p>
+          <div class="mt-3 flex flex-wrap items-end gap-x-8 gap-y-3">
+            <p class="t-figure">$0</p><p class="t-figure">${prices.newPatient}</p><p class="t-figure">7 pm</p><p class="t-figure">${prices.planAdult}<span class="text-lead font-[650] tracking-normal">/mo</span></p>
+          </div>
+        </div>
+      </div>
+      <ol class="flex flex-col divide-y divide-line rounded-md border border-line bg-white">
+        {scale.map((s) => (
+          <li class="grid gap-2 p-5 md:grid-cols-[8rem_1fr] md:items-baseline md:gap-6">
+            <span class="text-label font-normal text-stone"><b class="font-display font-[700] text-ink">{s.name}</b> · {s.size}px</span>
+            <span class={s.cls}>{s.sample}</span>
+          </li>
+        ))}
+      </ol>
+    </section>
+
+    <!-- 4 Space -->
+    <section id="space" class="flex flex-col gap-8">
+      <SectionHead label="Space & shape" title="4 px grid, soft corners, one shadow" />
+      <div class="grid gap-4 lg:grid-cols-3">
+        <div class="flex flex-col gap-2 rounded-md border border-line bg-white p-6">
+          {[1, 2, 3, 4, 6, 8, 12, 16].map((n) => (
+            <div class="flex items-center gap-3 text-label font-normal"><span class="w-14 tabular-nums text-stone">{n * 4}px</span><span class="h-3 rounded-full bg-spring" style={`width:${n * 4}px`}></span></div>
+          ))}
+          <p class="mt-2 text-small text-stone">Gutter 16 → 32 px · section 64 → 128 px · text ≤ 65ch</p>
+        </div>
+        <div class="grid grid-cols-2 gap-3 rounded-md border border-line bg-white p-6 text-label font-normal">
+          <div class="flex h-20 items-end rounded-sm bg-spring-50 p-2">sm 6</div>
+          <div class="flex h-20 items-end rounded-md bg-spring-50 p-2">md 14</div>
+          <div class="flex h-20 items-end rounded-lg bg-spring-50 p-2">lg 28</div>
+          <div class="flex h-20 items-end rounded-full bg-spring-50 px-4 pb-2">full</div>
+        </div>
+        <div class="flex flex-col gap-3 rounded-md bg-spring-25 p-6 text-small">
+          <div class="rounded-md bg-white p-4 shadow-(--shadow-float)"><b class="font-display">shadow-float</b> — only for a card that floats over a photo.</div>
+          <div class="rounded-md border border-line bg-white p-4">Everything else: flat, 1px line.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 5 Rope -->
+    <section id="rope" class="flex flex-col gap-8">
+      <SectionHead label="Signature" title="The lane rope" lead="Rebuilt after review: floats strung almost touching, in colour sections, like a real pool lane line — not dashes. Shown on white so the pale floats are visible." />
+      <div class="grid gap-4">
+        <div class="grid gap-3 rounded-md border border-line bg-white p-6 md:grid-cols-[13rem_1fr] md:items-center">
+          <div><b class="font-display">Lane</b><p class="text-small text-stone">Section divider. Long spring sections, a pair of white floats, a red pair every ~200 px — like the lane lines at Deep Eddy.</p></div>
+          <Rope variant="lane" />
+        </div>
+        <div class="grid gap-3 rounded-md border-2 border-spring bg-white p-6 md:grid-cols-[13rem_1fr] md:items-center">
+          <div><b class="font-display">Quiet</b> <Badge tone="spring">Default</Badge><p class="text-small text-stone">Pale floats, one spring float in twelve. Between people in a booking.</p></div>
+          <Rope variant="quiet" />
+        </div>
+        <div class="grid gap-3 rounded-md border border-line bg-white p-6 md:grid-cols-[13rem_1fr] md:items-center">
+          <div><b class="font-display">Segment</b><p class="text-small text-stone">Nine floats with red ends, next to a section label.</p></div>
+          <p class="t-label flex items-center gap-3 text-stone"><Rope variant="segment" />For the dentist-shy</p>
+        </div>
+        <div class="grid gap-3 rounded-md bg-spring-25 p-6 md:grid-cols-[13rem_1fr] md:items-center">
+          <div><b class="font-display">Retired</b><p class="text-small text-stone">Phase 1 preview: 6 px dashes with dots — read as a ruler or railway.</p></div>
+          <div class="h-1.5 rounded-full opacity-70" style="background:radial-gradient(circle at 3px 3px, var(--color-buoy) 2.6px, transparent 3px) 0 0/48px 6px repeat-x, repeating-linear-gradient(90deg, var(--color-spring) 0 9px, transparent 9px 12px)"></div>
+        </div>
+        <div class="rounded-md border border-line bg-white p-6 text-small">
+          <b class="font-display">Usage rule:</b> at most one lane rope between sections <em>or</em> the quiet rope inside one booking card per screen — never both. A segment only next to a label, one per section. No ropes in the footer or as decoration on photos.
+        </div>
+      </div>
+    </section>
+
+    <!-- 6 Buttons -->
+    <section id="buttons" class="flex flex-col gap-8">
+      <SectionHead label="Buttons" title="One primary action per view" lead="Pill buttons, 48 px minimum (56 px large). Book online is always spring; everything else steps down." />
+      <div class="flex flex-wrap items-center gap-3 rounded-md border border-line bg-white p-6">
+        <Button href="#buttons">Book online</Button>
+        <Button href="#buttons" variant="secondary">Check my insurance</Button>
+        <Button href="#buttons" variant="quiet">See Saturday times</Button>
+        <Button href="#buttons" variant="link">How the $99 visit works</Button>
+        <Button href="#buttons" size="lg">Book online · large</Button>
+        <Button disabled>Sending…</Button>
+      </div>
+      <div class="on-dark flex flex-wrap items-center gap-3 rounded-md bg-ink p-6">
+        <Button href="#buttons">Book online</Button>
+        <Button href="#buttons" variant="on-dark">Call (512) 555-0142</Button>
+      </div>
+    </section>
+
+    <!-- 7 Forms -->
+    <section id="forms" class="flex flex-col gap-8">
+      <SectionHead label="Forms" title="Fields, selects and chips" lead="Visible labels, 48 px fields, borders at 3:1, errors next to the field in plain English." />
+      <div class="grid gap-6 rounded-md border border-line bg-white p-6 md:grid-cols-2">
+        <Field id="sg-name" label="Your name" autocomplete="name" placeholder="Ana Morales" />
+        <Field id="sg-phone" label="Mobile phone" type="tel" autocomplete="tel" hint="We text to confirm — no marketing." value="512 555" error="That number looks short — US numbers have 10 digits." />
+        <Select id="sg-carrier" label="Insurance carrier" options={['Delta Dental', 'UT SELECT Dental (Delta Dental PPO)', 'Cigna', 'MetLife', 'Aetna', 'Guardian', 'UnitedHealthcare', 'BCBS of Texas', 'Humana', "I don't have insurance"]} />
+        <Field id="sg-email" label="Email" type="email" optional autocomplete="email" />
+        <div class="flex flex-col gap-2 md:col-span-2">
+          <p class="t-label">Visit type (single choice)</p>
+          <ChipGroup label="Visit type" options={['New patient · $99', 'Cleaning & exam', "Kids' cleaning", 'Toothache', 'Aligner consult']} selected={['New patient · $99']} />
+        </div>
+      </div>
+    </section>
+
+    <!-- 8 Badges -->
+    <section id="badges" class="flex flex-col gap-8">
+      <SectionHead label="Badges" title="Small facts, never decoration" />
+      <div class="flex flex-wrap items-center gap-3 rounded-md border border-line bg-white p-6">
+        <Badge tone="spring" dot>Open now</Badge><Badge tone="sun">Saturday</Badge><Badge tone="spring">In-network</Badge>
+        <Badge>New patient · $99</Badge><Badge tone="ink">Hablamos español</Badge><Badge tone="alert">Fully booked</Badge>
+      </div>
+    </section>
+
+    <!-- 9 Signature components -->
+    <section id="signature" class="flex flex-col gap-8">
+      <SectionHead label="Signature components" title="Booking, insurance, comfort" lead="Static states for review; the live widgets (family booking A, insurance in dollars B, comfort plan C) arrive in phase 5 and load on first interaction." />
+      <div class="grid gap-6 lg:grid-cols-3">
+        <div class="flex flex-col gap-3"><p class="t-label text-stone">Week lanes — desktop hero</p><div class="rounded-md border border-line bg-white p-5"><WeekLanes /></div></div>
+        <div class="flex flex-col gap-3"><p class="t-label text-stone">Week lanes — compact, under mobile CTAs</p><div class="rounded-md border border-line bg-white p-5"><WeekLanes variant="compact" /></div>
+          <p class="t-label text-stone pt-3">Crew quick start — compact, mobile</p><div class="rounded-md border border-line bg-white p-5"><CrewQuick /></div></div>
+        <div class="flex flex-col gap-3"><p class="t-label text-stone">Insurance answer (B)</p><InsuranceResult /></div>
+      </div>
+      <ComfortPanel />
+    </section>
+
+    <!-- 10 Cards -->
+    <section id="cards" class="flex flex-col gap-8">
+      <SectionHead label="Cards" title="Services, doctors, reviews" lead="Services differ in form on purpose: photo-led or one big fact. Doctors are named in the copy deck (phase 3)." />
+      <div class="grid gap-4 md:grid-cols-3">
+        <ServiceTile title="Cleanings & Exams" href="/services/cleanings-exams/" photo={cleaning} alt="A hygienist with her mask down chats with a relaxed patient" fact="$0" factLabel="with most PPO plans" text="Every six months, about an hour, kids from age one." position="40% 40%" />
+        <ServiceTile variant="fact" title="Same-Day Crowns" href="/services/same-day-crowns/" fact="~2 hrs" factLabel="scan, design, mill and bond — one visit, one numbing" text="No goop impressions and no temporary crown for three weeks." />
+        <ServiceTile title="Clear Aligners" href="/services/clear-aligners/" photo={aligners} alt="A smiling woman puts in a clear aligner" fact={`$${prices.alignersMonthlyFrom}`} factLabel="a month, free 3D scan first" text="6–18 months for most adults. We tell you if you're not a good fit." position="50% 35%" />
+      </div>
+      <div class="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+        <DoctorCard photo={dr1} name="Dr. Elena Ruiz, DDS" role="Family & anxious patients" school="UT Health San Antonio" languages="Hablamos español" why="I had a dentist who lectured me at twelve. I decided nobody in my chair would ever feel that." />
+        <DoctorCard photo={dr2} name="Dr. Mark Holloway, DDS" role="Same-day crowns" school="Texas A&M College of Dentistry" why="I like fixing things in one visit. People have jobs and kids — two appointments is one too many." />
+        <DoctorCard photo={dr3} name="Dr. Hannah Kessler, DMD" role="Clear aligners & kids" school="UTHealth Houston" why="Kids remember how a visit felt, not what we did. I'm in the business of good memories." />
+      </div>
+      <div class="grid gap-4 md:grid-cols-2">
+        <SampleReview quote="We booked all three of us for Saturday at nine. Chairs side by side, out by ten, kids got stickers, I got my morning back." who="Sam R." context="Mueller · family of three" />
+        <SampleReview quote="First visit in eight years. Nobody said a word about it. They showed me every photo before doing anything." who="Jordan T." context="Windsor Park · new patient" />
+      </div>
+    </section>
+
+    <!-- 11 Photos -->
+    <section id="photos" class="flex flex-col gap-8">
+      <SectionHead label="Photos" title="Photo treatment" lead="Real photos only, AVIF/WebP via astro:assets. Large photos get the 28 px corner, cards 14 px. Two hero candidates in the hero frame — your call (see the photo board)." />
+      <div class="grid gap-4 md:grid-cols-2">
+        <figure class="flex flex-col gap-2">
+          <div class="aspect-[4/3] overflow-hidden rounded-lg"><Photo src={heroFamily} alt="A dad and his two kids brushing their teeth" sizes="(min-width: 48rem) 45vw, 100vw" position="38% 40%" /></div>
+          <figcaption class="text-small"><b class="font-display">Hero 4 · Saturday mood</b> — family at home, warm and real. Not a clinic.</figcaption>
+        </figure>
+        <figure class="flex flex-col gap-2">
+          <div class="aspect-[4/3] overflow-hidden rounded-lg"><Photo src={heroClinic} alt="A dad and his daughter look at her X-ray with the dentist" sizes="(min-width: 48rem) 45vw, 100vw" position="25% 50%" /></div>
+          <figcaption class="text-small"><b class="font-display">Hero 3 · In the clinic</b> — parent + child + dentist, nothing in anyone's mouth. Cooler light.</figcaption>
+        </figure>
+      </div>
+    </section>
+  </div>
+</BaseLayout>

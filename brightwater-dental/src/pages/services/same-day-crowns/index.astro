@@ -1,0 +1,34 @@
+---
+import ServiceLayout from '../../../components/page/ServiceLayout.astro';
+import Photo from '../../../components/ui/Photo.astro';
+import { services } from '../../../data/services';
+import crowns from '../../../assets/photos/service-crown-veneers.jpg';
+const s = services.find((x) => x.slug === 'same-day-crowns')!;
+const compare = [
+  ['Visits', '1', '2, two to three weeks apart'],
+  ['Numbing', 'Once', 'Twice'],
+  ['Impressions', '3D scan', 'Putty trays'],
+  ['Temporary crown', 'None', 'Two to three weeks'],
+  ['Time in the chair', 'About 2 hours', 'About 1.5 + 1 hour'],
+];
+---
+<ServiceLayout s={s} title="Same-day crowns in Austin | Brightwater Family Dental" description="A ceramic crown designed, milled and bonded in one visit of about two hours. From $1,150, about 50% covered by most PPO plans.">
+  <section class="wrap py-(--spacing-section)" aria-labelledby="vs-h">
+    <div class="grid gap-10 lg:grid-cols-12 lg:items-center lg:gap-12">
+      <div class="flex min-w-0 flex-col gap-6 lg:col-span-7">
+        <p class="t-label text-stone">One visit vs two</p>
+        <h2 id="vs-h" class="t-h2">Same-day vs the traditional way</h2>
+        <div class="overflow-x-auto rounded-md border border-line bg-white">
+          <table class="w-full text-left text-small">
+            <thead class="font-display"><tr class="bg-spring-25"><th scope="col" class="p-3 sm:p-4"><span class="sr-only">Compare</span></th><th scope="col" class="p-3 sm:p-4 font-[750] text-spring-ink">Same-day at Brightwater</th><th scope="col" class="p-3 sm:p-4 font-[650] text-stone">Traditional</th></tr></thead>
+            <tbody class="divide-y divide-line">{compare.map(([k, a, b]) => <tr><th scope="row" class="p-3 sm:p-4 font-display font-[650]">{k}</th><td class="p-3 sm:p-4 font-[700]">{a}</td><td class="p-3 sm:p-4 text-stone">{b}</td></tr>)}</tbody>
+          </table>
+        </div>
+      </div>
+      <figure class="flex flex-col gap-2 lg:col-span-5">
+        <div class="aspect-[4/5] overflow-hidden rounded-lg"><Photo src={crowns} alt="Ceramic crowns on a dark reflective surface" widths={[400, 640, 900]} sizes="(min-width: 64rem) 32vw, 100vw" position="50% 45%" /></div>
+        <figcaption class="text-small text-stone">Milled from one block of ceramic, shade-matched on the screen.</figcaption>
+      </figure>
+    </div>
+  </section>
+</ServiceLayout>

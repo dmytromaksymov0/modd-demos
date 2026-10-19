@@ -1,0 +1,42 @@
+---
+// "Who's coming in?" — the family-booking teaser (signature moment A). One lane per person,
+// separated by a single lane rope. Static demo data here; the live widget arrives in phase 5.
+import Rope from '../ui/Rope.astro';
+import Button from '../ui/Button.astro';
+interface Person { initial: string; name: string; visit: string; time: string; chair: string }
+interface Props { date?: string; people?: Person[]; floating?: boolean; class?: string; headingId?: string }
+const {
+  date = 'Sat, Nov 7',
+  people = [
+    { initial: 'S', name: 'Sam, 38', visit: 'Cleaning & exam', time: '9:00', chair: 'Chair 1' },
+    { initial: 'L', name: 'Leo, 6', visit: "Kids' cleaning", time: '9:00', chair: 'Chair 2' },
+    { initial: 'M', name: 'Mia, 8', visit: "Kids' cleaning", time: '9:00', chair: 'Chair 3' },
+  ],
+  floating = false,
+  class: cls = '',
+  headingId = 'crew-h',
+} = Astro.props;
+---
+<section class={`rounded-md bg-white p-5 sm:p-6 ${floating ? 'shadow-(--shadow-float)' : 'border border-line'} ${cls}`} aria-labelledby={headingId} data-booking>
+  <div class="flex items-baseline justify-between gap-3">
+    <h2 id={headingId} class="font-display text-[1.375rem] font-[750] leading-tight tracking-[-0.02em]">Who's coming in?</h2>
+    <span class="text-small text-stone">{date}</span>
+  </div>
+  <ul class="mt-2">
+    {people.map((p, i) => (
+      <li>
+        {i > 0 && <Rope variant="quiet" />}
+        <div class="grid grid-cols-[auto_1fr_auto] items-center gap-3 py-3">
+          <span class="grid size-9 place-items-center rounded-full bg-spring-50 font-display font-[750] text-spring-ink" aria-hidden="true">{p.initial}</span>
+          <span class="leading-snug"><b class="block font-display font-[650]">{p.name}</b><span class="text-small text-stone">{p.visit}</span></span>
+          <span class="text-right leading-tight"><b class="block font-display text-[1.0625rem] font-[750] tabular-nums">{p.time}</b><span class="text-label text-stone">{p.chair}</span></span>
+        </div>
+      </li>
+    ))}
+  </ul>
+  <a href="/book/?crew=family" class="mb-4 mt-1 inline-flex min-h-11 items-center gap-2 font-display font-[650] text-spring no-underline hover:underline">
+    <svg class="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14" /></svg>Add someone
+  </a>
+  <Button href="/book/?crew=family&day=sat" full>See Saturday times</Button>
+  <p class="mt-3 text-center text-small text-stone">Everyone done by <span class="num">10:00</span> · one set of contact details</p>
+</section>
