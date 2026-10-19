@@ -56,3 +56,13 @@
 - Если что-то в брифе неясно — спроси, а не додумывай.
 - На фазах 1–3 используй скилл `ui-ux-pro-max` (установлен глобально в `~/.claude/skills/ui-ux-pro-max`): `--design-system` для направления, `--domain`/`--stack` для точечных вопросов. Его результаты — рекомендации, запреты из этого файла важнее.
 - Playwright стоит в корне `modd-demos/` (`node_modules` общий для всех сайтов).
+
+## Git и деплой
+- Все сайты живут в одном приватном репозитории `dmytromaksymov0/modd-demos` (ветка `main`), каждый в своей папке. Коммит и пуш — только по моему «ок».
+- `screenshots/` и `reports/` сайта в git не попадают (см. `.gitignore`): итоговые цифры QA пиши в `docs/`.
+- Деплой — **только через Git-интеграцию Cloudflare Pages**. Никакого Direct Upload (`wrangler pages deploy` в новый проект): такой проект потом нельзя подключить к GitHub, придётся пересоздавать и менять адрес (так уже было с Kestrel).
+- Порядок: код закоммичен и запушен → я создаю в дашборде Pages-проект «Import an existing Git repository» (не мастер Workers) → дальше каждый пуш в `main` публикует сайт.
+- Настройки проекта: Root directory = папка сайта, Build output = `dist`, Build command = `npm run build`, `NODE_VERSION` = `22`, Build watch paths = `<папка сайта>/*`.
+- Имя Pages-проекта выбираем до первого деплоя (переименовать нельзя) и держим одинаковым в трёх местах: имя проекта в Cloudflare, `name` в `wrangler.toml`, `site` в `astro.config.mjs` (+ `robots.txt`).
+- Лимит Cloudflare — 5 Pages-проектов на репозиторий: ровно по одному на сайт, тестовые проекты не создаём.
+- Секреты (`TELEGRAM_BOT_TOKEN`, `TELEGRAM_CHAT_ID`) ввожу я сам: дашборд или `npx wrangler pages secret put … --project-name <имя>`. После добавления — Retry deployment. Тестовую заявку в Telegram отправляй только с моего разрешения.
