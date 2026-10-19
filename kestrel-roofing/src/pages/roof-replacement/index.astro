@@ -1,0 +1,181 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHero from '../../components/patterns/PageHero.astro';
+import Annotation from '../../components/ui/Annotation.astro';
+import SectionHead from '../../components/ui/SectionHead.astro';
+import Photo from '../../components/ui/Photo.astro';
+import Button from '../../components/ui/Button.astro';
+import Warranty from '../../components/home/Warranty.astro';
+import DayTimeline from '../../components/home/DayTimeline.astro';
+import FinalCta from '../../components/home/FinalCta.astro';
+import Faq from '../../components/patterns/Faq.astro';
+import { estimate, RATES, EXTRAS, usd } from '../../lib/pricing';
+import { business, faqSchema, breadcrumbs } from '../../lib/schema';
+import { site } from '../../config/site';
+import heroImg from '../../assets/photos/hero-2-brick-house-decking.jpg';
+import shingleImg from '../../assets/photos/material-architectural-shingle.jpg';
+import metalImg from '../../assets/photos/material-metal-farmhouse.jpg';
+import Check from '@lucide/astro/icons/check';
+import X from '@lucide/astro/icons/x';
+import ArrowRight from '@lucide/astro/icons/arrow-right';
+
+const typical = { homeSqft: 2000, stories: 1 as const, pitch: 6 };
+const shingle = estimate({ ...typical, material: 'architectural' });
+const metal = estimate({ ...typical, material: 'metal' });
+
+const materials = [
+  {
+    key: 'architectural', img: shingleImg, alt: 'Close-up of brown architectural asphalt shingles', name: RATES.architectural.label,
+    pitch: 'The roof on most Columbus homes. Dimensional look, quiet in rain, easy to repair.',
+    rows: [['Lasts', '25–30 years'], ['Wind', 'Rated to 130 mph'], ['Hail', 'Class 4 impact-rated option (+8–12%)'], ['Per square', `${usd(RATES.architectural.low)}–${usd(RATES.architectural.high)}`], ['Typical ranch*', `${usd(shingle.low)}–${usd(shingle.high)}`], ['Install', `${shingle.days} day`]],
+  },
+  {
+    key: 'metal', img: metalImg, alt: 'White farmhouse with a standing-seam metal roof', name: RATES.metal.label,
+    pitch: 'Twice the life, sheds snow and hail, lower cooling bills. Costs about double up front.',
+    rows: [['Lasts', '40–60 years'], ['Wind', 'Rated to 140+ mph'], ['Hail', 'Class 4 — dents, rarely leaks'], ['Per square', `${usd(RATES.metal.low)}–${usd(RATES.metal.high)}`], ['Typical ranch*', `${usd(metal.low)}–${usd(metal.high)}`], ['Install', `${metal.days} days`]],
+  },
+];
+
+const layers = [
+  ['Tear-off to the deck', 'Every old layer comes off. We never shingle over shingles.'],
+  ['Deck inspection', 'Every sheet walked and checked. Soft wood photographed before we touch it.'],
+  ['Ice & water shield', 'Self-sealing membrane at eaves, valleys and around penetrations — Ohio ice-dam country.'],
+  ['Synthetic underlayment', 'On the rest of the deck. Doesn’t wrinkle or tear like felt.'],
+  ['Drip edge & starter', 'Metal edge at eaves and rakes; starter strip so the first row can’t lift.'],
+  ['Shingles', 'Six nails each, hand-checked pattern on every slope.'],
+  ['Flashing & pipe boots', 'New step and counter flashing at walls and chimneys, new boots on every pipe.'],
+  ['Ridge vent', 'Continuous ventilation so the attic breathes and shingles last.'],
+];
+
+const faq = [
+  { q: 'How long does a roof replacement take?', a: 'Most homes take one day: we arrive at 7 and leave by evening with the yard cleaned. Large, steep or metal roofs take two to three days — your estimate says which.' },
+  { q: 'Do I need to be home?', a: 'No. We need access to an outdoor outlet and the driveway. Most owners leave for work and come back to a finished roof; we send photos during the day.' },
+  { q: 'Is it loud? What about my kids and pets?', a: 'Tear-off is loud for the first two to three hours. Keep pets inside or away for the day. We fence off the drop zone and keep the driveway clear by evening.' },
+  { q: 'Will you damage my landscaping?', a: 'We cover beds and grass with tarps, lean plywood against siding and windows, and put the dumpster on plywood. Anything we damage, we fix.' },
+  { q: 'Do I need a permit in Columbus?', a: 'Re-roofing in Columbus and most suburbs needs a permit. We pull it, schedule any inspection and include the fee in your price.' },
+  { q: 'Can you match my neighbor’s roof?', a: 'Usually yes — bring a photo or the address. We’ll show you samples on your own house in daylight before you choose.' },
+];
+---
+<BaseLayout
+  title="Roof Replacement in Columbus, OH — Done in One Day | Kestrel"
+  description={`New roof in one day with a fixed price before we start and 25 years on our workmanship. Architectural shingle from ${usd(RATES.architectural.low)}/square, metal from ${usd(RATES.metal.low)}/square.`}
+  schema={[business(Astro.site?.href), faqSchema(faq), breadcrumbs(Astro.site?.href, [{ name: 'Roof Replacement', path: '/roof-replacement/' }])]}
+>
+  <PageHero
+    kicker="Roof replacement"
+    title="A new roof in one day. Price locked&nbsp;first."
+    lede="Tear-off to the deck, every layer done right, yard cleaned before we leave — and 25 years on our work. Here’s exactly what you’re paying for."
+    img={heroImg}
+    alt="Kestrel crew tearing off an old roof on a brick home; new plywood decking leans against the garage"
+    position="60% 50%"
+    cta={{ label: 'Book a free inspection', href: '#final-form', problem: 'old-roof' }}
+  >
+    <Annotation x={27} y={27} side="right" mobile rule={28} title="7:40 · Tear-off" text="Down to the deck, into the dumpster" />
+    <Annotation x={50} y={58} side="right" mobile mobileSide="right" rule={28} title="New decking ready" text="Only for sheets you’ve seen photos of" />
+  </PageHero>
+
+  <!-- Repair or replace -->
+  <section class="border-t border-line py-[var(--spacing-section)]" aria-labelledby="rr-title">
+    <div class="wrap">
+      <SectionHead id="rr-title" kicker="Be honest with me" title="Repair or replace?" lede="A lot of roofs we look at don’t need replacing yet. Here’s how we decide — and we’ll tell you the same thing on your roof." />
+      <div class="mt-10 grid gap-6 md:grid-cols-2">
+        <div class="rounded-sm border border-line bg-white p-6">
+          <h3 class="t-h3">A repair is usually enough if…</h3>
+          <ul class="mt-4 flex flex-col gap-3">
+            {['The roof is under 15 years old', 'The leak is in one spot — a pipe boot, a chimney, a valley', 'A few shingles blew off in a storm', 'The deck feels solid when we walk it'].map((t) => <li class="flex gap-3"><Check class="mt-1 size-5 shrink-0 text-clear" aria-hidden="true" />{t}</li>)}
+          </ul>
+          <p class="t-label mt-6 text-blueprint">Repairs from $350</p>
+        </div>
+        <div class="rounded-sm border border-ink bg-white p-6">
+          <h3 class="t-h3">It’s time to replace if…</h3>
+          <ul class="mt-4 flex flex-col gap-3">
+            {['Shingles are curling, cracking or shedding granules into the gutters', 'The roof is 20+ years old and leaks in more than one place', 'There’s hail damage on several slopes (often covered by insurance)', 'You’re selling and the buyer’s inspector will flag it'].map((t) => <li class="flex gap-3"><X class="mt-1 size-5 shrink-0 text-alert" aria-hidden="true" />{t}</li>)}
+          </ul>
+          <p class="t-label mt-6 text-blueprint">Most replacements take 1 day</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Materials -->
+  <section class="bg-white py-[var(--spacing-section)]" aria-labelledby="mat-title">
+    <div class="wrap">
+      <SectionHead id="mat-title" kicker="Materials" title="Two roofs we install — and what they really cost" lede="We install the two materials that make sense in central Ohio. Prices are installed, with tear-off and everything listed below." />
+      <div class="mt-10 grid gap-8 lg:grid-cols-2">
+        {materials.map((m) => (
+          <article class="flex flex-col overflow-hidden rounded-sm border border-line bg-paper">
+            <div class="relative bg-line" style="aspect-ratio:16/9"><Photo src={m.img} alt={m.alt} sizes="(min-width: 1024px) 620px, 100vw" class="absolute inset-0" /></div>
+            <div class="flex flex-1 flex-col gap-4 p-6">
+              <h3 class="t-h3">{m.name}</h3>
+              <p class="text-graphite">{m.pitch}</p>
+              <dl class="mt-auto grid grid-cols-[8rem_1fr] gap-x-4 gap-y-2 border-t border-line pt-4 text-small">
+                {m.rows.map(([k, v]) => <><dt class="t-label pt-0.5 text-graphite">{k}</dt><dd class="font-medium">{v}</dd></>)}
+              </dl>
+            </div>
+          </article>
+        ))}
+      </div>
+      <p class="t-small mt-4 text-graphite">* One-story home, 2,000 sq ft, medium 6/12 pitch. <a href="/roof-cost-calculator/" class="font-semibold text-blueprint underline underline-offset-4">Price your own roof</a> — pick your pitch from photos.</p>
+    </div>
+  </section>
+
+  <!-- What's in every roof -->
+  <section class="py-[var(--spacing-section)]" aria-labelledby="layers-title">
+    <div class="wrap grid gap-10 lg:grid-cols-12 lg:gap-12">
+      <div class="lg:col-span-5">
+        <SectionHead id="layers-title" kicker="Included, every time" title="What’s in every Kestrel roof, bottom to top" lede="Cheap quotes skip layers you can’t see from the street. Ours are on the estimate, line by line." />
+      </div>
+      <ol class="divide-y divide-line border-y border-line lg:col-span-7">
+        {layers.map(([t, d], i) => (
+          <li class="grid grid-cols-[3rem_1fr] gap-4 py-4">
+            <span class="t-label pt-1 text-blueprint">{String(i + 1).padStart(2, '0')}</span>
+            <div><h3 class="font-semibold">{t}</h3><p class="t-small mt-0.5 text-graphite">{d}</p></div>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <DayTimeline />
+
+  <!-- Costs we tell you first -->
+  <section class="border-t border-line py-[var(--spacing-section)]" aria-labelledby="extras-title">
+    <div class="wrap grid gap-10 lg:grid-cols-12 lg:gap-12">
+      <div class="lg:col-span-5">
+        <SectionHead id="extras-title" kicker="No surprises" title="Costs we tell you about first" lede="These are the only things that can add to a replacement. They’re priced here, in writing on your estimate, and never added without a photo and your OK." />
+      </div>
+      <div class="lg:col-span-7">
+        <table class="w-full border-collapse text-left">
+          <caption class="sr-only">Possible extra costs on a roof replacement</caption>
+          <thead><tr class="border-b border-ink"><th scope="col" class="t-label pb-3 font-medium text-graphite">Item</th><th scope="col" class="t-label pb-3 text-right font-medium text-graphite">Price</th></tr></thead>
+          <tbody>
+            {Object.values(EXTRAS).map((e) => (
+              <tr class="border-b border-line"><td class="py-4 pr-4">{e.label}</td><td class="py-4 text-right font-semibold whitespace-nowrap">{usd(e.price)} <span class="t-small font-normal text-graphite">{e.unit}</span></td></tr>
+            ))}
+          </tbody>
+        </table>
+        <p class="t-small mt-4 text-graphite">Typical Columbus home: 0–4 decking sheets. We photograph every one we replace and you see it before we do.</p>
+      </div>
+    </div>
+  </section>
+
+  <Warranty />
+
+  <!-- Financing -->
+  <section class="border-t border-line py-[var(--spacing-section)]" aria-labelledby="fin-title">
+    <div class="wrap grid items-center gap-8 lg:grid-cols-12 lg:gap-12">
+      <div class="lg:col-span-6">
+        <SectionHead id="fin-title" kicker="Financing" title={`0% for ${site.financing.months} months`} lede="Spread the cost of a new roof over a year with no interest. Apply in 5 minutes during your estimate — it doesn’t affect your price." />
+      </div>
+      <div class="rounded-sm bg-ink p-6 text-paper lg:col-span-6 md:p-8">
+        <p class="t-label text-mist">Example · typical ranch, shingle</p>
+        <p class="mt-2 text-[clamp(2rem,1.5rem+2vw,3rem)] font-bold leading-none [font-variation-settings:'wdth'_120]">≈ {usd(shingle.monthly)}/mo</p>
+        <p class="mt-3 text-mist">for {site.financing.months} months at 0% APR on a {usd(Math.round((shingle.low + shingle.high) / 2 / 100) * 100)} roof. {site.financing.note}</p>
+        <div class="mt-5"><a href="/roof-cost-calculator/" class="inline-flex min-h-11 items-center gap-1.5 font-semibold underline underline-offset-4 hover:text-blueprint-light">Work out your own payment <ArrowRight class="size-4" aria-hidden="true" /></a></div>
+      </div>
+    </div>
+  </section>
+
+  <Faq items={faq} />
+  <FinalCta problem="old-roof" title="Get a fixed price for your new&nbsp;roof." />
+</BaseLayout>

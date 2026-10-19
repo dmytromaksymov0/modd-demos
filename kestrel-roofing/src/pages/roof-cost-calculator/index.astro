@@ -1,0 +1,66 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import SectionHead from '../../components/ui/SectionHead.astro';
+import RoofCalculator from '../../components/patterns/RoofCalculator.astro';
+import FinalCta from '../../components/home/FinalCta.astro';
+import Faq from '../../components/patterns/Faq.astro';
+import { business, faqSchema, breadcrumbs } from '../../lib/schema';
+import { EXTRAS, RATES, usd } from '../../lib/pricing';
+import { site } from '../../config/site';
+
+const faq = [
+  { q: 'How accurate is the calculator?', a: 'For a typical roof it lands within about 10–15% of our final price. The difference comes from things only an inspection shows: extra layers, rotten decking, skylights, a complex roof with many valleys.' },
+  { q: 'Why do you show prices when other roofers don’t?', a: 'Because you’ll find out anyway, and a number you can plan around is more useful than a sales visit. The fixed price on your estimate is the one you pay.' },
+  { q: 'Does the price include tear-off and disposal?', a: 'Yes — tear-off of one layer, dumpster, disposal, permit, underlayment, flashing, ridge vent and clean-up. Extra layers and decking are priced below.' },
+  { q: 'What about insurance claims?', a: 'If storm damage is covered, your insurer pays the replacement cost and you pay your deductible. <a href="/storm-damage/" class="font-semibold text-blueprint underline underline-offset-4">See how a claim works</a>.' },
+];
+---
+<BaseLayout
+  title="Roof Replacement Cost Calculator — Columbus, OH | Kestrel"
+  description={`See what a new roof costs in Columbus before anyone visits: pick your home size, roof pitch and material. Shingle ${usd(RATES.architectural.low)}–${usd(RATES.architectural.high)} per square, installed. No email required.`}
+  schema={[business(Astro.site?.href), faqSchema(faq), breadcrumbs(Astro.site?.href, [{ name: 'Roof Cost Calculator', path: '/roof-cost-calculator/' }])]}
+>
+  <section class="wrap pt-10 pb-8 lg:pt-14" data-hero>
+    <p class="t-label text-graphite">Roof cost calculator</p>
+    <h1 class="t-h1 mt-3 max-w-[20ch]">What will a new roof cost? Real Columbus numbers.</h1>
+    <p class="t-lead measure mt-4 text-graphite">Four questions, an instant price range — no email, no phone number. When you want a fixed price, we measure your roof for free.</p>
+  </section>
+
+  <section class="wrap pb-[var(--spacing-section)]" aria-label="Calculator">
+    <RoofCalculator />
+  </section>
+
+  <section class="border-t border-line bg-white py-[var(--spacing-section)]" aria-labelledby="how-title">
+    <div class="wrap grid gap-10 lg:grid-cols-12 lg:gap-12">
+      <div class="lg:col-span-5">
+        <SectionHead id="how-title" kicker="How we calculate" title="The math, out in the open" lede="Roofers price by the square — 100 square feet of roof. Here’s how we get from your home size to squares and dollars." />
+      </div>
+      <ol class="divide-y divide-line border-y border-line lg:col-span-7">
+        {[
+          ['Footprint', 'Home size ÷ stories. A 2,000 sq ft two-story sits on about 1,000 sq ft.'],
+          ['Overhangs', '× 1.15 for eaves and rakes that stick out past the walls.'],
+          ['Pitch', '× the pitch factor: 1.05 at 4/12, 1.12 at 6/12, 1.20 at 8/12, 1.41 at 12/12.'],
+          ['Waste', '× 1.10 for cutting, starter strip and ridge caps. ÷ 100 = squares.'],
+          ['Price', `Squares × ${usd(RATES.architectural.low)}–${usd(RATES.architectural.high)} for shingle or ${usd(RATES.metal.low)}–${usd(RATES.metal.high)} for metal. Steep roofs (8/12+) add 5–12% for harness work.`],
+        ].map(([t, d], i) => (
+          <li class="grid grid-cols-[3rem_1fr] gap-4 py-4"><span class="t-label pt-1 text-blueprint">{String(i + 1).padStart(2, '0')}</span><div><h3 class="font-semibold">{t}</h3><p class="t-small mt-0.5 text-graphite">{d}</p></div></li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <section class="py-[var(--spacing-section)]" aria-labelledby="change-title">
+    <div class="wrap grid gap-10 lg:grid-cols-12 lg:gap-12">
+      <div class="lg:col-span-5"><SectionHead id="change-title" kicker="What can change it" title="The only things that move the number" lede={`We find these at the inspection and put them on your estimate — never as a surprise on the invoice. Financing: 0% for ${site.financing.months} months, on approved credit.`} /></div>
+      <table class="w-full border-collapse text-left lg:col-span-7">
+        <caption class="sr-only">Possible extra costs</caption>
+        <tbody>
+          {Object.values(EXTRAS).map((e) => <tr class="border-b border-line"><td class="py-4 pr-4">{e.label}</td><td class="py-4 text-right font-semibold whitespace-nowrap">{usd(e.price)} <span class="t-small font-normal text-graphite">{e.unit}</span></td></tr>)}
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <Faq items={faq} title="About the numbers" />
+  <FinalCta problem="old-roof" kicker="Exact price" title="Turn the range into one fixed&nbsp;number." />
+</BaseLayout>

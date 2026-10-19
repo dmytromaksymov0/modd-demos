@@ -1,0 +1,10 @@
+---
+interface Props { kicker: string; title: string; lede?: string; id: string; class?: string }
+const { kicker, title, lede, id, class: cls = '' } = Astro.props;
+---
+<header class={`flex flex-col gap-3 ${cls}`}>
+  <p class="t-label text-graphite">{kicker}</p>
+  <h2 id={id} class="t-h2" set:html={title} />
+  {lede && <p class="t-lead measure text-graphite">{lede}</p>}
+  <slot />
+</header>

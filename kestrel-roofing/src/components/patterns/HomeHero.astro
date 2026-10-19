@@ -1,0 +1,53 @@
+---
+// Home hero. Constraint: on 1280×800 the whole form — including its button — is above the fold.
+import heroImg from '../../assets/photos/hero-1-porch-house-crew.jpg';
+import { site } from '../../config/site';
+import AnnotatedPhoto from '../ui/AnnotatedPhoto.astro';
+import Annotation from '../ui/Annotation.astro';
+import Badge from '../ui/Badge.astro';
+import LeadForm from './LeadForm.astro';
+import Button from '../ui/Button.astro';
+import Phone from '@lucide/astro/icons/phone';
+import Landmark from '@lucide/astro/icons/landmark';
+import ShieldCheck from '@lucide/astro/icons/shield-check';
+import BadgeCheck from '@lucide/astro/icons/badge-check';
+import Hammer from '@lucide/astro/icons/hammer';
+interface Props { demo?: boolean }
+const { demo = false } = Astro.props;
+---
+<section class="hero wrap grid gap-6 pt-6 pb-12 md:pt-8 lg:grid-cols-2 lg:gap-x-10 lg:gap-y-0 lg:pb-16" data-hero>
+  <div class="contents lg:flex lg:flex-col lg:gap-5">
+    <p class="t-label order-1 text-graphite lg:order-none">Columbus roofing since {site.founded}</p>
+    <h1 class="hero-title order-2 lg:order-none">We measure first, then we <span class="text-blueprint">price</span>.</h1>
+    <p class="t-lead order-3 max-w-[40ch] text-graphite lg:order-none">Free inspection with photos of everything we find, and a fixed price before any work starts. Most roofs take one day — and <strong class="font-semibold text-ink">our work is covered for {site.warrantyYears}&nbsp;years</strong>.</p>
+    <div class="order-4 grid grid-cols-[1fr_auto] gap-2 lg:hidden">
+      <Button href="#hero-form">Book free inspection</Button>
+      <Button href={site.phone.href} variant="secondary"><Phone class="size-5" aria-hidden="true" />Call</Button>
+    </div>
+    <LeadForm id="hero-form" demo={demo} class="order-6 lg:order-none" />
+  </div>
+
+  <div class="contents lg:flex lg:flex-col lg:gap-6">
+    <AnnotatedPhoto src={heroImg} class="order-5 lg:order-none" alt="Kestrel crew replacing the roof of a white two-story house with a wraparound porch; tarps cover the lawn" priority quality={55} sizes="(min-width: 1344px) 640px, (min-width: 1024px) 48vw, calc(100vw - 32px)">
+      <Annotation x={55} y={28} side="right" mobile mobileSide="left" rule={28} title="11:00 · Underlayment on" text="Synthetic + ice & water shield" />
+      <Annotation x={13} y={66} side="right" rule={28} title="Old deck · photo 14/32" text="2 soft sheets swapped, $85 each — with your OK" />
+      <Annotation x={46} y={89} mobileY={82} side="right" mobile rule={24} title="Tarps over the lawn" text="Beds and grass protected all day" />
+    </AnnotatedPhoto>
+    <div class="order-7 grid grid-cols-1 gap-x-6 gap-y-5 border-t border-ink pt-5 sm:grid-cols-2 lg:order-none">
+      <Badge title="Licensed in Columbus" detail="Home Improvement Contractor"><Landmark slot="icon" class="size-5" /></Badge>
+      <Badge title="$2M insured" detail="Liability + workers’ comp"><ShieldCheck slot="icon" class="size-5" /></Badge>
+      <Badge title="Master Installer" detail="Manufacturer-certified crews"><BadgeCheck slot="icon" class="size-5" /></Badge>
+      <Badge title={`$${site.nailBounty} for any nail we miss`} detail="Two magnet sweeps before we leave"><Hammer slot="icon" class="size-5" /></Badge>
+    </div>
+  </div>
+</section>
+
+<style>
+  .hero-title {
+    font-size: clamp(2.375rem, 1.45rem + 3vw, 3.5rem);
+    line-height: 1;
+    letter-spacing: -0.025em;
+    font-weight: 750;
+    font-variation-settings: 'wdth' var(--wdth-display);
+  }
+</style>

@@ -1,0 +1,21 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { site } from '../../config/site';
+---
+<BaseLayout title="Privacy Policy | Kestrel Roofing Co." description="How Kestrel Roofing Co. handles the information you send through this website.">
+  <article class="wrap py-[var(--spacing-section)]">
+    <p class="t-label text-graphite">Privacy</p>
+    <h1 class="t-h1 mt-3">Privacy policy</h1>
+    <div class="measure mt-8 flex flex-col gap-5 text-graphite [&_h2]:mt-4 [&_h2]:text-h3 [&_h2]:font-bold [&_h2]:text-ink">
+      <p><strong class="text-ink">This is a concept website for a fictional company.</strong> Forms are connected for demonstration only; please don’t send real personal details.</p>
+      <h2>What we collect</h2>
+      <p>When you request an inspection we receive the details you type: problem type, ZIP code, name, phone number and, if you used the calculator, your estimate. Nothing else is collected through the form.</p>
+      <h2>How we use it</h2>
+      <p>Only to call you back about your roof. We don’t sell or share your details, and we don’t add you to marketing lists.</p>
+      <h2>Analytics and cookies</h2>
+      <p>This site sets no tracking cookies. If privacy-friendly analytics are enabled, they count page views without identifying you.</p>
+      <h2>Contact</h2>
+      <p>Questions or a request to delete your details: {site.email} or {site.phone.display}.</p>
+    </div>
+  </article>
+</BaseLayout>

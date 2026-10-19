@@ -1,0 +1,41 @@
+---
+// Mobile bottom bar: appears after the hero, hides while a form is on screen or the keyboard is open.
+import { site } from '../../config/site';
+import Phone from '@lucide/astro/icons/phone';
+import CalendarCheck from '@lucide/astro/icons/calendar-check';
+interface Props { alwaysVisible?: boolean }
+const { alwaysVisible = false } = Astro.props;
+---
+<div
+  class="sticky-bar fixed inset-x-0 bottom-0 z-40 border-t border-line bg-paper/95 px-3 pt-2 backdrop-blur-sm md:hidden"
+  style="padding-bottom: max(0.5rem, env(safe-area-inset-bottom))"
+  data-sticky-bar
+  data-visible={alwaysVisible ? 'true' : 'false'}
+>
+  <div class="grid grid-cols-[auto_1fr] gap-2">
+    <a href={site.phone.href} class="inline-flex min-h-12 items-center justify-center gap-2 rounded-sm border border-ink px-5 font-semibold no-underline"><Phone class="size-5" aria-hidden="true" />Call</a>
+    <a href="/free-inspection/" class="inline-flex min-h-12 items-center justify-center gap-2 rounded-sm bg-blueprint font-semibold text-white no-underline" data-open-form><CalendarCheck class="size-5" aria-hidden="true" />Book free inspection</a>
+  </div>
+</div>
+<style>
+  .sticky-bar { transform: translateY(110%); transition: transform var(--duration-base) var(--ease-out); }
+  .sticky-bar[data-visible='true'] { transform: none; }
+</style>
+<script>
+  const bar = document.querySelector<HTMLElement>('[data-sticky-bar]');
+  if (bar && bar.dataset.visible !== 'true') {
+    const hero = document.querySelector('[data-hero]');
+    const forms = [...document.querySelectorAll('[data-lead-form]')];
+    let pastHero = !hero, formOnScreen = false, typing = false;
+    const render = () => { bar.dataset.visible = String(pastHero && !formOnScreen && !typing); };
+    if (hero) new IntersectionObserver(([e]) => { pastHero = !e.isIntersecting; render(); }).observe(hero);
+    const seen = new Set<Element>();
+    const fo = new IntersectionObserver((entries) => {
+      entries.forEach((e) => (e.isIntersecting ? seen.add(e.target) : seen.delete(e.target)));
+      formOnScreen = seen.size > 0; render();
+    });
+    forms.forEach((f) => fo.observe(f));
+    document.addEventListener('focusin', (e) => { typing = (e.target as HTMLElement).matches('input, textarea, select'); render(); });
+    document.addEventListener('focusout', () => { typing = false; render(); });
+  }
+</script>

@@ -1,0 +1,23 @@
+---
+// Trust badge (icon + claim + proof line) or compact status pill.
+interface Props { title?: string; detail?: string; variant?: 'trust' | 'status' | 'note'; tone?: 'clear' | 'blueprint' | 'alert'; class?: string }
+const { title, detail, variant = 'trust', tone = 'clear', class: cls = '' } = Astro.props;
+const tones = { clear: 'bg-clear-soft text-clear', blueprint: 'bg-blueprint-soft text-blueprint-ink', alert: 'bg-alert-soft text-alert' };
+---
+{variant === 'trust' && (
+  <div class={`flex items-start gap-3 ${cls}`}>
+    <span class="mt-0.5 flex size-10 shrink-0 items-center justify-center rounded-sm border border-ink text-ink" aria-hidden="true"><slot name="icon" /></span>
+    <span class="flex flex-col">
+      <strong class="text-body font-bold [font-variation-settings:'wdth'_110]">{title}</strong>
+      <span class="t-small text-graphite">{detail}</span>
+    </span>
+  </div>
+)}
+{variant === 'status' && (
+  <span class={`inline-flex min-h-7 items-center gap-1.5 rounded-full px-2.5 text-small font-medium ${tones[tone]} ${cls}`}>
+    <span class="size-2 rounded-full bg-current" aria-hidden="true"></span><slot />
+  </span>
+)}
+{variant === 'note' && (
+  <span class={`t-label inline-flex min-h-7 items-center rounded-sm px-2 ${tones[tone]} ${cls}`}><slot /></span>
+)}

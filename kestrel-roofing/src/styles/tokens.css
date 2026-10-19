@@ -1,0 +1,90 @@
+/*
+  Kestrel Roofing — design tokens (direction A · Field Report).
+  Single source of truth: these are Tailwind 4 theme variables, so every token is both
+  a CSS custom property (var(--color-ink)) and a utility (bg-ink, text-graphite, font-mono…).
+  Components must not hard-code colours, fonts, radii or spacing — use these.
+*/
+@theme {
+  /* Reset Tailwind's default palette: only brand colours exist on this site. */
+  --color-*: initial;
+
+  /* Surfaces & text */
+  --color-paper: #F4F5F3;      /* page background — cool paper, not cream */
+  --color-white: #FFFFFF;      /* cards, fields, photo labels */
+  --color-ink: #14181C;        /* primary text, storm banner, report plate */
+  --color-ink-2: #2A3138;      /* hover on ink surfaces, dividers on dark */
+  --color-graphite: #545C63;   /* secondary text — 6.2:1 on paper */
+  --color-mist: #9AA4AB;       /* text on ink surfaces only — 7.3:1 on ink */
+  --color-line: #D3D8DA;       /* hairlines, field borders */
+  --color-line-strong: #AEB6BC;/* field border hover */
+
+  /* Brand */
+  --color-blueprint: #2341D6;      /* CTA, links, annotation pins — 7.5:1 with white */
+  --color-blueprint-ink: #1A31A8;  /* CTA hover / pressed */
+  --color-blueprint-soft: #E6EAFB; /* selected chip background, info notes */
+  --color-blueprint-light: #8EA2FF;/* accents on ink surfaces */
+
+  /* Status */
+  --color-clear: #1E7A4C;      /* open now, ZIP in area, success — 4.9:1 on paper */
+  --color-clear-soft: #E3F1E9;
+  --color-alert: #B42318;      /* form errors — 6.0:1 on white */
+  --color-alert-soft: #FCEBE9;
+
+  /* Typography */
+  --font-sans: "Archivo Variable", "Archivo", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+
+  /* Type scale — fluid between 375px and 1440px viewports.
+     Body is 17px: the audience is 35–65. Mono labels never go below 13px. */
+  --text-display: clamp(2.375rem, 1.55rem + 3.5vw, 4.25rem);  /* 38 → 68px, hero */
+  --text-display--line-height: 1;
+  --text-display--letter-spacing: -0.025em;
+  --text-h1: clamp(2.125rem, 1.6rem + 2.2vw, 3.375rem);       /* 34 → 54px */
+  --text-h1--line-height: 1.04;
+  --text-h1--letter-spacing: -0.02em;
+  --text-h2: clamp(1.75rem, 1.4rem + 1.5vw, 2.625rem);        /* 28 → 42px */
+  --text-h2--line-height: 1.08;
+  --text-h2--letter-spacing: -0.015em;
+  --text-h3: clamp(1.3125rem, 1.15rem + 0.6vw, 1.625rem);     /* 21 → 26px */
+  --text-h3--line-height: 1.2;
+  --text-lead: clamp(1.125rem, 1.07rem + 0.25vw, 1.25rem);    /* 18 → 20px */
+  --text-lead--line-height: 1.5;
+  --text-body: 1.0625rem;                                      /* 17px */
+  --text-body--line-height: 1.6;
+  --text-small: 0.9375rem;                                     /* 15px */
+  --text-small--line-height: 1.5;
+  --text-label: 0.8125rem;                                     /* 13px — mono labels, minimum */
+  --text-label--line-height: 1.35;
+  --text-label--letter-spacing: 0.05em;
+
+  /* Display widths (Archivo variable `wdth` axis) */
+  --wdth-display: 125;
+  --wdth-heading: 115;
+  --wdth-text: 100;
+
+  /* Spacing: Tailwind's 4px base step (p-4 = 16px). Section rhythm on top of it. */
+  --spacing: 0.25rem;
+  --spacing-gutter: clamp(1rem, 0.6rem + 1.8vw, 2rem);         /* page side padding 16 → 32px */
+  --spacing-section: clamp(4rem, 2.8rem + 5vw, 8rem);          /* 64 → 128px between sections */
+
+  /* Layout */
+  --container-page: 84rem;     /* 1344px max content width */
+  --container-measure: 65ch;   /* max text line length */
+
+  /* Shape — Field Report is square-cut: hairlines, 2px corners, no shadows. */
+  --radius-sm: 2px;
+  --radius-md: 4px;
+  --radius-full: 9999px;
+
+  /* Motion */
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --duration-fast: 150ms;
+  --duration-base: 240ms;
+
+  /* Breakpoints (Tailwind defaults kept explicit) */
+  --breakpoint-sm: 40rem;
+  --breakpoint-md: 48rem;
+  --breakpoint-lg: 64rem;
+  --breakpoint-xl: 80rem;
+  --breakpoint-2xl: 96rem;
+}

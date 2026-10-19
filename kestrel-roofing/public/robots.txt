@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+Disallow: /styleguide/
+Disallow: /thanks/
+
+Sitemap: https://kestrel-roofing.pages.dev/sitemap-index.xml

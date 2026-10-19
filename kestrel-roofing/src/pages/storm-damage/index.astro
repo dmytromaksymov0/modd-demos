@@ -1,0 +1,149 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHero from '../../components/patterns/PageHero.astro';
+import Annotation from '../../components/ui/Annotation.astro';
+import SectionHead from '../../components/ui/SectionHead.astro';
+import Photo from '../../components/ui/Photo.astro';
+import InsuranceLanes from '../../components/patterns/InsuranceLanes.astro';
+import FinalCta from '../../components/home/FinalCta.astro';
+import Faq from '../../components/patterns/Faq.astro';
+import { business, faqSchema, breadcrumbs } from '../../lib/schema';
+import { site, storm } from '../../config/site';
+import { usd } from '../../lib/pricing';
+import heroImg from '../../assets/photos/storm-hail-3tab.jpg';
+import windImg from '../../assets/photos/storm-damaged-shingles.jpg';
+import hailImg from '../../assets/photos/storm-hailstones.jpg';
+import caseImg from '../../assets/photos/hero-2-brick-house-decking.jpg';
+import Check from '@lucide/astro/icons/check';
+import X from '@lucide/astro/icons/x';
+import Phone from '@lucide/astro/icons/phone';
+import CircleAlert from '@lucide/astro/icons/circle-alert';
+
+const signs = [
+  ['Granules in the gutters or at downspouts', 'Looks like coarse black sand. A cup or more after a storm means the shingles took hits.'],
+  ['Dents on metal vents, gutters or the AC unit', 'If hail dented soft metal, it bruised the shingles too.'],
+  ['Shingles on the lawn, or bare strips on the roof', 'Wind lifts tabs and breaks the seal — those roofs leak in the next storm.'],
+  ['Stains on the ceiling or in the attic', 'Water gets in long before you see a drip.'],
+];
+const rcv = 16000, dep = 4000, ded = 1000;
+const faq = [
+  { q: 'Will a storm claim raise my premium?', a: 'A weather claim usually isn’t treated like an at-fault claim, but every insurer is different. Ask your agent before you file — we’ll give you the report either way, free.' },
+  { q: 'How long do I have to file?', a: 'Many Ohio policies require you to report storm damage within one year of the storm — some sooner. Check your policy, or call your agent with the storm date.' },
+  { q: 'Can you “cover” my deductible?', a: 'No — and be careful with anyone who offers. Waiving or hiding a deductible is insurance fraud. You pay your deductible; we never charge more than the insurance payment plus it.' },
+  { q: 'What if the adjuster says there’s no damage?', a: 'We review the report with you. If our photos show damage the adjuster missed, we can ask for a re-inspection. If we don’t think you have a claim, we’ll say so and not waste your time.' },
+  { q: 'Do I have to use the roofer my insurer recommends?', a: 'No. In Ohio you choose your contractor. Your insurer pays for the damage, not for a particular company.' },
+];
+---
+<BaseLayout
+  title="Storm & Hail Damage Roof Repair in Columbus, OH | Kestrel"
+  description="Free storm inspection within 48 hours, a photo report your insurer can use, and we meet your adjuster on the roof. Same-day tarping for active leaks in Columbus."
+  schema={[business(Astro.site?.href), faqSchema(faq), breadcrumbs(Astro.site?.href, [{ name: 'Storm & Hail Damage', path: '/storm-damage/' }])]}
+>
+  <PageHero
+    kicker="Storm & hail damage"
+    title="Storm damage? Free inspection within&nbsp;48&nbsp;hours."
+    lede="Don’t climb up there to check. We photograph every hit, give you a report your insurer can use, and meet your adjuster on the roof."
+    img={heroImg}
+    alt="Asphalt shingles with dark circular bruises where hailstones knocked the granules off"
+    cta={{ label: 'Book a storm inspection', href: '#final-form', problem: 'storm' }}
+  >
+    <Annotation x={30} y={36} side="right" mobile rule={28} title="Hail hit · 1 in" text="Granules gone, mat exposed" />
+    <Annotation x={68} y={66} side="left" mobile mobileSide="left" rule={28} title="Photo 07/24" text="Logged with date and slope for your adjuster" />
+    {storm.enabled && <p slot="after-cta" class="t-small flex items-start gap-2 rounded-sm bg-blueprint-soft p-3 text-blueprint-ink"><CircleAlert class="mt-0.5 size-4 shrink-0" aria-hidden="true" />Hail hit {storm.areas.join(', ')} on {storm.date}. We’re prioritising inspections there this week.</p>}
+  </PageHero>
+
+  <!-- Emergency -->
+  <section class="bg-ink text-paper" aria-labelledby="leak-title">
+    <div class="wrap flex flex-col gap-4 py-8 md:flex-row md:items-center md:justify-between">
+      <div>
+        <h2 id="leak-title" class="t-h3">Water coming in right now?</h2>
+        <p class="mt-1 text-mist">Put a bucket under it, move what you can, and call. We tarp active leaks the same day — then sort out the rest.</p>
+      </div>
+      <a href={site.phone.href} class="inline-flex min-h-12 shrink-0 items-center gap-2 rounded-sm bg-blueprint px-5 font-semibold text-white no-underline hover:bg-blueprint-ink"><Phone class="size-5" aria-hidden="true" />Call {site.phone.display}</a>
+    </div>
+  </section>
+
+  <!-- Signs -->
+  <section class="py-[var(--spacing-section)]" aria-labelledby="signs-title">
+    <div class="wrap grid gap-10 lg:grid-cols-12 lg:gap-12">
+      <div class="lg:col-span-5">
+        <SectionHead id="signs-title" kicker="Check from the ground" title="Four signs your roof took damage" lede="You can spot most storm damage without a ladder. Please don’t go up — a wet or hail-softened roof is slippery, and we do this every day." />
+        <div class="mt-8 grid grid-cols-2 gap-3">
+          <div class="relative overflow-hidden rounded-sm bg-line" style="aspect-ratio:1"><Photo src={hailImg} alt="Hailstones on wet pavement after a storm" sizes="(min-width: 1024px) 240px, 45vw" widths={[360, 540]} class="absolute inset-0" /></div>
+          <div class="relative overflow-hidden rounded-sm bg-line" style="aspect-ratio:1"><Photo src={windImg} alt="Asphalt roof with several shingles torn off by wind" sizes="(min-width: 1024px) 240px, 45vw" widths={[360, 540]} class="absolute inset-0" /></div>
+        </div>
+      </div>
+      <ul class="flex flex-col divide-y divide-line border-y border-line lg:col-span-7">
+        {signs.map(([t, d]) => (
+          <li class="flex gap-4 py-5"><Check class="mt-1 size-5 shrink-0 text-blueprint" aria-hidden="true" /><div><h3 class="font-semibold">{t}</h3><p class="t-small mt-1 text-graphite">{d}</p></div></li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <!-- Claim lanes -->
+  <section class="bg-white py-[var(--spacing-section)]" aria-labelledby="claim-title">
+    <div class="wrap">
+      <SectionHead id="claim-title" kicker="How a claim works" title="Who does what, step by step" lede="Seven steps from the storm to the final check — and which of them are on you, on us and on your insurer. Tap a step." />
+      <div class="mt-10"><InsuranceLanes /></div>
+
+      <div class="mt-12 grid gap-8 border-t border-ink pt-8 lg:grid-cols-12">
+        <div class="lg:col-span-4">
+          <h3 class="t-h3">The money, with real numbers</h3>
+          <p class="t-small mt-2 text-graphite">Example only — your policy decides the numbers. Most Ohio policies pay in two checks.</p>
+        </div>
+        <dl class="grid gap-px overflow-hidden rounded-sm border border-line bg-line text-small sm:grid-cols-2 lg:col-span-8 lg:grid-cols-4">
+          <div class="bg-paper p-4"><dt class="t-label text-graphite">Full replacement cost</dt><dd class="mt-1 text-h3 font-bold">{usd(rcv)}</dd></div>
+          <div class="bg-paper p-4"><dt class="t-label text-graphite">1st check (ACV)</dt><dd class="mt-1"><span class="block text-h3 font-bold">{usd(rcv - dep - ded)}</span><span class="mt-1 block text-graphite">{usd(rcv)} − {usd(dep)} depreciation − {usd(ded)} deductible</span></dd></div>
+          <div class="bg-paper p-4"><dt class="t-label text-graphite">2nd check</dt><dd class="mt-1"><span class="block text-h3 font-bold">{usd(dep)}</span><span class="mt-1 block text-graphite">Depreciation released after the work is done</span></dd></div>
+          <div class="bg-blueprint-soft p-4"><dt class="t-label text-blueprint-ink">You pay out of pocket</dt><dd class="mt-1"><span class="block text-h3 font-bold text-blueprint-ink">{usd(ded)}</span><span class="mt-1 block text-graphite">Your deductible. Never more.</span></dd></div>
+        </dl>
+      </div>
+    </div>
+  </section>
+
+  <!-- Adjuster meeting do / don't -->
+  <section class="py-[var(--spacing-section)]" aria-labelledby="adj-title">
+    <div class="wrap">
+      <SectionHead id="adj-title" kicker="At the adjuster meeting" title="What we do on your roof — and what we don’t" />
+      <div class="mt-10 grid gap-6 md:grid-cols-2">
+        <div class="rounded-sm border border-ink bg-white p-6">
+          <h3 class="t-h3">We do</h3>
+          <ul class="mt-4 flex flex-col gap-3">{['Show the adjuster every hit we photographed', 'Measure test squares together', 'Point out code items — drip edge, ice & water shield — the scope must include', 'Answer technical questions so you don’t have to'].map((t) => <li class="flex gap-3"><Check class="mt-1 size-5 shrink-0 text-clear" aria-hidden="true" />{t}</li>)}</ul>
+        </div>
+        <div class="rounded-sm border border-line bg-white p-6">
+          <h3 class="t-h3">We don’t</h3>
+          <ul class="mt-4 flex flex-col gap-3">{['Negotiate your claim — we’re roofers, not public adjusters', 'Promise a claim will be approved', 'Offer to “cover” your deductible', 'Ask you to sign anything on your doorstep'].map((t) => <li class="flex gap-3"><X class="mt-1 size-5 shrink-0 text-alert" aria-hidden="true" />{t}</li>)}</ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Storm chasers -->
+  <section class="border-t border-line py-[var(--spacing-section)]" aria-labelledby="chaser-title">
+    <div class="wrap grid gap-10 lg:grid-cols-12 lg:gap-12">
+      <div class="lg:col-span-5"><SectionHead id="chaser-title" kicker="After every big storm" title="How to spot a storm chaser" lede="Out-of-town crews follow hail across the Midwest. Some do fine work; many are gone before the first leak. Watch for these." /></div>
+      <ul class="grid gap-4 sm:grid-cols-2 lg:col-span-7">
+        {[['Knocks on your door', 'Real local roofers are busy after a storm — they don’t need to knock.'], ['Out-of-state plates, no local address', 'Ask where their office is. Ours: ' + site.address.street + ', Columbus.'], ['“Sign today” pressure', 'A contingency agreement on the doorstep can lock you in before your insurer has looked.'], ['Offers to waive the deductible', 'It’s fraud, and it puts you on the hook, not them.']].map(([t, d]) => (
+          <li class="rounded-sm border border-line bg-white p-5"><h3 class="font-semibold">{t}</h3><p class="t-small mt-1 text-graphite">{d}</p></li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <!-- Case -->
+  <section class="bg-white py-[var(--spacing-section)]" aria-labelledby="storm-case-title">
+    <div class="wrap grid gap-8 lg:grid-cols-12 lg:gap-10">
+      <div class="relative overflow-hidden rounded-sm bg-line lg:col-span-7" style="aspect-ratio:3/2"><Photo src={caseImg} alt="Crew replacing a hail-damaged roof on a brick home in Hilliard" sizes="(min-width: 1024px) 760px, 100vw" class="absolute inset-0" position="60% 50%" /></div>
+      <div class="flex flex-col gap-4 lg:col-span-5 lg:justify-center">
+        <p class="t-label text-graphite">A recent claim</p>
+        <h2 id="storm-case-title" class="t-h2">Hilliard: approved on the first adjuster visit</h2>
+        <p class="text-graphite">Hail bruising on all four slopes, 9 hits in a 10 × 10 ft test square. We met the adjuster with 212 photos; full replacement approved. The owner paid the $1,000 deductible — nothing else.</p>
+        <a href="/projects/" class="inline-flex min-h-11 items-center self-start font-semibold text-blueprint underline underline-offset-4">See more projects</a>
+      </div>
+    </div>
+  </section>
+
+  <Faq items={faq} title="Storm & insurance questions" />
+  <FinalCta problem="storm" kicker="Free storm inspection" title="Find out if your roof took damage. It’s&nbsp;free." />
+</BaseLayout>

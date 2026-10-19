@@ -1,0 +1,15 @@
+---
+// Landing page for form posts without JavaScript (the JS form shows its own success state).
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Button from '../../components/ui/Button.astro';
+import { site } from '../../config/site';
+import Check from '@lucide/astro/icons/check';
+---
+<BaseLayout title="Request received | Kestrel Roofing Co." description="We got your free roof inspection request. A Kestrel inspector will call you back within 2 business hours to pick a time." noindex>
+  <section class="wrap flex flex-col items-start gap-5 py-[var(--spacing-section)]">
+    <span class="flex size-14 items-center justify-center rounded-sm bg-clear text-white"><Check class="size-7" aria-hidden="true" /></span>
+    <h1 class="t-h1 max-w-[18ch]">Got it — we’ll call you shortly.</h1>
+    <p class="t-lead measure text-graphite">A Kestrel inspector will call from <span class="whitespace-nowrap">{site.phone.display}</span> within 2 business hours ({site.hours.label}) to pick a time. The inspection takes 30–45 minutes, and you’ll have a photo report within 24 hours.</p>
+    <div class="flex flex-wrap gap-3"><Button href="/">Back to the home page</Button><Button href="/roof-cost-calculator/" variant="secondary">Price my roof meanwhile</Button></div>
+  </section>
+</BaseLayout>

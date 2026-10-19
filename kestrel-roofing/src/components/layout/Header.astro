@@ -1,0 +1,61 @@
+---
+import { site, nav } from '../../config/site';
+import Logo from '../brand/Logo.astro';
+import Button from '../ui/Button.astro';
+import OpenStatus from './OpenStatus.astro';
+import Menu from '@lucide/astro/icons/menu';
+import X from '@lucide/astro/icons/x';
+import Phone from '@lucide/astro/icons/phone';
+const path = Astro.url.pathname;
+---
+<header class="sticky top-0 z-40 border-b border-line bg-paper/95 backdrop-blur-sm" data-header>
+  <div class="wrap flex h-16 items-center gap-6 lg:h-[4.5rem] lg:gap-8">
+    <a href="/" class="flex min-h-12 shrink-0 items-center" aria-label="Kestrel Roofing Co. — home">
+      <Logo class="h-9 w-auto lg:h-11" subline={true} />
+    </a>
+    <nav aria-label="Main" class="ml-2 hidden xl:block">
+      <ul class="flex gap-6 text-small font-medium">
+        {nav.map((n) => (
+          <li><a href={n.href} class="py-2 no-underline hover:text-blueprint aria-[current=page]:text-blueprint" aria-current={path.startsWith(n.href) ? 'page' : undefined}>{n.label}</a></li>
+        ))}
+      </ul>
+    </nav>
+    <div class="ml-auto flex items-center gap-4">
+      <a href={site.phone.href} class="hidden flex-col items-end leading-tight no-underline sm:flex">
+        <strong class="text-[1.0625rem] font-bold [font-variation-settings:'wdth'_110]">{site.phone.display}</strong>
+        <OpenStatus class="text-[0.8125rem] text-graphite" />
+      </a>
+      <a href={site.phone.href} class="flex size-12 items-center justify-center rounded-sm border border-ink sm:hidden" aria-label={`Call ${site.phone.display}`}>
+        <Phone class="size-5" aria-hidden="true" />
+      </a>
+      <span class="hidden md:block"><Button href="/free-inspection/">Free inspection</Button></span>
+      <button type="button" class="flex size-12 items-center justify-center rounded-sm border border-line xl:hidden" aria-expanded="false" aria-controls="mobile-nav" data-menu-toggle>
+        <Menu class="size-6" aria-hidden="true" data-icon-open />
+        <X class="hidden size-6" aria-hidden="true" data-icon-close />
+        <span class="sr-only">Menu</span>
+      </button>
+    </div>
+  </div>
+  <nav id="mobile-nav" aria-label="Main" class="hidden border-t border-line bg-paper xl:hidden" data-menu>
+    <ul class="wrap flex flex-col py-2">
+      {nav.map((n) => (
+        <li><a href={n.href} class="flex min-h-12 items-center border-b border-line text-lead font-semibold no-underline last:border-0">{n.label}</a></li>
+      ))}
+      <li class="py-4"><Button href="/free-inspection/" full>Book a free inspection</Button></li>
+    </ul>
+  </nav>
+</header>
+<script>
+  const btn = document.querySelector<HTMLButtonElement>('[data-menu-toggle]');
+  const menu = document.querySelector<HTMLElement>('[data-menu]');
+  btn?.addEventListener('click', () => {
+    const open = btn.getAttribute('aria-expanded') === 'true';
+    btn.setAttribute('aria-expanded', String(!open));
+    menu?.classList.toggle('hidden', open);
+    btn.querySelector('[data-icon-open]')?.classList.toggle('hidden', !open);
+    btn.querySelector('[data-icon-close]')?.classList.toggle('hidden', open);
+  });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && btn?.getAttribute('aria-expanded') === 'true') { btn.click(); btn.focus(); }
+  });
+</script>

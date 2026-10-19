@@ -1,0 +1,204 @@
+---
+// Free inspection request. Two steps so the first screen stays short:
+//   1) what's going on + ZIP (instant service-area answer)   2) name + phone → submit.
+// Without JS both steps render as one form and submit normally to /api/lead.
+import { problemTypes, serviceArea, site } from '../../config/site';
+import ChipGroup from '../ui/ChipGroup.astro';
+import Field from '../ui/Field.astro';
+import Button from '../ui/Button.astro';
+import ArrowRight from '@lucide/astro/icons/arrow-right';
+import ArrowLeft from '@lucide/astro/icons/arrow-left';
+import Check from '@lucide/astro/icons/check';
+interface Props { id?: string; problem?: string; demo?: boolean; class?: string }
+const { id = 'lead', problem, demo = false, class: cls = '' } = Astro.props;
+const zipMap = Object.fromEntries(serviceArea.flatMap((a) => a.zips.map((z) => [z, { city: a.city, storm: !!a.storm }])));
+---
+<form
+  id={id}
+  action="/api/lead"
+  method="post"
+  novalidate
+  class={`lead-form rounded-sm border border-ink bg-white p-5 text-ink md:p-6 ${cls}`}
+  data-lead-form
+  data-demo={demo ? 'true' : undefined}
+  data-zips={JSON.stringify(zipMap)}
+>
+  <div data-step="1" class="flex flex-col gap-4">
+    <div class="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
+      <h2 class="text-h3 font-bold [font-variation-settings:'wdth'_115]">Free roof inspection</h2>
+      <span class="t-label js-only hidden whitespace-nowrap text-graphite" data-progress>Step 1 of 2</span>
+    </div>
+    <ChipGroup name="problem" legend="What’s going on?" options={problemTypes} value={problem} required />
+    <div class="grid grid-cols-1 items-end gap-3 sm:grid-cols-[minmax(0,10rem)_1fr]">
+      <Field id={`${id}-zip`} name="zip" label="Your ZIP code" inputmode="numeric" autocomplete="postal-code" maxlength="5" pattern="\d{5}" required />
+      <span class="js-only hidden"><Button type="button" full data-next>Next: where to call you <ArrowRight class="size-5" aria-hidden="true" /></Button></span>
+    </div>
+    <p class="t-small -mt-1 min-h-6 text-graphite" data-zip-note aria-live="polite">Free · 30–45 minutes · you don’t need to be home</p>
+  </div>
+
+  <div data-step="2" class="mt-5 flex flex-col gap-4 border-t border-line pt-5">
+    <div class="flex items-center justify-between gap-4">
+      <button type="button" class="js-only hidden min-h-11 items-center gap-1.5 text-small font-semibold text-blueprint" data-back><ArrowLeft class="size-4" aria-hidden="true" />Back</button>
+      <span class="t-label js-only hidden whitespace-nowrap text-graphite">Step 2 of 2</span>
+    </div>
+    <div class="grid grid-cols-1 gap-3 sm:grid-cols-2">
+      <Field id={`${id}-name`} name="name" label="Your name" autocomplete="name" required />
+      <Field id={`${id}-phone`} name="phone" label="Phone" type="tel" autocomplete="tel" inputmode="tel" required />
+    </div>
+    <div class="hidden" aria-hidden="true"><label>Leave this empty <input name="company" tabindex="-1" autocomplete="off" /></label></div>
+    <input type="hidden" name="estimate" value="" data-estimate-field />
+    <input type="hidden" name="page" value={Astro.url.pathname} />
+    <Button type="submit" size="lg" full data-submit>Book my free inspection</Button>
+    <p class="t-small text-graphite">We call back within 2 business hours ({site.hours.label}). No pressure, no obligation.</p>
+    <p class="t-small font-medium text-alert empty:hidden" data-form-error role="alert"></p>
+  </div>
+
+  <div data-success hidden class="flex flex-col gap-3" tabindex="-1">
+    <span class="flex size-12 items-center justify-center rounded-sm bg-clear text-white"><Check class="size-6" aria-hidden="true" /></span>
+    <h2 class="text-h3 font-bold [font-variation-settings:'wdth'_115]">Got it — we’ll call you shortly.</h2>
+    <p class="text-graphite">A Kestrel inspector will call from <span class="whitespace-nowrap">{site.phone.display}</span> within 2 business hours to pick a time. The inspection takes 30–45 minutes and you’ll get a photo report within 24 hours.</p>
+  </div>
+</form>
+
+<style is:global>
+  /* html.js is set by an inline script in <head> before first paint, so there is no layout shift.
+     Global because Button/Field render outside this component's scope. */
+  html.js .lead-form [data-step='2'] { display: none; }
+  html.js .lead-form[data-current='2'] [data-step='1'] { display: none; }
+  html.js .lead-form[data-current='2'] [data-step='2'] { display: flex; margin-top: 0; border-top: 0; padding-top: 0; }
+  html.js .lead-form .js-only { display: inline-flex; }
+  html.js .lead-form span.js-only { display: block; }
+  .lead-form[data-done] [data-step] { display: none !important; }
+</style>
+
+<script>
+  type ZipInfo = { city: string; storm: boolean };
+  const phoneDigits = (v: string) => v.replace(/\D/g, '').replace(/^1(?=\d{10}$)/, '');
+
+  // Links like <a href="#hero-form" data-set-problem="storm"> pre-select the problem type in that form.
+  const preselect = (form: HTMLFormElement | null, value: string | null) => {
+    const r = value && form?.querySelector<HTMLInputElement>(`input[name="problem"][value="${CSS.escape(value)}"]`);
+    if (r) { r.checked = true; r.dispatchEvent(new Event('change', { bubbles: true })); }
+  };
+  document.addEventListener('click', (e) => {
+    const a = (e.target as HTMLElement).closest<HTMLAnchorElement>('a[data-set-problem]');
+    if (!a) return;
+    const form = document.querySelector<HTMLFormElement>(a.hash);
+    if (form) { form.dataset.current = '1'; preselect(form, a.dataset.setProblem!); setTimeout(() => form.querySelector<HTMLInputElement>('input[name="zip"]')?.focus({ preventScroll: true }), 400); }
+  });
+  const urlProblem = new URLSearchParams(location.search).get('problem');
+
+  document.querySelectorAll<HTMLFormElement>('[data-lead-form]').forEach((form) => {
+    preselect(form, urlProblem);
+    form.dataset.js = 'true';
+    form.dataset.current = '1';
+    const zips: Record<string, ZipInfo> = JSON.parse(form.dataset.zips!);
+    const zip = form.querySelector<HTMLInputElement>('input[name="zip"]')!;
+    const name = form.querySelector<HTMLInputElement>('input[name="name"]')!;
+    const phone = form.querySelector<HTMLInputElement>('input[name="phone"]')!;
+    const note = form.querySelector<HTMLElement>('[data-zip-note]')!;
+    const defaultNote = note.textContent;
+    const formError = form.querySelector<HTMLElement>('[data-form-error]')!;
+
+    const setError = (input: HTMLInputElement, msg: string) => {
+      const box = input.closest('[data-field]')!.querySelector<HTMLElement>('.field-error')!;
+      box.textContent = msg;
+      if (msg) input.setAttribute('aria-invalid', 'true'); else input.removeAttribute('aria-invalid');
+      return !msg;
+    };
+    const chipError = (msg: string) => {
+      let box = form.querySelector<HTMLElement>('[data-chip-error]');
+      if (!box) {
+        box = document.createElement('p');
+        box.dataset.chipError = '';
+        box.className = 't-small font-medium text-alert mt-2';
+        box.setAttribute('role', 'alert');
+        form.querySelector('fieldset')!.append(box);
+      }
+      box.textContent = msg;
+      return !msg;
+    };
+
+    const checkZip = (final = false) => {
+      const v = zip.value.trim();
+      note.classList.remove('text-clear', 'text-graphite');
+      if (v.length < 5) {
+        note.textContent = defaultNote; note.classList.add('text-graphite');
+        return final ? setError(zip, 'Enter your 5-digit ZIP code.') : setError(zip, '');
+      }
+      if (!/^\d{5}$/.test(v)) return setError(zip, 'ZIP codes are 5 digits, like 43221.');
+      setError(zip, '');
+      const hit = zips[v] ?? (v.startsWith('432') ? { city: 'Columbus', storm: false } : null);
+      if (hit) {
+        note.textContent = hit.storm ? `✓ ${hit.city} — storm area, priority inspections this week.` : `✓ ${hit.city} — we inspect there every week.`;
+        note.classList.add('text-clear');
+      } else {
+        note.textContent = `${v} is outside our usual area. Leave your number anyway — we’ll tell you honestly if we can help.`;
+        note.classList.add('text-graphite');
+      }
+      return true;
+    };
+    zip.addEventListener('input', () => { zip.value = zip.value.replace(/\D/g, '').slice(0, 5); checkZip(); });
+
+    const step1Valid = () => {
+      const chip = !!form.querySelector('input[name="problem"]:checked');
+      const okChip = chipError(chip ? '' : 'Pick the closest option — “Not sure” is fine.');
+      const okZip = checkZip(true);
+      if (!okChip) form.querySelector<HTMLInputElement>('input[name="problem"]')!.focus();
+      else if (!okZip) zip.focus();
+      return okChip && okZip;
+    };
+    form.querySelectorAll('input[name="problem"]').forEach((r) => r.addEventListener('change', () => chipError('')));
+
+    const go = (step: '1' | '2') => {
+      form.dataset.current = step;
+      (step === '2' ? name : form.querySelector<HTMLInputElement>('input[name="problem"]:checked') ?? zip).focus();
+    };
+    form.querySelector('[data-next]')!.addEventListener('click', () => { if (step1Valid()) go('2'); });
+    zip.addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); if (step1Valid()) go('2'); } });
+    form.querySelector('[data-back]')!.addEventListener('click', () => go('1'));
+
+    phone.addEventListener('blur', () => {
+      const d = phoneDigits(phone.value);
+      if (d.length === 10) phone.value = `(${d.slice(0, 3)}) ${d.slice(3, 6)}-${d.slice(6)}`;
+    });
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      formError.textContent = '';
+      if (!step1Valid()) { go('1'); return; }
+      const okName = setError(name, name.value.trim().length >= 2 ? '' : 'Tell us what to call you.');
+      const okPhone = setError(phone, phoneDigits(phone.value).length === 10 ? '' : 'We need a 10-digit US number to call you back.');
+      if (!okName) { name.focus(); return; }
+      if (!okPhone) { phone.focus(); return; }
+
+      const btn = form.querySelector<HTMLButtonElement>('[data-submit]')!;
+      const label = btn.textContent;
+      btn.disabled = true; btn.textContent = 'Sending…';
+      try {
+        if (form.dataset.demo !== 'true') {
+          const res = await fetch(form.action, { method: 'POST', body: new FormData(form), headers: { Accept: 'application/json' } });
+          if (res.status === 422) {
+            // Server-side validation disagreed: show its messages next to the fields.
+            const { errors = {} } = await res.json().catch(() => ({}));
+            if (errors.problem || errors.zip) { go('1'); if (errors.problem) chipError(errors.problem); if (errors.zip) setError(zip, errors.zip); return; }
+            if (errors.name) setError(name, errors.name);
+            if (errors.phone) setError(phone, errors.phone);
+            return;
+          }
+          if (!res.ok) throw new Error(String(res.status));
+        } else {
+          await new Promise((r) => setTimeout(r, 600));
+        }
+        form.dataset.done = 'true';
+        window.dispatchEvent(new CustomEvent('kestrel:lead', { detail: { problem: form.querySelector<HTMLInputElement>('input[name="problem"]:checked')?.value } }));
+        const ok = form.querySelector<HTMLElement>('[data-success]')!;
+        ok.hidden = false; ok.focus();
+      } catch {
+        formError.textContent = 'Sorry — that didn’t go through. Please call us at (614) 555-0142, or try again.';
+      } finally {
+        btn.disabled = false; btn.textContent = label;
+      }
+    });
+  });
+</script>

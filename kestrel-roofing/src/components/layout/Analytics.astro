@@ -1,0 +1,22 @@
+---
+// Analytics stub. Renders nothing while analytics.provider === 'none' (the demo default).
+// Listens for the 'kestrel:lead' event the lead form dispatches on success.
+import { analytics } from '../../config/site';
+const { provider, plausibleDomain, ga4Id } = analytics;
+---
+{provider === 'plausible' && (
+  <>
+    <script is:inline defer data-domain={plausibleDomain} src="https://plausible.io/js/script.js"></script>
+    <script is:inline>window.addEventListener('kestrel:lead', (e) => window.plausible?.('Lead', { props: { problem: e.detail.problem } }));</script>
+  </>
+)}
+{provider === 'ga4' && (
+  <>
+    <script is:inline async src={`https://www.googletagmanager.com/gtag/js?id=${ga4Id}`}></script>
+    <script is:inline define:vars={{ ga4Id }}>
+      window.dataLayer = window.dataLayer || []; function gtag() { dataLayer.push(arguments); }
+      gtag('js', new Date()); gtag('config', ga4Id);
+      window.addEventListener('kestrel:lead', (e) => gtag('event', 'generate_lead', { problem: e.detail.problem }));
+    </script>
+  </>
+)}

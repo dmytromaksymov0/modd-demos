@@ -1,0 +1,105 @@
+---
+// Signature moment C — an insurance claim in three lanes: You / Kestrel / Insurer.
+// Desktop: a 7-step grid you can step through; mobile: one card per step with the three lanes stacked.
+// Every step is a native <button> + region; arrow keys move between steps.
+import { site } from '../../config/site';
+type Lane = 'you' | 'us' | 'ins';
+interface Step { n: number; title: string; when: string; you: string; us: string; ins: string; money?: string; key?: boolean }
+const steps: Step[] = [
+  { n: 1, title: 'Inspection', when: 'Day 1–2', you: 'Book a free storm inspection.', us: 'Check every slope, photograph each hit, send a photo report within 24 hours.', ins: '—' },
+  { n: 2, title: 'File the claim', when: 'Same week', you: 'Call your insurer or file online. Write down the claim number.', us: 'Give you the report and photos to attach.', ins: 'Opens the claim, assigns an adjuster.' },
+  { n: 3, title: 'Adjuster meeting', when: '1–3 weeks', you: 'Be there if you can — it’s your claim.', us: 'On your roof with the adjuster, pointing out every hit and measurement.', ins: 'Adjuster inspects and writes the scope.', key: true },
+  { n: 4, title: 'Scope review', when: '+1 week', you: 'Forward us the scope of loss.', us: 'Check it line by line. If code items are missing — drip edge, ice & water shield — we send a supplement.', ins: 'Reviews the supplement, updates the scope.' },
+  { n: 5, title: 'First check', when: '+1–2 weeks', you: 'Deposit the check, sign our fixed-price contract.', us: 'Order materials, schedule your one-day install.', ins: 'Pays actual cash value (ACV) minus your deductible.', money: 'ACV check' },
+  { n: 6, title: 'New roof', when: '1 day', you: 'Nothing — you don’t need to be home.', us: 'Replace the roof, clean up, photograph the finished work.', ins: '—' },
+  { n: 7, title: 'Final payment', when: '+2–4 weeks', you: 'Pay us the insurance money plus your deductible — never more.', us: 'Send completion photos and the final invoice to your insurer.', ins: 'Releases the held-back depreciation.', money: 'Depreciation' },
+];
+const lanes: { key: Lane; label: string }[] = [{ key: 'you', label: 'You' }, { key: 'us', label: 'Kestrel' }, { key: 'ins', label: 'Insurer' }];
+---
+<div class="lanes" data-lanes>
+  <!-- Step selector -->
+  <div role="tablist" aria-label="Claim steps" class="lanes-steps grid grid-cols-7 border-b border-ink" data-lane-tabs>
+    {steps.map((s, i) => (
+      <button role="tab" type="button" id={`claim-tab-${s.n}`} aria-controls={`claim-step-${s.n}`} aria-selected={i === 2 ? 'true' : 'false'} tabindex={i === 2 ? 0 : -1}
+        class="lane-tab group relative flex min-h-20 flex-col items-start gap-1 px-2 py-3 text-left aria-selected:bg-white">
+        <span class="t-label text-graphite group-aria-selected:text-blueprint">{s.n} · {s.when}</span>
+        <span class="text-small font-semibold leading-tight">{s.title}{s.key && <span class="ml-1 inline-block size-2 rounded-full bg-blueprint align-middle" aria-hidden="true"></span><span class="sr-only"> (key step)</span>}</span>
+      </button>
+    ))}
+  </div>
+
+  {steps.map((s, i) => (
+    <section role="tabpanel" id={`claim-step-${s.n}`} aria-labelledby={`claim-tab-${s.n}`} class="lane-panel" data-active={i === 2 ? '' : undefined}>
+      <header class="lane-panel-head flex flex-wrap items-baseline gap-x-4 gap-y-1">
+        <span class="t-label text-blueprint">Step {s.n} of 7 · {s.when}</span>
+        <h3 class="t-h3">{s.title}</h3>
+        {s.key && <span class="t-label rounded-sm bg-blueprint px-2 py-1 text-white">We’re on the roof with you</span>}
+      </header>
+      <dl class="mt-4 grid gap-px overflow-hidden rounded-sm border border-line bg-line md:grid-cols-3">
+        {lanes.map((l) => (
+          <div class:list={['flex flex-col gap-1 p-4', l.key === 'us' ? 'bg-blueprint-soft' : 'bg-white']}>
+            <dt class:list={['t-label', l.key === 'us' ? 'text-blueprint-ink' : 'text-graphite']}>{l.label}</dt>
+            <dd class:list={[s[l.key] === '—' ? 'text-graphite' : '', 'text-body']}>{s[l.key] === '—' ? 'Nothing to do' : s[l.key]}</dd>
+          </div>
+        ))}
+      </dl>
+      {s.money && <p class="t-small mt-3 text-graphite"><b class="text-ink">{s.money}:</b> see the worked example below.</p>}
+    </section>
+  ))}
+
+  <div class="mt-6 flex items-center justify-between gap-4">
+    <p class="t-small text-graphite">Questions during a claim? Call your project lead at {site.phone.display}.</p>
+    <div class="flex gap-2">
+      <button type="button" class="flex size-12 items-center justify-center rounded-sm border border-ink hover:bg-ink hover:text-paper disabled:opacity-30" data-lane-prev aria-label="Previous step">←</button>
+      <button type="button" class="flex size-12 items-center justify-center rounded-sm border border-ink hover:bg-ink hover:text-paper disabled:opacity-30" data-lane-next aria-label="Next step">→</button>
+    </div>
+  </div>
+</div>
+
+<style is:global>
+  .lane-tab + .lane-tab { border-left: 1px solid var(--color-line); }
+  .lane-tab[aria-selected='true']::after { content: ''; position: absolute; left: 0; right: 0; bottom: -1px; height: 3px; background: var(--color-blueprint); }
+  .lane-panel { padding-top: 1.5rem; }
+  html.js .lane-panel:not([data-active]) { display: none; }
+  /* Phones: steps become a horizontal strip of compact pills. */
+  @media (max-width: 47.99rem) {
+    .lanes-steps { grid-template-columns: repeat(7, minmax(7.5rem, 1fr)); overflow-x: auto; scroll-snap-type: x mandatory; }
+    .lane-tab { scroll-snap-align: start; }
+  }
+  html:not(.js) .lanes-steps, html:not(.js) [data-lane-prev], html:not(.js) [data-lane-next] { display: none; }
+  html:not(.js) .lane-panel { border-top: 1px solid var(--color-line); }
+</style>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-lanes]').forEach((root) => {
+    const tabs = [...root.querySelectorAll<HTMLButtonElement>('[role="tab"]')];
+    const panels = [...root.querySelectorAll<HTMLElement>('[role="tabpanel"]')];
+    const prev = root.querySelector<HTMLButtonElement>('[data-lane-prev]')!;
+    const next = root.querySelector<HTMLButtonElement>('[data-lane-next]')!;
+    let cur = tabs.findIndex((t) => t.getAttribute('aria-selected') === 'true');
+    const select = (i: number, focus = false) => {
+      cur = Math.max(0, Math.min(tabs.length - 1, i));
+      tabs.forEach((t, j) => { t.setAttribute('aria-selected', String(j === cur)); t.tabIndex = j === cur ? 0 : -1; });
+      panels.forEach((p, j) => (j === cur ? p.setAttribute('data-active', '') : p.removeAttribute('data-active')));
+      // Keep the selected step visible inside the horizontal strip only — never scroll the page.
+      const strip = tabs[cur].parentElement!;
+      const t = tabs[cur];
+      if (t.offsetLeft < strip.scrollLeft || t.offsetLeft + t.offsetWidth > strip.scrollLeft + strip.clientWidth)
+        strip.scrollTo({ left: t.offsetLeft - (strip.clientWidth - t.offsetWidth) / 2 });
+      prev.disabled = cur === 0; next.disabled = cur === tabs.length - 1;
+      if (focus) tabs[cur].focus();
+    };
+    tabs.forEach((t, i) => {
+      t.addEventListener('click', () => select(i));
+      t.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowRight') { e.preventDefault(); select(cur + 1, true); }
+        if (e.key === 'ArrowLeft') { e.preventDefault(); select(cur - 1, true); }
+        if (e.key === 'Home') { e.preventDefault(); select(0, true); }
+        if (e.key === 'End') { e.preventDefault(); select(tabs.length - 1, true); }
+      });
+    });
+    prev.addEventListener('click', () => select(cur - 1));
+    next.addEventListener('click', () => select(cur + 1));
+    select(cur);
+  });
+</script>

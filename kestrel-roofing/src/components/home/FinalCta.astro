@@ -1,0 +1,36 @@
+---
+// Section 7 — second conversion point + service area in one line.
+import { site, serviceArea } from '../../config/site';
+import LeadForm from '../patterns/LeadForm.astro';
+import OpenStatus from '../layout/OpenStatus.astro';
+import Check from '@lucide/astro/icons/check';
+import ArrowRight from '@lucide/astro/icons/arrow-right';
+interface Props { title?: string; problem?: string; kicker?: string }
+const { title = 'Find out what your roof needs. It’s&nbsp;free.', problem, kicker = 'Free inspection' } = Astro.props;
+const shown = ['Columbus', 'Dublin', 'Westerville', 'Hilliard', 'Upper Arlington'];
+const rest = serviceArea.length - shown.length;
+---
+<section class="bg-ink py-[var(--spacing-section)] text-paper" aria-labelledby="cta-title">
+  <div class="wrap grid gap-10 lg:grid-cols-12 lg:gap-x-12 lg:gap-y-0">
+    <div class="lg:col-span-6 lg:row-start-1">
+      <p class="t-label text-mist">{kicker}</p>
+      <h2 id="cta-title" class="t-h1 mt-3" set:html={title} />
+      <ul class="mt-8 flex flex-col gap-3 text-lead">
+        {['30–45 minutes, and you don’t need to be home', 'Photo report within 24 hours', 'A fixed price — or an honest “not yet”'].map((t) => (
+          <li class="flex gap-3"><Check class="mt-1 size-5 shrink-0 text-blueprint-light" aria-hidden="true" />{t}</li>
+        ))}
+      </ul>
+    </div>
+    <div class="lg:col-span-6 lg:col-start-7 lg:row-span-2 lg:row-start-1">
+      <LeadForm id="final-form" problem={problem} />
+    </div>
+    <div class="lg:col-span-6 lg:col-start-1 lg:row-start-2 lg:mt-10">
+      <div class="border-t border-ink-2 pt-6">
+        <p class="t-label text-mist">Rather talk?</p>
+        <a href={site.phone.href} class="mt-1 flex min-h-12 items-center text-h2 font-bold no-underline [font-variation-settings:'wdth'_120] hover:text-blueprint-light">{site.phone.display}</a>
+        <OpenStatus class="mt-1 text-small text-mist" />
+      </div>
+      <p class="mt-8 text-small text-mist">Serving {shown.join(', ')} and <a href="/about/#service-area" class="text-paper underline underline-offset-4 hover:text-blueprint-light">{rest} more towns<ArrowRight class="ml-1 inline size-3.5 align-[-2px]" aria-hidden="true" /></a></p>
+    </div>
+  </div>
+</section>

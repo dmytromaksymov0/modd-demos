@@ -1,0 +1,60 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import LeadForm from '../../components/patterns/LeadForm.astro';
+import OpenStatus from '../../components/layout/OpenStatus.astro';
+import Faq from '../../components/patterns/Faq.astro';
+import { business, faqSchema, breadcrumbs } from '../../lib/schema';
+import { site } from '../../config/site';
+import Phone from '@lucide/astro/icons/phone';
+import Mail from '@lucide/astro/icons/mail';
+import MapPin from '@lucide/astro/icons/map-pin';
+import Clock from '@lucide/astro/icons/clock';
+
+const next = [
+  ['We call you back', 'Within 2 business hours, from (614) 555-0142, to pick a time that suits you.'],
+  ['We inspect the roof', '30–45 minutes. We go up, measure, photograph — you don’t need to be home.'],
+  ['You get a photo report', 'Within 24 hours: every problem we found, with photos and plain-English notes.'],
+  ['You get a fixed price', 'Or an honest “you don’t need a roof yet”. No pressure either way.'],
+];
+const faq = [
+  { q: 'Is the inspection really free?', a: 'Yes. No charge, no obligation, and no “trip fee” on the estimate later.' },
+  { q: 'Do I need to be home?', a: 'No. We need to know the gate code if there is one. We’ll send the photos and walk you through them by phone or in person, whichever you prefer.' },
+  { q: 'Will someone try to sell me a roof on the spot?', a: 'No. We leave the report and the price with you. Most people take a few days to decide, and that’s fine.' },
+  { q: 'Which areas do you cover?', a: 'Columbus and 17 towns around it. <a href="/about/#service-area" class="font-semibold text-blueprint underline underline-offset-4">Check your ZIP code</a>.' },
+];
+---
+<BaseLayout
+  title="Book a Free Roof Inspection in Columbus, OH | Kestrel Roofing"
+  description="Book a free roof inspection: we call back within 2 business hours, inspect in 30–45 minutes, and send a photo report within 24 hours. No pressure, no obligation."
+  schema={[business(Astro.site?.href), faqSchema(faq), breadcrumbs(Astro.site?.href, [{ name: 'Free Inspection', path: '/free-inspection/' }])]}
+>
+  <section class="wrap grid gap-10 pt-10 pb-[var(--spacing-section)] lg:grid-cols-12 lg:gap-12 lg:pt-14" data-hero>
+    <div class="lg:col-span-6">
+      <p class="t-label text-graphite">Free inspection</p>
+      <h1 class="t-h1 mt-3">Book a free roof inspection.</h1>
+      <p class="t-lead measure mt-4 text-graphite">Two quick steps. We call you back within 2 business hours — or call us now.</p>
+      <p id="form-error" class="t-small mt-6 hidden rounded-sm border border-alert bg-alert-soft p-4 text-ink target:block" role="alert">Sorry — your request didn’t go through. Please check the fields and try again, or call <a href={site.phone.href} class="font-semibold underline">{site.phone.display}</a>.</p>
+      <LeadForm id="final-form" class="mt-8" />
+    </div>
+    <div class="flex flex-col gap-10 lg:col-span-6 lg:pt-24">
+      <div>
+        <h2 class="t-h3">What happens next</h2>
+        <ol class="mt-4 divide-y divide-line border-y border-line">
+          {next.map(([t, d], i) => (
+            <li class="grid grid-cols-[3rem_1fr] gap-4 py-4"><span class="t-label pt-1 text-blueprint">{String(i + 1).padStart(2, '0')}</span><div><h3 class="font-semibold">{t}</h3><p class="t-small mt-0.5 text-graphite">{d}</p></div></li>
+          ))}
+        </ol>
+      </div>
+      <div class="rounded-sm border border-ink bg-white p-6">
+        <h2 class="t-h3">Rather talk to someone?</h2>
+        <ul class="mt-4 flex flex-col gap-4">
+          <li class="flex gap-3"><Phone class="mt-1 size-5 shrink-0" aria-hidden="true" /><div><a href={site.phone.href} class="text-h3 font-bold no-underline hover:text-blueprint [font-variation-settings:'wdth'_115]">{site.phone.display}</a><div><OpenStatus class="text-small text-graphite" /></div></div></li>
+          <li class="flex gap-3"><Clock class="mt-0.5 size-5 shrink-0" aria-hidden="true" /><span>{site.hours.label}. Active leak after hours? Call anyway — we tarp the same day.</span></li>
+          <li class="flex items-center gap-3"><Mail class="size-5 shrink-0" aria-hidden="true" /><a href={`mailto:${site.email}`} class="-my-3 inline-flex min-h-11 items-center underline underline-offset-4">{site.email}</a></li>
+          <li class="flex gap-3"><MapPin class="mt-0.5 size-5 shrink-0" aria-hidden="true" /><address class="not-italic">{site.address.street}, {site.address.city}, {site.address.region} {site.address.zip}</address></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+  <Faq items={faq} title="Before you book" />
+</BaseLayout>

@@ -1,0 +1,104 @@
+---
+// Section 2 — three ways people arrive. Accessible tabs; without JS all three panels show stacked.
+import Photo from '../ui/Photo.astro';
+import Button from '../ui/Button.astro';
+import Badge from '../ui/Badge.astro';
+import { site } from '../../config/site';
+import leakImg from '../../assets/photos/about-roofer-ladder.jpg';
+import stormImg from '../../assets/photos/storm-hail-3tab.jpg';
+import oldImg from '../../assets/photos/project-stone-house.jpg';
+import ArrowRight from '@lucide/astro/icons/arrow-right';
+
+const tabs = [
+  {
+    id: 'leak', tab: 'It’s leaking', problem: 'leak', img: leakImg, pos: '50% 38%',
+    alt: 'Roofer in a safety harness climbing a ladder to the roof edge',
+    title: 'Water coming in?',
+    body: 'Call us. If it’s raining, we tarp the roof the same day so the damage stops while we find the cause. Most leaks are flashing or a few shingles — a repair, not a new roof.',
+    fact: 'Same-day tarp', factNote: 'Repairs from $350',
+    cta: 'Book a leak inspection', link: { label: 'Call now', href: site.phone.href },
+  },
+  {
+    id: 'storm', tab: 'Hail or wind', problem: 'storm', img: stormImg, pos: '50% 50%',
+    alt: 'Asphalt shingles with dark circular hail bruises',
+    title: 'Hail or a big wind?',
+    body: 'Don’t climb up there to check. We look at every slope, photograph each hit and give you a report your insurer can use. If there’s a claim, we meet your adjuster on the roof.',
+    fact: 'We meet your adjuster', factNote: 'Photo report in 24 hours',
+    cta: 'Book a storm inspection', link: { label: 'How a claim works', href: '/storm-damage/' },
+  },
+  {
+    id: 'old', tab: 'Old roof or selling', problem: 'old-roof', img: oldImg, pos: '50% 45%',
+    alt: 'Stone and siding home with a newer architectural shingle roof',
+    title: 'Roof getting old — or selling soon?',
+    body: 'A buyer’s inspector looks at the roof first. We’ll tell you honestly how many years yours has left. If it’s time, we replace it in a day — and our warranty transfers to the buyer.',
+    fact: 'Warranty transfers to the buyer', factNote: `${site.warrantyYears} years on our work`,
+    cta: 'Book a roof check', link: { label: 'Price my roof', href: '/roof-cost-calculator/' },
+  },
+];
+---
+<section class="border-t border-line py-[var(--spacing-section)]" aria-labelledby="scenarios-title" data-tabs>
+  <div class="wrap">
+    <div class="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
+      <div>
+        <p class="t-label text-graphite">Start here</p>
+        <h2 id="scenarios-title" class="t-h2 mt-2">What brought you here?</h2>
+      </div>
+      <div role="tablist" aria-label="Your situation" class="js-tabs hidden flex-wrap gap-2" data-tablist>
+        {tabs.map((t, i) => (
+          <button role="tab" type="button" id={`tab-${t.id}`} aria-controls={`panel-${t.id}`} aria-selected={i === 0 ? 'true' : 'false'} tabindex={i === 0 ? 0 : -1}
+            class="min-h-12 rounded-sm border border-line bg-white px-5 font-semibold transition-colors duration-(--duration-fast) hover:border-ink aria-selected:border-ink aria-selected:bg-ink aria-selected:text-paper">{t.tab}</button>
+        ))}
+      </div>
+    </div>
+
+    {tabs.map((t, i) => (
+      <div role="tabpanel" id={`panel-${t.id}`} aria-labelledby={`tab-${t.id}`} class="scenario mt-8 grid gap-6 lg:grid-cols-12 lg:gap-10" data-panel data-active={i === 0 ? '' : undefined}>
+        <div class="relative overflow-hidden rounded-sm bg-line lg:col-span-7" style="aspect-ratio:3/2">
+          <Photo src={t.img} alt={t.alt} sizes="(min-width: 1024px) 760px, 100vw" class="absolute inset-0" position={t.pos} widths={[480, 768, 1080, 1440]} />
+        </div>
+        <div class="flex flex-col gap-5 lg:col-span-5 lg:justify-center">
+          <h3 class="t-h2">{t.title}</h3>
+          <p class="t-lead measure text-graphite">{t.body}</p>
+          <div class="flex flex-wrap items-baseline gap-x-4 gap-y-1 border-y border-line py-4">
+            <span class="t-h3">{t.fact}</span>
+            <span class="t-label text-blueprint">{t.factNote}</span>
+          </div>
+          <div class="flex flex-wrap items-center gap-x-6 gap-y-3">
+            <Button href="#hero-form" data-set-problem={t.problem}>{t.cta}</Button>
+            <Button variant="link" href={t.link.href}>{t.link.label} <ArrowRight class="size-4" aria-hidden="true" /></Button>
+          </div>
+        </div>
+      </div>
+    ))}
+  </div>
+</section>
+
+<style is:global>
+  html.js [data-tabs] .js-tabs { display: flex; }
+  html.js [data-tabs] [data-panel]:not([data-active]) { display: none; }
+</style>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-tabs]').forEach((root) => {
+    root.dataset.js = 'true';
+    const tabs = [...root.querySelectorAll<HTMLButtonElement>('[role="tab"]')];
+    const panels = [...root.querySelectorAll<HTMLElement>('[data-panel]')];
+    const select = (i: number, focus = false) => {
+      tabs.forEach((t, j) => { t.setAttribute('aria-selected', String(i === j)); t.tabIndex = i === j ? 0 : -1; });
+      panels.forEach((p, j) => (i === j ? p.setAttribute('data-active', '') : p.removeAttribute('data-active')));
+      if (focus) tabs[i].focus();
+    };
+    tabs.forEach((t, i) => {
+      t.addEventListener('click', () => select(i));
+      t.addEventListener('keydown', (e) => {
+        const k = e.key;
+        if (k === 'ArrowRight' || k === 'ArrowLeft' || k === 'Home' || k === 'End') {
+          e.preventDefault();
+          const n = k === 'Home' ? 0 : k === 'End' ? tabs.length - 1 : (i + (k === 'ArrowRight' ? 1 : -1) + tabs.length) % tabs.length;
+          select(n, true);
+        }
+      });
+    });
+    select(0);
+  });
+</script>

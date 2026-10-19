@@ -1,0 +1,31 @@
+---
+// "Open now · until 7 pm" computed in the visitor's browser against Columbus office hours.
+// Without JS it shows the plain hours.
+import { site } from '../../config/site';
+interface Props { class?: string }
+const { class: cls = '' } = Astro.props;
+---
+<span class={`open-status inline-flex items-center gap-1.5 ${cls}`} data-open-status data-hours={JSON.stringify(site.hours)}>
+  <span class="size-2 rounded-full bg-graphite" data-dot aria-hidden="true"></span>
+  <span data-text>{site.hours.label}</span>
+</span>
+<script>
+  type Hours = { tz: string; open: number; close: number; days: number[] };
+  const fmt = (h: number) => (h === 12 ? '12 pm' : h > 12 ? `${h - 12} pm` : `${h} am`);
+  function update() {
+    document.querySelectorAll<HTMLElement>('[data-open-status]').forEach((el) => {
+      const hrs: Hours = JSON.parse(el.dataset.hours!);
+      const parts = new Intl.DateTimeFormat('en-US', { timeZone: hrs.tz, weekday: 'short', hour: 'numeric', hour12: false }).formatToParts(new Date());
+      const hour = Number(parts.find((p) => p.type === 'hour')!.value) % 24;
+      const day = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].indexOf(parts.find((p) => p.type === 'weekday')!.value);
+      const open = hrs.days.includes(day) && hour >= hrs.open && hour < hrs.close;
+      el.querySelector('[data-text]')!.textContent = open ? `Open now · until ${fmt(hrs.close)}` : `Closed · we call back from ${fmt(hrs.open)}`;
+      const dot = el.querySelector<HTMLElement>('[data-dot]')!;
+      dot.classList.toggle('bg-clear', open);
+      dot.classList.toggle('bg-graphite', !open);
+      el.classList.toggle('text-clear', open);
+    });
+  }
+  update();
+  setInterval(update, 60_000);
+</script>

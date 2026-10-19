@@ -1,0 +1,16 @@
+---
+// Kestrel wordmark. Outlines generated from Archivo (wdth 125) + IBM Plex Mono by design/phase-2/make_logo.py.
+import paths from './logo-paths.json';
+interface Props { tone?: 'ink' | 'paper'; subline?: boolean; class?: string }
+const { tone = 'ink', subline = true, class: cls = '' } = Astro.props;
+const ink = tone === 'ink' ? 'var(--color-ink)' : 'var(--color-paper)';
+const dot = tone === 'ink' ? 'var(--color-blueprint)' : 'var(--color-blueprint-light)';
+const sub = tone === 'ink' ? 'var(--color-graphite)' : 'var(--color-mist)';
+const mark = paths.mark.replaceAll('@INK', ink).replaceAll('@DOT', dot);
+const h = subline ? 84 : 60;
+---
+<svg class={cls} viewBox={`0 0 ${paths.width} ${h}`} role="img" aria-label="Kestrel Roofing Co." xmlns="http://www.w3.org/2000/svg">
+  <Fragment set:html={mark} />
+  <path d={paths.word} fill={ink} />
+  {subline && <path d={paths.small} fill={sub} />}
+</svg>

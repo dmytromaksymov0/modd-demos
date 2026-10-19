@@ -1,0 +1,65 @@
+---
+// Section 3 — argument #1: 25 years on our workmanship, separate from the manufacturer's warranty.
+import { site } from '../../config/site';
+import Button from '../ui/Button.astro';
+import ArrowRight from '@lucide/astro/icons/arrow-right';
+const rows = [
+  { q: 'What it covers', m: 'Defects in the shingles themselves', k: 'Our installation: nailing, flashing, vents, leaks caused by our work' },
+  { q: 'How long', m: 'Up to “lifetime”, prorated, with conditions', k: `${site.warrantyYears} years, not prorated` },
+  { q: 'Who you call', m: 'The manufacturer, with paperwork', k: `Us — same number, ${site.phone.display}` },
+  { q: 'If you sell the house', m: 'Depends on the product and paperwork', k: 'Transfers once to the buyer, free, in writing' },
+  { q: 'Cost', m: 'Included with the shingles', k: 'Included with every replacement' },
+];
+---
+<section class="bg-white py-[var(--spacing-section)]" aria-labelledby="warranty-title">
+  <div class="wrap grid gap-10 lg:grid-cols-12 lg:gap-12">
+    <div class="lg:col-span-5">
+      <p class="t-label text-graphite">Our warranty</p>
+      <p class="warranty-num mt-4" aria-hidden="true">{site.warrantyYears}</p>
+      <h2 id="warranty-title" class="t-h1 -mt-2">years on our work. In&nbsp;writing.</h2>
+      <p class="t-lead measure mt-5 text-graphite">The manufacturer covers the shingles. We cover the work — the part that actually causes most leaks. Most roofers stop at 5 to 10&nbsp;years.</p>
+      <div class="mt-6"><Button variant="link" href="/about/#warranty">Read our warranty, plain English <ArrowRight class="size-4" aria-hidden="true" /></Button></div>
+    </div>
+    <div class="lg:col-span-7">
+      <table class="w-full border-collapse text-left">
+        <caption class="sr-only">Manufacturer warranty compared with the Kestrel workmanship warranty</caption>
+        <thead>
+          <tr class="border-b border-ink">
+            <th scope="col" class="w-[28%] pb-3 align-bottom"><span class="sr-only">Question</span></th>
+            <th scope="col" class="t-label w-[34%] pb-3 pr-4 align-bottom font-medium text-graphite">Manufacturer warranty</th>
+            <th scope="col" class="t-label pb-3 align-bottom font-medium text-blueprint">Kestrel workmanship</th>
+          </tr>
+        </thead>
+        <tbody>
+          {rows.map((r) => (
+            <tr class="border-b border-line align-top">
+              <th scope="row" class="py-4 pr-4 text-small font-semibold">{r.q}</th>
+              <td class="py-4 pr-4 text-small text-graphite">{r.m}</td>
+              <td class="py-4 text-small font-medium text-ink">{r.k}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+      <p class="t-small mt-4 text-graphite">Not covered: storm damage (that’s insurance), roofs walked on or altered by others after us. Covered: everything we touched.</p>
+    </div>
+  </div>
+</section>
+<style>
+  .warranty-num {
+    font-size: clamp(7rem, 4rem + 13vw, 15rem);
+    line-height: 0.82;
+    font-weight: 800;
+    font-variation-settings: 'wdth' var(--wdth-display);
+    letter-spacing: -0.04em;
+    color: var(--color-blueprint);
+  }
+  @media (max-width: 47.99rem) {
+    table, thead, tbody, tr, th, td { display: block; }
+    thead { display: none; }
+    tr { padding: 0.75rem 0; }
+    tbody th { padding: 0 0 0.25rem; }
+    tbody td { padding: 0.125rem 0; }
+    tbody td:nth-of-type(1)::before { content: 'Manufacturer: '; font-weight: 600; color: var(--color-ink); }
+    tbody td:nth-of-type(2)::before { content: 'Kestrel: '; font-weight: 700; color: var(--color-blueprint); }
+  }
+</style>

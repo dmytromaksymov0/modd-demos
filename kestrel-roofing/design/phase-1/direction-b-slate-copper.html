@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kestrel Roofing — Direction B · Slate &amp; Copper</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource-variable/instrument-sans@5/wdth.css">
+<style>
+  :root{
+    --zinc:#EEF0EF; --slate:#22282E; --slate-2:#58626B; --mist:#D7DCDD;
+    --copper:#9C5126; --verdigris:#3B6B5F; --white:#FFFFFF;
+    --sans:"Instrument Sans Variable", system-ui, sans-serif;
+    --s1:4px; --s2:8px; --s3:12px; --s4:16px; --s5:24px; --s6:32px; --s7:48px; --s8:72px;
+    --r-sm:10px; --r-lg:22px;
+  }
+  *{box-sizing:border-box;margin:0}
+  body{background:var(--zinc);color:var(--slate);font-family:var(--sans);font-size:16px;line-height:1.5;-webkit-font-smoothing:antialiased}
+  a{color:inherit}
+
+  .storm{display:flex;align-items:center;gap:var(--s3);padding:10px var(--s6);background:var(--slate);color:var(--zinc);font-size:14px}
+  .storm i{width:7px;height:7px;border-radius:50%;background:#E08A55;flex:none}
+  .storm a{margin-left:auto;color:#F1B58F;text-underline-offset:3px;white-space:nowrap}
+
+  header{display:flex;align-items:center;gap:var(--s7);padding:var(--s5) var(--s6)}
+  .wordmark{font-size:22px;font-weight:600;letter-spacing:-.02em;text-decoration:none}
+  .wordmark span{font-weight:400;color:var(--slate-2)}
+  nav ul{display:flex;gap:var(--s6);list-style:none;padding:0;font-size:15px}
+  nav a{text-decoration:none;color:var(--slate-2)}
+  nav a:hover{color:var(--slate)}
+  .right{margin-left:auto;display:flex;align-items:center;gap:var(--s5)}
+  .phone{text-decoration:none;font-size:15px;font-weight:500}
+  .phone small{color:var(--verdigris);font-weight:500;margin-left:6px}
+  .btn{display:inline-flex;align-items:center;justify-content:center;min-height:48px;padding:0 24px;border-radius:999px;background:var(--copper);color:var(--white);font:inherit;font-weight:600;text-decoration:none;border:0;cursor:pointer}
+  .btn.dark{background:var(--slate)}
+  .btn.ghost{background:transparent;border:1px solid var(--slate);color:var(--slate)}
+
+  .intro{display:grid;grid-template-columns:repeat(12,1fr);gap:var(--s5);padding:var(--s6) var(--s6) var(--s6);align-items:end}
+  h1{grid-column:1 / span 9;font-weight:500;font-size:clamp(40px,5.3vw,88px);line-height:1.02;letter-spacing:-.04em}
+  .chip{display:inline-block;width:1.55em;height:.78em;border-radius:999px;vertical-align:.06em;background-size:cover;background-position:center;margin:0 .04em}
+  h1 .accent{color:var(--copper)}
+  .aside{grid-column:10 / span 3;display:flex;flex-direction:column;gap:var(--s4);padding-bottom:10px}
+  .aside p{font-size:17px;color:var(--slate-2);max-width:30ch}
+  .aside p b{color:var(--slate);font-weight:600}
+  .m-cta{display:none}
+
+  .stage{position:relative;margin:0 var(--s6);height:560px;border-radius:var(--r-lg);overflow:hidden;background:var(--mist)}
+  .stage img{width:100%;height:100%;object-fit:cover;object-position:50% 62%}
+  .stage .shade{position:absolute;inset:0;background:linear-gradient(90deg,rgba(18,22,26,.55) 0%,rgba(18,22,26,0) 45%)}
+  .facts{position:absolute;left:var(--s6);bottom:var(--s6);display:flex;gap:var(--s7);color:var(--white)}
+  .facts b{display:block;font-size:44px;font-weight:500;letter-spacing:-.03em;line-height:1}
+  .facts span{font-size:14px;opacity:.85}
+
+  form{position:absolute;right:var(--s5);top:var(--s5);bottom:var(--s5);width:380px;background:var(--white);border-radius:var(--r-sm);padding:var(--s5);display:flex;flex-direction:column;gap:var(--s3)}
+  form h2{font-size:22px;font-weight:600;letter-spacing:-.02em}
+  form .sub{font-size:14px;color:var(--slate-2);margin-top:-6px}
+  .row{display:grid;grid-template-columns:1fr 1fr;gap:var(--s3)}
+  label{display:flex;flex-direction:column;gap:4px;font-size:13px;font-weight:500;color:var(--slate-2)}
+  input{width:100%;min-width:0;height:46px;border:1px solid var(--mist);border-radius:var(--r-sm);padding:0 12px;font:inherit;font-size:16px;color:var(--slate);background:var(--white)}
+  .zipok{font-size:13px;color:var(--verdigris);font-weight:500}
+  .seg{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+  .seg button{min-height:42px;border:1px solid var(--mist);background:var(--white);border-radius:var(--r-sm);font:inherit;font-size:14px;color:var(--slate);cursor:pointer}
+  .seg button[aria-pressed=true]{border-color:var(--slate);box-shadow:inset 0 0 0 1px var(--slate);font-weight:600}
+  form .btn{margin-top:auto;width:100%}
+  .micro{font-size:12.5px;color:var(--slate-2);text-align:center}
+
+  .badges{display:flex;gap:var(--s6);padding:var(--s5) var(--s6);font-size:14px;color:var(--slate-2);flex-wrap:wrap}
+  .badges b{color:var(--slate);font-weight:600}
+  :focus-visible{outline:3px solid var(--verdigris);outline-offset:2px}
+
+  @media (max-width:1100px){ nav{display:none} h1{grid-column:1 / -1} .aside{grid-column:1 / -1} }
+  @media (max-width:760px){
+    .storm{padding:10px var(--s4);font-size:13px;align-items:flex-start}
+    .storm i{margin-top:6px}
+    .storm a{display:none}
+    header{padding:var(--s4)}
+    .phone small,.right .btn{display:none}
+    .intro{padding:var(--s4) var(--s4) var(--s5);gap:var(--s4)}
+    h1{font-size:42px;line-height:1.04}
+    .aside p{font-size:16px}
+    .m-cta{display:grid;grid-template-columns:1fr auto;gap:var(--s2)}
+    .stage{margin:0 var(--s4);height:auto;overflow:visible;background:none;border-radius:0}
+    .stage img{height:280px;border-radius:var(--r-lg)}
+    .stage .shade{display:none}
+    .facts{position:static;color:var(--slate);gap:var(--s5);padding:var(--s4) 0}
+    .facts b{font-size:30px}
+    form{position:static;width:auto;border:1px solid var(--mist)}
+    .badges{padding:var(--s5) var(--s4);gap:var(--s3) var(--s5)}
+  }
+</style>
+</head>
+<body>
+  <div class="storm" role="status"><i aria-hidden="true"></i><span>Hail hit Dublin, Hilliard &amp; Upper Arlington on Oct 14. Storm inspections are free this week.</span><a href="#">Book one →</a></div>
+  <header>
+    <a class="wordmark" href="#">Kestrel <span>Roofing Co.</span></a>
+    <nav aria-label="Main"><ul><li><a href="#">Replacement</a></li><li><a href="#">Storm &amp; Hail</a></li><li><a href="#">Cost Calculator</a></li><li><a href="#">Projects</a></li><li><a href="#">About</a></li></ul></nav>
+    <div class="right">
+      <a class="phone" href="tel:+16145550142">(614) 555-0142<small>Open now</small></a>
+      <a class="btn dark" href="#form">Free inspection</a>
+    </div>
+  </header>
+
+  <main>
+    <section class="intro">
+      <h1>A new roof <span class="chip" role="img" aria-label="architectural shingles" style="background-image:url(photos/shingle-texture-5IilXEIe9hU.jpg)"></span> in one day. Our work <span class="chip" role="img" aria-label="Kestrel crew on a roof" style="background-image:url(photos/crew-harness-MyBBMM317A4.jpg)"></span> covered <span class="accent">for&nbsp;25&nbsp;years.</span></h1>
+      <div class="aside">
+        <p>Columbus homeowners since 2009. <b>Price locked before we start</b>, decking at $85 a sheet only with photo proof.</p>
+        <div class="m-cta"><a class="btn" href="#form">Book free inspection</a><a class="btn ghost" href="tel:+16145550142">Call</a></div>
+      </div>
+    </section>
+
+    <section class="stage">
+      <img src="photos/stone-house-QnYt7TLnFFU.jpg" alt="Stone-and-siding two-story home with a new architectural shingle roof">
+      <div class="shade" aria-hidden="true"></div>
+      <div class="facts">
+        <div><b>1 day</b><span>Typical replacement</span></div>
+        <div><b>25 yrs</b><span>On our workmanship</span></div>
+        <div><b>$25</b><span>For any nail we miss</span></div>
+      </div>
+      <form id="form" onsubmit="return false">
+        <h2>Free roof inspection</h2>
+        <p class="sub">30–45 minutes. You don’t need to be home.</p>
+        <div class="row"><label>Name<input autocomplete="name"></label><label>Phone<input type="tel" autocomplete="tel"></label></div>
+        <label>ZIP code<input inputmode="numeric" value="43017"></label>
+        <span class="zipok">✓ Dublin — we’re inspecting there this week</span>
+        <div class="seg" role="group" aria-label="What’s going on?"><button type="button" aria-pressed="false">Leak</button><button type="button" aria-pressed="true">Storm or hail</button><button type="button" aria-pressed="false">Old roof</button><button type="button" aria-pressed="false">Not sure</button></div>
+        <button class="btn" type="submit">Book my inspection</button>
+        <p class="micro">Photo report within 24 hours. No obligation.</p>
+      </form>
+    </section>
+
+    <div class="badges"><span><b>Licensed</b> · City of Columbus</span><span><b>$2M insured</b> · liability + workers’ comp</span><span><b>Manufacturer-Certified</b> Master Installer</span><span><b>0% for 12 months</b> · on approved credit</span></div>
+  </main>
+</body>
+</html>

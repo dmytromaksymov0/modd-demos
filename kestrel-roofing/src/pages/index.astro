@@ -1,0 +1,26 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import HomeHero from '../components/patterns/HomeHero.astro';
+import Scenarios from '../components/home/Scenarios.astro';
+import Warranty from '../components/home/Warranty.astro';
+import DayTimeline from '../components/home/DayTimeline.astro';
+import HonestPrice from '../components/home/HonestPrice.astro';
+import Proof from '../components/home/Proof.astro';
+import FinalCta from '../components/home/FinalCta.astro';
+import { business } from '../lib/schema';
+
+const schema = business(Astro.site?.href);
+---
+<BaseLayout
+  schema={schema}
+  title="Roof Replacement & Storm Repair in Columbus, OH | Kestrel Roofing Co."
+  description="Free roof inspection with a photo report in 24 hours, a fixed price before work starts, most roofs done in one day and 25 years on our work. Columbus & suburbs."
+>
+  <HomeHero />
+  <Scenarios />
+  <Warranty />
+  <DayTimeline />
+  <HonestPrice />
+  <Proof />
+  <FinalCta />
+</BaseLayout>

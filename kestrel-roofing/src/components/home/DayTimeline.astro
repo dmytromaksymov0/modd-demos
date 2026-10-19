@@ -1,0 +1,119 @@
+---
+// Section 4 — signature moment B: one roof, one day, 7:00 → 17:30.
+// Horizontal scroll-snap track; a clock follows the step in view. Reduced motion: no smooth scrolling.
+import Photo from '../ui/Photo.astro';
+import { site } from '../../config/site';
+import ArrowLeft from '@lucide/astro/icons/arrow-left';
+import ArrowRight from '@lucide/astro/icons/arrow-right';
+import arrival from '../../assets/photos/day-0700-arrival.jpg';
+import tearoff from '../../assets/photos/day-0740-tearoff.jpg';
+import decking from '../../assets/photos/day-1000-decking.jpg';
+import under from '../../assets/photos/day-1100-underlayment.jpg';
+import shingles from '../../assets/photos/day-1300-shingles-nailgun.jpg';
+import ridge from '../../assets/photos/day-1530-ridge.jpg';
+import haul from '../../assets/photos/day-1700-debris-haul.jpg';
+import done from '../../assets/photos/day-1730-finished-ranch.jpg';
+
+const steps = [
+  { t: '7:00', title: 'Crew arrives', body: 'Tarps over the lawn and flower beds, plywood against the walls, dumpster on the driveway.', img: arrival, pos: '30% 60%', alt: 'Roofer in a harness walking up the driveway with his gear' },
+  { t: '7:40', title: 'Old roof comes off', body: 'Everything down to the wood, straight into the dumpster — not onto your lawn.', img: tearoff, pos: '45% 50%', alt: 'Roofer tearing off old shingles with a shovel' },
+  { t: '9:30', title: 'Deck check', body: 'We walk every sheet. Soft wood is photographed and shown to you — $85 a sheet, only with your OK.', img: decking, pos: '50% 55%', alt: 'Two roofers fitting a new plywood sheet on the roof deck' },
+  { t: '11:00', title: 'Underlayment', body: 'Ice & water shield at the eaves and valleys, synthetic underlayment everywhere else, new drip edge.', img: under, pos: '50% 40%', alt: 'Roofer on a ladder at the eave of a roof covered in new grey synthetic underlayment' },
+  { t: '12:30', title: 'Shingles go on', body: 'Six nails per shingle, and the crew lead checks the pattern on every slope.', img: shingles, pos: '50% 75%', alt: 'Close-up of a nail gun fastening architectural shingles' },
+  { t: '15:30', title: 'Ridge & flashing', body: 'Ridge vent, new flashing at the chimney and walls, new pipe boots.', img: ridge, pos: '50% 50%', alt: 'Roofer working along the ridge of the new roof' },
+  { t: '16:30', title: 'Clean-up', body: 'Dumpster out, gutters cleared, two passes with a magnet over the lawn and driveway.', img: haul, pos: '40% 50%', alt: 'Roofer loading old roofing debris into a truck' },
+  { t: '17:30', title: 'Walk-through', body: `We go over the roof with you, hand over the photos and your warranty. $${site.nailBounty} for any nail we missed.`, img: done, pos: '50% 60%', alt: 'Brick ranch house with a finished new roof and a clean lawn' },
+];
+---
+<section class="overflow-hidden py-[var(--spacing-section)]" aria-labelledby="day-title" data-day>
+  <div class="wrap flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
+    <div>
+      <p class="t-label text-graphite">How a replacement goes</p>
+      <h2 id="day-title" class="t-h2 mt-2">A new roof in one day</h2>
+      <p class="t-lead measure mt-3 text-graphite">What actually happens between 7 in the morning and 5:30 in the evening. Bigger or steeper roofs can take two days — we tell you upfront.</p>
+    </div>
+    <div class="flex items-center gap-4">
+      <p class="day-clock" aria-hidden="true"><span data-clock>7:00</span><small data-ampm>am</small></p>
+      <div class="flex gap-2">
+        <button type="button" class="flex size-12 items-center justify-center rounded-sm border border-ink hover:bg-ink hover:text-paper disabled:opacity-30" data-prev aria-label="Previous step"><ArrowLeft class="size-5" aria-hidden="true" /></button>
+        <button type="button" class="flex size-12 items-center justify-center rounded-sm border border-ink hover:bg-ink hover:text-paper disabled:opacity-30" data-next aria-label="Next step"><ArrowRight class="size-5" aria-hidden="true" /></button>
+      </div>
+    </div>
+  </div>
+
+  <div class="wrap mt-6">
+    <div class="h-1 w-full bg-line" aria-hidden="true"><div class="h-1 bg-blueprint transition-[width] duration-(--duration-base)" style="width:12.5%" data-progress></div></div>
+  </div>
+
+  <ol class="day-track mt-6" tabindex="0" aria-label="Replacement day, step by step" data-track>
+    {steps.map((s, i) => (
+      <li class="day-step" data-step={i} data-time={s.t}>
+        <div class="relative overflow-hidden rounded-sm bg-line" style="aspect-ratio:4/5">
+          <Photo src={s.img} alt={s.alt} sizes="(min-width: 1024px) 340px, 78vw" widths={[360, 540, 720]} class="absolute inset-0" position={s.pos} />
+          <span class="t-label absolute left-3 top-3 rounded-sm bg-ink px-2 py-1 text-paper">{s.t}{Number(s.t.split(':')[0]) < 12 ? ' am' : ' pm'}</span>
+        </div>
+        <h3 class="t-h3 mt-4">{s.title}</h3>
+        <p class="t-small mt-1.5 text-graphite">{s.body}</p>
+      </li>
+    ))}
+  </ol>
+</section>
+
+<style>
+  .day-clock { display: flex; align-items: baseline; gap: 0.35rem; font-weight: 750; font-variation-settings: 'wdth' var(--wdth-display); font-size: clamp(2rem, 1.5rem + 2vw, 3rem); line-height: 1; font-variant-numeric: tabular-nums; min-width: 6.5ch; justify-content: flex-end; }
+  .day-clock small { font-family: var(--font-mono); font-size: var(--text-label); font-weight: 500; text-transform: uppercase; color: var(--color-graphite); }
+  .day-track {
+    --pad: max(var(--spacing-gutter), calc((100vw - var(--container-page)) / 2 + var(--spacing-gutter)));
+    display: grid; grid-auto-flow: column; grid-auto-columns: min(78vw, 340px); gap: 1.25rem;
+    overflow-x: auto; scroll-snap-type: x mandatory; scroll-padding-inline: var(--pad);
+    padding: 0 var(--pad) 0.75rem; list-style: none; margin: 0; scroll-behavior: smooth; scrollbar-width: thin;
+  }
+  .day-step { scroll-snap-align: start; }
+  .day-track:focus-visible { outline-offset: -3px; }
+  @media (prefers-reduced-motion: reduce) { .day-track { scroll-behavior: auto; } }
+</style>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-day]').forEach((root) => {
+    const track = root.querySelector<HTMLElement>('[data-track]')!;
+    const steps = [...track.querySelectorAll<HTMLElement>('[data-step]')];
+    const clock = root.querySelector<HTMLElement>('[data-clock]')!;
+    const ampm = root.querySelector<HTMLElement>('[data-ampm]')!;
+    const bar = root.querySelector<HTMLElement>('[data-progress]')!;
+    const prev = root.querySelector<HTMLButtonElement>('[data-prev]')!;
+    const next = root.querySelector<HTMLButtonElement>('[data-next]')!;
+    let current = 0;
+    const show = (i: number) => {
+      current = i;
+      const [h, m] = steps[i].dataset.time!.split(':').map(Number);
+      clock.textContent = `${h > 12 ? h - 12 : h}:${String(m).padStart(2, '0')}`;
+      ampm.textContent = h < 12 ? 'am' : 'pm';
+      bar.style.width = `${((i + 1) / steps.length) * 100}%`;
+      prev.disabled = i === 0;
+      next.disabled = i === steps.length - 1;
+    };
+    // The step whose left edge is closest to the track's start padding is "now".
+    const onScroll = () => {
+      const pad = parseFloat(getComputedStyle(track).scrollPaddingInlineStart) || 0;
+      const origin = track.getBoundingClientRect().left + pad;
+      let best = 0, dist = Infinity;
+      steps.forEach((s, i) => { const d = Math.abs(s.getBoundingClientRect().left - origin); if (d < dist) { dist = d; best = i; } });
+      if (track.scrollLeft + track.clientWidth >= track.scrollWidth - 4) best = steps.length - 1;
+      if (best !== current) show(best);
+    };
+    const go = (i: number) => {
+      const t = Math.max(0, Math.min(steps.length - 1, i));
+      const pad = parseFloat(getComputedStyle(track).scrollPaddingInlineStart) || 0;
+      track.scrollTo({ left: steps[t].offsetLeft - pad });
+      show(t);
+    };
+    track.addEventListener('scroll', () => requestAnimationFrame(onScroll), { passive: true });
+    prev.addEventListener('click', () => go(current - 1));
+    next.addEventListener('click', () => go(current + 1));
+    track.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight') { e.preventDefault(); go(current + 1); }
+      if (e.key === 'ArrowLeft') { e.preventDefault(); go(current - 1); }
+    });
+    show(0);
+  });
+</script>

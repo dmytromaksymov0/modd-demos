@@ -1,0 +1,169 @@
+---
+// Signature moment A — full roof calculator. Pitch is picked from photos of real houses.
+// Logic lives in src/lib/pricing.ts (unit-tested in phase 5). The result is copied into every
+// lead form on the page (hidden "estimate" field) so the inspection request arrives pre-qualified.
+import { estimate, RATES, usd, PITCH_MIN, PITCH_MAX } from '../../lib/pricing';
+import { site } from '../../config/site';
+import Photo from '../ui/Photo.astro';
+import Button from '../ui/Button.astro';
+import p4 from '../../assets/photos/pitch-4-12-ranch.jpg';
+import p6 from '../../assets/photos/pitch-6-12-colonial.jpg';
+import p8 from '../../assets/photos/pitch-8-12-brick-colonial.jpg';
+import p12 from '../../assets/photos/pitch-12-12-porch-house.jpg';
+import shingleImg from '../../assets/photos/material-architectural-shingle.jpg';
+import metalImg from '../../assets/photos/material-metal-farmhouse.jpg';
+import Check from '@lucide/astro/icons/check';
+
+const pitches = [
+  { rise: 4, name: 'Low', note: 'Ranch, gentle slope', img: p4, pos: '50% 55%', alt: 'One-story ranch house with a low-slope roof' },
+  { rise: 6, name: 'Medium', note: 'Most two-story homes', img: p6, pos: '50% 35%', alt: 'Two-story house with siding and a medium-slope roof' },
+  { rise: 8, name: 'Steep', note: 'Colonials, hip roofs', img: p8, pos: '50% 45%', alt: 'Brick colonial house with a steep hip roof' },
+  { rise: 12, name: 'Very steep', note: 'Older homes, tall gables', img: p12, pos: '50% 40%', alt: 'Older house with a porch and very steep gables' },
+];
+const d = estimate({ homeSqft: 2000, stories: 2, pitch: 6, material: 'architectural' });
+---
+<div class="calc grid gap-8 lg:grid-cols-12 lg:gap-10" data-calc>
+  <form class="flex flex-col gap-10 lg:col-span-7" onsubmit="return false" aria-label="Roof price calculator">
+    <!-- 1. Size -->
+    <fieldset class="flex flex-col gap-3">
+      <legend class="t-h3 mb-1">1. How big is your home?</legend>
+      <p class="t-small text-graphite">Living area from your listing or tax record. A guess is fine.</p>
+      <div class="flex flex-wrap items-center gap-4">
+        <label class="flex items-center gap-2"><span class="sr-only">Home size in square feet</span>
+          <input type="number" inputmode="numeric" min="600" max="8000" step="50" value="2000" class="h-12 w-32 rounded-sm border border-line bg-white px-3 text-lead font-semibold focus:border-blueprint" data-c-size-num />
+          <span class="text-graphite">sq ft</span>
+        </label>
+        <input type="range" min="600" max="6000" step="50" value="2000" class="range min-w-48 flex-1" aria-label="Home size slider" data-c-size />
+      </div>
+    </fieldset>
+
+    <!-- 2. Stories -->
+    <fieldset>
+      <legend class="t-h3 mb-3">2. How many stories?</legend>
+      <div class="seg grid max-w-sm grid-cols-2">
+        <label><input type="radio" name="c-stories" value="1" class="sr-only" /><span>One story</span></label>
+        <label><input type="radio" name="c-stories" value="2" checked class="sr-only" /><span>Two stories</span></label>
+      </div>
+    </fieldset>
+
+    <!-- 3. Pitch from photos -->
+    <fieldset>
+      <legend class="t-h3 mb-1">3. Which roof looks most like yours?</legend>
+      <p class="t-small mb-4 text-graphite">Steeper roofs have more area and take longer. Pick the closest — the inspection measures it exactly.</p>
+      <div class="grid grid-cols-2 gap-3 md:grid-cols-4">
+        {pitches.map((p) => (
+          <label class="pitch-card relative cursor-pointer">
+            <input type="radio" name="c-pitch" value={p.rise} checked={p.rise === 6} class="peer sr-only" />
+            <span class="flex h-full flex-col overflow-hidden rounded-sm border border-line bg-white transition-colors peer-checked:border-ink peer-checked:shadow-[inset_0_0_0_2px_var(--color-ink)] peer-focus-visible:outline-3 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-blueprint">
+              <span class="relative block bg-line" style="aspect-ratio:4/3"><Photo src={p.img} alt={p.alt} sizes="(min-width: 768px) 200px, 45vw" widths={[320, 480, 640]} class="absolute inset-0" position={p.pos} /></span>
+              <span class="flex flex-col gap-0.5 p-3">
+                <span class="t-label text-blueprint">{p.rise}/12</span>
+                <span class="font-semibold">{p.name}</span>
+                <span class="t-small text-graphite">{p.note}</span>
+              </span>
+            </span>
+            <span class="pitch-check absolute right-2 top-2 hidden size-7 items-center justify-center rounded-full bg-ink text-paper" aria-hidden="true"><Check class="size-4" /></span>
+          </label>
+        ))}
+      </div>
+      <label class="mt-4 flex flex-wrap items-center gap-3 text-small text-graphite">Know the exact pitch?
+        <select class="h-11 rounded-sm border border-line bg-white px-3 text-body text-ink" data-c-pitch-fine>
+          {Array.from({ length: PITCH_MAX - PITCH_MIN + 1 }, (_, i) => PITCH_MIN + i).map((r) => <option value={r} selected={r === 6}>{r}/12</option>)}
+        </select>
+      </label>
+    </fieldset>
+
+    <!-- 4. Material -->
+    <fieldset>
+      <legend class="t-h3 mb-3">4. Which material?</legend>
+      <div class="grid gap-3 sm:grid-cols-2">
+        {[{ v: 'architectural', img: shingleImg, alt: 'Architectural shingles', d: '25–30 years · most common' }, { v: 'metal', img: metalImg, alt: 'Standing-seam metal roof', d: '40–60 years · about 2× the price' }].map((m) => (
+          <label class="relative cursor-pointer">
+            <input type="radio" name="c-material" value={m.v} checked={m.v === 'architectural'} class="peer sr-only" />
+            <span class="flex items-center gap-4 overflow-hidden rounded-sm border border-line bg-white pr-4 peer-checked:border-ink peer-checked:shadow-[inset_0_0_0_2px_var(--color-ink)] peer-focus-visible:outline-3 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-blueprint">
+              <span class="relative block h-20 w-24 shrink-0 bg-line"><Photo src={m.img} alt={m.alt} sizes="96px" widths={[192]} class="absolute inset-0" /></span>
+              <span><span class="block font-semibold">{RATES[m.v as 'architectural' | 'metal'].label}</span><span class="t-small text-graphite">{m.d}</span></span>
+            </span>
+          </label>
+        ))}
+      </div>
+    </fieldset>
+  </form>
+
+  <!-- Result -->
+  <aside class="lg:col-span-5" aria-label="Your estimate">
+    <div class="rounded-sm bg-ink p-6 text-paper md:p-8 lg:sticky lg:top-28" aria-live="polite">
+      <p class="t-label text-mist">Your estimated price, installed</p>
+      <p class="mt-2 text-[clamp(1.875rem,1.3rem+2vw,2.75rem)] font-bold leading-none [font-variation-settings:'wdth'_120]" data-r-price>{usd(d.low)} – {usd(d.high)}</p>
+      <dl class="mt-6 grid grid-cols-3 gap-4 border-y border-ink-2 py-4">
+        <div><dt class="t-label text-mist">Roof</dt><dd class="mt-1 font-semibold" data-r-squares>{d.squares} sq</dd></div>
+        <div><dt class="t-label text-mist">Time</dt><dd class="mt-1 font-semibold" data-r-days>{d.days} {d.days === 1 ? 'day' : 'days'}</dd></div>
+        <div><dt class="t-label text-mist">0% / 12 mo</dt><dd class="mt-1 font-semibold" data-r-monthly>≈ {usd(d.monthly)}/mo</dd></div>
+      </dl>
+      <p class="t-label mt-5 text-mist">Included</p>
+      <ul class="mt-2 grid gap-1.5 text-small text-paper/90">
+        {['Tear-off to the deck & disposal', 'Ice & water shield + synthetic underlayment', 'New drip edge, flashing, pipe boots, ridge vent', 'Permit, clean-up, two magnet sweeps', `${site.warrantyYears}-year workmanship warranty`].map((t) => <li class="flex gap-2"><Check class="mt-0.5 size-4 shrink-0 text-blueprint-light" aria-hidden="true" />{t}</li>)}
+      </ul>
+      <p class="t-small mt-5 text-mist" data-r-summary>2,000 sq ft · 2 stories · 6/12 · architectural shingle</p>
+      <div class="mt-5"><Button href="#final-form" full data-set-problem="old-roof">Lock in an exact price — free inspection</Button></div>
+      <p class="t-small mt-3 text-mist">No email needed to see a price. We only call if you ask us to.</p>
+    </div>
+  </aside>
+</div>
+
+<style>
+  .seg { border: 1px solid var(--color-line); border-radius: var(--radius-sm); background: var(--color-white); }
+  .seg label { position: relative; }
+  .seg span { display: flex; min-height: 3rem; align-items: center; justify-content: center; font-weight: 600; cursor: pointer; }
+  .seg label + label span { border-left: 1px solid var(--color-line); }
+  .seg input:checked + span { background: var(--color-ink); color: var(--color-paper); }
+  .seg input:focus-visible + span { outline: 3px solid var(--color-blueprint); outline-offset: 2px; }
+  .pitch-card input:checked ~ .pitch-check { display: flex; }
+  .range { appearance: none; height: 2.75rem; background: transparent; cursor: pointer; }
+  .range::-webkit-slider-runnable-track { height: 4px; background: linear-gradient(var(--color-blueprint), var(--color-blueprint)) 0 / var(--fill, 26%) 100% no-repeat, var(--color-line); border-radius: 2px; }
+  .range::-moz-range-track { height: 4px; background: var(--color-line); border-radius: 2px; }
+  .range::-moz-range-progress { height: 4px; background: var(--color-blueprint); }
+  .range::-webkit-slider-thumb { appearance: none; width: 28px; height: 28px; margin-top: -12px; border-radius: 50%; background: var(--color-white); border: 2px solid var(--color-ink); }
+  .range::-moz-range-thumb { width: 24px; height: 24px; border-radius: 50%; background: var(--color-white); border: 2px solid var(--color-ink); }
+  .range:focus-visible { outline: none; }
+  .range:focus-visible::-webkit-slider-thumb { outline: 3px solid var(--color-blueprint); outline-offset: 2px; }
+  .range:focus-visible::-moz-range-thumb { outline: 3px solid var(--color-blueprint); outline-offset: 2px; }
+</style>
+
+<script>
+  import { estimate, usd, RATES, type Material } from '../../lib/pricing';
+  document.querySelectorAll<HTMLElement>('[data-calc]').forEach((root) => {
+    const num = root.querySelector<HTMLInputElement>('[data-c-size-num]')!;
+    const range = root.querySelector<HTMLInputElement>('[data-c-size]')!;
+    const fine = root.querySelector<HTMLSelectElement>('[data-c-pitch-fine]')!;
+    const $ = (s: string) => root.querySelector<HTMLElement>(s)!;
+    const val = (name: string) => root.querySelector<HTMLInputElement>(`input[name="${name}"]:checked`)?.value;
+    let pitch = 6;
+    const update = () => {
+      const size = Math.min(8000, Math.max(600, Number(num.value) || 2000));
+      const stories = Number(val('c-stories')) as 1 | 2;
+      const material = val('c-material') as Material;
+      const e = estimate({ homeSqft: size, stories, pitch, material });
+      range.style.setProperty('--fill', `${((Math.min(size, 6000) - 600) / 5400) * 100}%`);
+      $('[data-r-price]').textContent = `${usd(e.low)} – ${usd(e.high)}`;
+      $('[data-r-squares]').textContent = `${e.squares} sq`;
+      $('[data-r-days]').textContent = `${e.days} ${e.days === 1 ? 'day' : 'days'}`;
+      $('[data-r-monthly]').textContent = `≈ ${usd(e.monthly)}/mo`;
+      const summary = `${size.toLocaleString('en-US')} sq ft · ${stories} ${stories === 1 ? 'story' : 'stories'} · ${pitch}/12 · ${RATES[material].label.toLowerCase()}`;
+      $('[data-r-summary]').textContent = summary;
+      document.querySelectorAll<HTMLInputElement>('[data-estimate-field]').forEach((f) => (f.value = `${usd(e.low)}–${usd(e.high)} · ${e.squares} sq · ${summary}`));
+    };
+    num.addEventListener('input', () => { range.value = num.value; update(); });
+    num.addEventListener('change', () => { const v = Math.min(8000, Math.max(600, Number(num.value) || 2000)); num.value = String(v); range.value = String(Math.min(v, 6000)); update(); });
+    range.addEventListener('input', () => { num.value = range.value; update(); });
+    root.querySelectorAll<HTMLInputElement>('input[name="c-pitch"]').forEach((r) => r.addEventListener('change', () => { pitch = Number(r.value); fine.value = r.value; update(); }));
+    fine.addEventListener('change', () => {
+      pitch = Number(fine.value);
+      const nearest = [4, 6, 8, 12].reduce((a, b) => (Math.abs(b - pitch) < Math.abs(a - pitch) ? b : a));
+      root.querySelector<HTMLInputElement>(`input[name="c-pitch"][value="${nearest}"]`)!.checked = true;
+      update();
+    });
+    root.addEventListener('change', update);
+    update();
+  });
+</script>

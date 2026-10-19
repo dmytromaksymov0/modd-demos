@@ -1,0 +1,35 @@
+---
+// Before / after slider. READY BUT OFF on the live site: enable only with real photo pairs of the
+// same house from the client (see README → "What changes for a real client").
+// Keyboard: the handle is a native range input (arrows, Home/End). No JS → shows the "after" photo with a label.
+import { Picture } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+interface Props { before: ImageMetadata; after: ImageMetadata; beforeAlt: string; afterAlt: string; label?: string; class?: string }
+const { before, after, beforeAlt, afterAlt, label = 'Compare before and after', class: cls = '' } = Astro.props;
+---
+<figure class={`ba relative overflow-hidden rounded-sm bg-line select-none ${cls}`} style={`aspect-ratio:${after.width}/${after.height};--pos:50%`} data-ba>
+  <Picture src={after} alt={afterAlt} formats={['avif', 'webp']} widths={[480, 960, 1440]} sizes="(min-width: 1024px) 60vw, 100vw" class="absolute inset-0 size-full object-cover" />
+  <div class="ba-before absolute inset-0" aria-hidden="true">
+    <Picture src={before} alt="" formats={['avif', 'webp']} widths={[480, 960, 1440]} sizes="(min-width: 1024px) 60vw, 100vw" class="absolute inset-0 size-full object-cover" />
+  </div>
+  <span class="t-label absolute left-3 top-3 rounded-sm bg-ink px-2 py-1 text-paper">Before</span>
+  <span class="t-label absolute right-3 top-3 rounded-sm bg-white px-2 py-1 text-ink">After</span>
+  <div class="ba-handle pointer-events-none absolute inset-y-0" aria-hidden="true"><span class="ba-knob"></span></div>
+  <input type="range" min="0" max="100" value="50" step="1" class="ba-range absolute inset-0 size-full cursor-ew-resize opacity-0" aria-label={label} aria-valuetext="50% before" data-ba-range />
+</figure>
+<style>
+  .ba-before { clip-path: inset(0 calc(100% - var(--pos)) 0 0); }
+  .ba-handle { left: var(--pos); width: 2px; margin-left: -1px; background: var(--color-white); box-shadow: 0 0 0 1px rgb(0 0 0 / 0.25); }
+  .ba-knob { position: absolute; top: 50%; left: 50%; width: 44px; height: 44px; transform: translate(-50%, -50%); border-radius: 50%; background: var(--color-white); border: 2px solid var(--color-ink); }
+  .ba-knob::before, .ba-knob::after { content: ''; position: absolute; top: 50%; width: 0; height: 0; border: 6px solid transparent; transform: translateY(-50%); }
+  .ba-knob::before { left: 7px; border-right-color: var(--color-ink); }
+  .ba-knob::after { right: 7px; border-left-color: var(--color-ink); }
+  .ba:has(.ba-range:focus-visible) .ba-knob { outline: 3px solid var(--color-blueprint); outline-offset: 2px; }
+</style>
+<script>
+  document.querySelectorAll<HTMLElement>('[data-ba]').forEach((fig) => {
+    const r = fig.querySelector<HTMLInputElement>('[data-ba-range]')!;
+    const set = () => { fig.style.setProperty('--pos', `${r.value}%`); r.setAttribute('aria-valuetext', `${r.value}% before`); };
+    r.addEventListener('input', set); set();
+  });
+</script>

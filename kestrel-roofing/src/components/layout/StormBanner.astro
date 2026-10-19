@@ -1,0 +1,15 @@
+---
+import { storm } from '../../config/site';
+import CloudHail from '@lucide/astro/icons/cloud-hail';
+import ArrowRight from '@lucide/astro/icons/arrow-right';
+const areas = storm.areas.length > 1 ? `${storm.areas.slice(0, -1).join(', ')} & ${storm.areas.at(-1)}` : storm.areas[0];
+---
+{storm.enabled && (
+  <aside class="bg-ink text-paper" aria-label="Storm alert">
+    <div class="wrap flex items-start gap-3 py-2.5 text-small md:items-center">
+      <CloudHail class="mt-0.5 size-5 shrink-0 text-blueprint-light md:mt-0" aria-hidden="true" />
+      <p><strong class="font-semibold">Hail hit {areas} on {storm.date}.</strong>{' '}<span class="text-paper/85">We’re doing {storm.message}.</span></p>
+      <a href={storm.href} class="ml-auto hidden shrink-0 items-center gap-1.5 font-semibold underline underline-offset-4 hover:text-blueprint-light md:inline-flex">{storm.cta}<ArrowRight class="size-4" aria-hidden="true" /></a>
+    </div>
+  </aside>
+)}

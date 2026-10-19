@@ -1,0 +1,107 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHero from '../../components/patterns/PageHero.astro';
+import Annotation from '../../components/ui/Annotation.astro';
+import SectionHead from '../../components/ui/SectionHead.astro';
+import Photo from '../../components/ui/Photo.astro';
+import Badge from '../../components/ui/Badge.astro';
+import ZipCheck from '../../components/patterns/ZipCheck.astro';
+import FinalCta from '../../components/home/FinalCta.astro';
+import { business, breadcrumbs } from '../../lib/schema';
+import { site, serviceArea } from '../../config/site';
+import crewImg from '../../assets/photos/crew-two-umJz4M-iCOw.jpg';
+import skylineImg from '../../assets/photos/area-columbus-skyline.jpg';
+import aerialImg from '../../assets/photos/area-ohio-suburb-aerial.jpg';
+import Landmark from '@lucide/astro/icons/landmark';
+import ShieldCheck from '@lucide/astro/icons/shield-check';
+import BadgeCheck from '@lucide/astro/icons/badge-check';
+import Hammer from '@lucide/astro/icons/hammer';
+
+const regions = [
+  { name: 'North', cities: ['Worthington', 'Powell', 'Lewis Center', 'Delaware', 'Westerville'] },
+  { name: 'West', cities: ['Dublin', 'Hilliard', 'Upper Arlington', 'Plain City'] },
+  { name: 'East', cities: ['Gahanna', 'New Albany', 'Bexley', 'Reynoldsburg', 'Pickerington'] },
+  { name: 'South', cities: ['Grove City', 'Groveport', 'Canal Winchester'] },
+];
+const storm = new Set(serviceArea.filter((a) => a.storm).map((a) => a.city));
+const terms = [
+  ['What’s covered', 'Leaks and failures caused by our installation: nailing, flashing, vents, pipe boots, drip edge, ridge.'],
+  ['How long', `${site.warrantyYears} years from the install date. Not prorated — year 24 is covered like year 1.`],
+  ['If you sell', 'Transfers once to the next owner, free. Send us the buyer’s name and we reissue it.'],
+  ['How to claim', `Call ${site.phone.display}. We inspect within 3 business days and fix covered work at no charge.`],
+  ['Not covered', 'Storm, hail and tree damage (that’s insurance), and areas changed or walked on by others after us.'],
+];
+---
+<BaseLayout
+  title="About Kestrel Roofing — Columbus Roofers Since 2009"
+  description="Columbus roofing company since 2009: our own crews, licensed by the City of Columbus, $2M insured, 25-year workmanship warranty. Serving 18 towns around Columbus."
+  schema={[business(Astro.site?.href), breadcrumbs(Astro.site?.href, [{ name: 'About', path: '/about/' }])]}
+>
+  <PageHero
+    kicker="About Kestrel"
+    title="Columbus roofers since&nbsp;2009. Our own&nbsp;crews."
+    lede="We started with one truck and a rule: measure first, price second, and leave the yard cleaner than we found it. Seventeen years later the rule hasn’t changed."
+    img={crewImg}
+    alt="Two Kestrel roofers in safety harnesses fastening shingles"
+  >
+    <Annotation x={30} y={30} side="right" mobile rule={28} title="Harnessed, always" text="OSHA fall protection on every roof" />
+  </PageHero>
+
+  <section class="border-t border-line py-[var(--spacing-section)]" aria-labelledby="crew-title">
+    <div class="wrap grid gap-10 lg:grid-cols-12 lg:gap-12">
+      <div class="lg:col-span-5">
+        <SectionHead id="crew-title" kicker="Who shows up" title="No subcontractors. The crew that quotes is the crew that builds." lede="Four full-time crews, each with a crew lead who’s been roofing with us for years. The same lead walks your roof at the inspection and on install day." />
+      </div>
+      <dl class="grid grid-cols-2 gap-px self-start overflow-hidden rounded-sm border border-line bg-line lg:col-span-7">
+        {[['Since', String(site.founded)], ['Crews', '4 full-time'], ['Roofs a year', '≈ 380'], ['Towns served', String(serviceArea.length)]].map(([k, v]) => (
+          <div class="bg-white p-5"><dt class="t-label text-graphite">{k}</dt><dd class="t-h2 mt-1">{v}</dd></div>
+        ))}
+      </dl>
+    </div>
+  </section>
+
+  <section class="bg-white py-[var(--spacing-section)]" aria-labelledby="cred-title">
+    <div class="wrap">
+      <SectionHead id="cred-title" kicker="Credentials" title="Paperwork you can ask to see" lede="Ohio has no statewide roofing license — the City of Columbus licenses home-improvement contractors. We’ll email any of these before we start." />
+      <div class="mt-10 grid gap-8 border-t border-ink pt-6 sm:grid-cols-2 lg:grid-cols-4">
+        <Badge title="Licensed" detail={site.license}><Landmark slot="icon" class="size-5" /></Badge>
+        <Badge title="$2M insured" detail="General liability + workers’ comp. Certificate on request."><ShieldCheck slot="icon" class="size-5" /></Badge>
+        <Badge title="Master Installer" detail="Manufacturer-certified crews, so the long manufacturer warranties apply."><BadgeCheck slot="icon" class="size-5" /></Badge>
+        <Badge title={`$${site.nailBounty} a nail`} detail="Two magnet sweeps. Find a nail we missed, we pay."><Hammer slot="icon" class="size-5" /></Badge>
+      </div>
+    </div>
+  </section>
+
+  <section id="warranty" class="py-[var(--spacing-section)]" aria-labelledby="war-title">
+    <div class="wrap grid gap-10 lg:grid-cols-12 lg:gap-12">
+      <div class="lg:col-span-5"><SectionHead id="war-title" kicker="Our warranty, plain English" title={`${site.warrantyYears} years on our work`} lede="This is a summary of the warranty you get in writing after every replacement. The manufacturer’s warranty on the shingles is separate and on top." /></div>
+      <dl class="divide-y divide-line border-y border-line lg:col-span-7">
+        {terms.map(([k, v]) => <div class="grid gap-1 py-4 sm:grid-cols-[10rem_1fr] sm:gap-6"><dt class="font-semibold">{k}</dt><dd class="text-graphite">{v}</dd></div>)}
+      </dl>
+    </div>
+  </section>
+
+  <section id="service-area" class="border-t border-line bg-white py-[var(--spacing-section)]" aria-labelledby="area-title">
+    <div class="wrap grid gap-10 lg:grid-cols-12 lg:gap-12">
+      <div class="flex flex-col gap-8 lg:col-span-5">
+        <SectionHead id="area-title" kicker="Service area" title="Columbus and 17 towns around it" lede="If you’re within about 30 minutes of downtown, we’re there every week. Storm areas get priority after a hail event." />
+        <ZipCheck />
+        <div class="relative overflow-hidden rounded-sm bg-line" style="aspect-ratio:3/2"><Photo src={skylineImg} alt="Downtown Columbus skyline across the Scioto River" sizes="(min-width: 1024px) 520px, 100vw" class="absolute inset-0" /></div>
+      </div>
+      <div class="lg:col-span-7">
+        <div class="relative mb-8 overflow-hidden rounded-sm bg-line" style="aspect-ratio:16/9"><Photo src={aerialImg} alt="Aerial view of a suburban Ohio neighborhood in autumn" sizes="(min-width: 1024px) 760px, 100vw" class="absolute inset-0" /></div>
+        <p class="t-label text-graphite">Columbus — every neighborhood</p>
+        <p class="mt-1 text-small text-graphite">Clintonville, German Village, Victorian Village, Northwest, Linden, Hilltop, Westgate, Far East and more.</p>
+        <div class="mt-6 grid grid-cols-2 gap-6 sm:grid-cols-4">
+          {regions.map((r) => (
+            <div><h3 class="t-label border-b border-ink pb-2">{r.name}</h3>
+              <ul class="mt-3 flex flex-col gap-1.5 text-small">{r.cities.map((c) => <li>{c}{storm.has(c) && <span class="ml-1.5 inline-block size-2 rounded-full bg-blueprint align-middle" aria-hidden="true"></span><span class="sr-only"> (storm area)</span>}</li>)}</ul>
+            </div>
+          ))}
+        </div>
+        <p class="t-small mt-6 flex items-center gap-2 text-graphite"><span class="inline-block size-2 rounded-full bg-blueprint" aria-hidden="true"></span>Storm area — priority inspections this week</p>
+      </div>
+    </div>
+  </section>
+  <FinalCta />
+</BaseLayout>

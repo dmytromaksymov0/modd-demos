@@ -1,0 +1,21 @@
+---
+import { Picture } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+interface Props { src: ImageMetadata; alt: string; sizes?: string; priority?: boolean; class?: string; position?: string; quality?: number }
+const { src, alt, sizes = '(min-width: 1024px) 50vw, 100vw', priority = false, class: cls = '', position = '50% 50%', quality = 70 } = Astro.props;
+---
+<figure class={`relative overflow-hidden rounded-sm bg-line ${cls}`} style={`aspect-ratio:${src.width}/${src.height};container-type:inline-size`}>
+  <Picture
+    src={src}
+    alt={alt}
+    formats={['avif', 'webp']}
+    quality={quality}
+    widths={[480, 640, 768, 1080, 1440, 1920]}
+    sizes={sizes}
+    loading={priority ? 'eager' : 'lazy'}
+    fetchpriority={priority ? 'high' : 'auto'}
+    class="absolute inset-0 size-full object-cover"
+    style={`object-position:${position}`}
+  />
+  <slot />
+</figure>

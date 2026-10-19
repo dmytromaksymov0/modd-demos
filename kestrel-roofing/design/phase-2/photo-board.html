@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kestrel — подборка фото (фаза 2)</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource-variable/archivo@5/wdth.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/ibm-plex-mono@5/400.css">
+<style>
+  :root{--paper:#F4F5F3;--ink:#14181C;--graphite:#545C63;--line:#D3D8DA;--blueprint:#2341D6;--warn:#A4441B;--ok:#1E7A4C}
+  *{box-sizing:border-box;margin:0}
+  body{background:var(--paper);color:var(--ink);font-family:"Archivo Variable",system-ui,sans-serif;font-size:16px;line-height:1.5;padding:40px 32px 80px;max-width:1440px;margin:0 auto}
+  h1{font-variation-settings:"wdth" 125;font-weight:750;font-size:40px;letter-spacing:-.02em;line-height:1.05}
+  h2{font-variation-settings:"wdth" 115;font-weight:700;font-size:24px;margin:56px 0 6px;padding-top:20px;border-top:1px solid var(--ink)}
+  .lead{color:var(--graphite);max-width:70ch;margin-top:12px}
+  .note{color:var(--graphite);max-width:75ch;margin-bottom:18px}
+  .grid{display:grid;gap:16px;grid-template-columns:repeat(4,1fr)}
+  .grid.two{grid-template-columns:repeat(2,1fr)}
+  .grid.three{grid-template-columns:repeat(3,1fr)}
+  figure{background:#fff;border:1px solid var(--line);border-radius:2px;overflow:hidden;display:flex;flex-direction:column}
+  figure img{width:100%;aspect-ratio:3/2;object-fit:cover;display:block}
+  .grid.two figure img{aspect-ratio:16/10}
+  figcaption{padding:10px 12px 12px;font-size:14px;color:var(--graphite)}
+  figcaption b{display:block;color:var(--ink);font-size:15px}
+  .tag{font-family:"IBM Plex Mono",monospace;font-size:13px;color:var(--blueprint);letter-spacing:.03em}
+  .pick{outline:3px solid var(--blueprint);outline-offset:-3px}
+  .pick .tag::after{content:" · МОЙ ВЫБОР";color:var(--ok)}
+  .gaps{background:#fff;border:1px solid var(--warn);padding:20px 24px;margin-top:20px}
+  .gaps h3{color:var(--warn);font-size:18px;margin-bottom:8px}
+  .gaps li{margin:6px 0 6px 18px}
+  @media (max-width:900px){.grid,.grid.three{grid-template-columns:repeat(2,1fr)} .grid.two{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+  <h1>Kestrel Roofing — подборка фото</h1>
+  <p class="lead">33 фото, все реальные: Unsplash и Pexels, бесплатная коммерческая лицензия, авторы — в <code>CREDITS.md</code>. Файлы лежат в <code>src/assets/photos/</code>. Это реальные американские дома и бригады (Техас, Северная Каролина и др.), снятые в Огайо — только виды Columbus. Дома отобраны так, чтобы читались как Средний Запад.</p>
+
+  <div class="gaps">
+    <h3>Чего на стоках нет — говорю прямо, ничем не подменяю</h3>
+    <ul>
+      <li><b>Пар «до / после» одного и того же дома для 6 кейсов.</b> На стоках их нет. Есть 4 реальных объекта «в процессе» от одного фотографа (Ryan Stephens). Предлагаю в кейсах формат «на объекте → детали работ» вместо слайдера до/после, либо слайдер «повреждение → новая кровля» с явной подписью «representative photos». Нужно твоё решение.</li>
+      <li><b>Магнитная уборка двора.</b> Фото кровельщика с магнитной щёткой не нашёл. В таймлайне последний этап — вывоз мусора и готовый дом. Обещание про $25 за гвоздь держится на тексте.</li>
+      <li><b>Групповое фото бригады для About.</b> Нет — либо европейские стройки, либо люди в касках на белом фоне (под запретом брифа). На About — кровельщик со снаряжением + вид Columbus.</li>
+      <li><b>На части фото видны реальные бренды</b>: розовые пачки черепицы, подложка с логотипом, тачка Kobalt. Кадрируем так, чтобы логотипов не было, или берём другой кадр.</li>
+    </ul>
+  </div>
+
+  <h2>1. Hero — 4 кандидата</h2>
+  <p class="note">Замена случайного кадра из превью. Все четыре — один фотограф и реальные объекты замены кровли. Цвет на снимках перенасыщен (HDR): перед вёрсткой приглушу насыщенность на 10–15 %, чтобы фото выглядели документально.</p>
+  <div class="grid two">
+    <figure class="pick"><img src="thumbs/hero-1-porch-house-crew.jpg" alt=""><figcaption><span class="tag">HERO-1</span><b>Дом с верандой, бригада на крыше</b>Узнаваемый «старый Columbus» (Clintonville, German Village). Видно 5 человек в работе, лестницу, брезент на газоне, который защищает клумбы: это прямо закрывает страх «бардака». Лица мелкие. Мой выбор для hero.</figcaption></figure>
+    <figure><img src="thumbs/hero-2-brick-house-decking.jpg" alt=""><figcaption><span class="tag">HERO-2</span><b>Кирпичный пригородный дом, настил</b>Сильный процесс: листы фанеры, рабочий на подъездной дорожке, вся бригада на крыше. Минус: кирпич + камень читаются скорее как Техас, чем как Огайо.</figcaption></figure>
+    <figure><img src="thumbs/hero-3-brick-house-tarps.jpg" alt=""><figcaption><span class="tag">HERO-3</span><b>Кирпичный дом, 6 человек на крыше</b>Хороший масштаб бригады, брезент на газоне. Минус: на тачке виден бренд (кадрировать), небо серое.</figcaption></figure>
+    <figure><img src="thumbs/hero-4-roofer-harness.jpg" alt=""><figcaption><span class="tag">HERO-4</span><b>Кровельщик в страховке, крупно</b>Видно руки, перчатки, лицо в профиль, страховочную систему. Самый «человеческий» кадр. Минус: на подложке и пачках бренды — нужен кроп. Лучше как второй кадр рядом с hero или в секции «процесс».</figcaption></figure>
+  </div>
+
+  <h2>2. Калькулятор: выбор уклона (фирменный момент A)</h2>
+  <p class="note">«Which looks most like your roof?» Уклон на фото оценён на глаз, это ориентир для домовладельца, а не замер. Точный уклон даёт осмотр.</p>
+  <div class="grid">
+    <figure><img src="thumbs/pitch-4-12-ranch.jpg" alt=""><figcaption><span class="tag">4/12 · LOW</span><b>Одноэтажный ranch</b>Пологая крыша, типичная для 1960–80-х.</figcaption></figure>
+    <figure><img src="thumbs/pitch-6-12-colonial.jpg" alt=""><figcaption><span class="tag">6/12 · STANDARD</span><b>Двухэтажный дом с сайдингом</b>Самый частый случай в пригородах.</figcaption></figure>
+    <figure><img src="thumbs/pitch-8-12-brick-colonial.jpg" alt=""><figcaption><span class="tag">8/12 · STEEP</span><b>Кирпичный colonial, вальмовая крыша</b>Круче и сложнее в работе.</figcaption></figure>
+    <figure><img src="thumbs/pitch-12-12-porch-house.jpg" alt=""><figcaption><span class="tag">12/12 · VERY STEEP</span><b>Старый дом с верандой</b>Крутые фронтоны, нужна страховка и больше времени.</figcaption></figure>
+  </div>
+
+  <h2>3. «A roof in one day»: таймлайн (фирменный момент B)</h2>
+  <div class="grid">
+    <figure><img src="thumbs/day-0700-arrival.jpg" alt=""><figcaption><span class="tag">07:00</span><b>Бригада приезжает</b>Снаряжение, страховка, лестница.</figcaption></figure>
+    <figure><img src="thumbs/day-0740-tearoff.jpg" alt=""><figcaption><span class="tag">07:40</span><b>Демонтаж старой кровли</b>Снимаем до настила.</figcaption></figure>
+    <figure><img src="thumbs/day-1000-decking.jpg" alt=""><figcaption><span class="tag">10:00</span><b>Замена настила</b>Только листы с фото и вашего согласия.</figcaption></figure>
+    <figure><img src="thumbs/day-1100-underlayment.jpg" alt=""><figcaption><span class="tag">11:00</span><b>Подкладка, ice &amp; water shield</b>Бренд на подложке — кадрировать.</figcaption></figure>
+    <figure><img src="thumbs/day-1300-shingles-nailgun.jpg" alt=""><figcaption><span class="tag">13:00</span><b>Укладка черепицы</b>Руки и пневмопистолет крупно.</figcaption></figure>
+    <figure><img src="thumbs/day-1530-ridge.jpg" alt=""><figcaption><span class="tag">15:30</span><b>Конёк и вентиляция</b>Кровельщик на коньке.</figcaption></figure>
+    <figure><img src="thumbs/day-1700-debris-haul.jpg" alt=""><figcaption><span class="tag">17:00</span><b>Вывоз мусора</b>Фото магнитной уборки нет (см. выше).</figcaption></figure>
+    <figure><img src="thumbs/day-1730-finished-ranch.jpg" alt=""><figcaption><span class="tag">17:30</span><b>Готово</b>Новая крыша, чистый газон.</figcaption></figure>
+  </div>
+
+  <h2>4. Storm &amp; Hail, страховой случай (фирменный момент C)</h2>
+  <div class="grid">
+    <figure class="pick"><img src="thumbs/storm-hail-3tab.jpg" alt=""><figcaption><span class="tag">HAIL HITS</span><b>Следы града на черепице</b>Реальные пробоины на 3-tab. Главное фото страницы.</figcaption></figure>
+    <figure><img src="thumbs/storm-damaged-shingles.jpg" alt=""><figcaption><span class="tag">WIND</span><b>Сорванная черепица</b>Ветровое повреждение.</figcaption></figure>
+    <figure><img src="thumbs/storm-hailstones.jpg" alt=""><figcaption><span class="tag">HAIL</span><b>Градины</b>Для штормового баннера и hero страницы.</figcaption></figure>
+    <figure><figcaption><span class="tag">REMOVED</span><b>Инспектор на лестнице</b>Убран на фазе 3: на одежде читался логотип реальной компании.</figcaption></figure>
+  </div>
+  <div class="grid three" style="margin-top:16px">
+    <figure><img src="thumbs/storm-clouds-homes.jpg" alt=""><figcaption><span class="tag">SKY</span><b>Грозовое небо над домами</b>Запасной фон для штормового блока.</figcaption></figure>
+    <figure><img src="thumbs/crew-kneeling-shingles.jpg" alt=""><figcaption><span class="tag">CREW</span><b>Кровельщик за работой</b>Лицо и руки видны. Для «наши бригады».</figcaption></figure>
+    <figure><img src="thumbs/about-roofer-ladder.jpg" alt=""><figcaption><span class="tag">ABOUT</span><b>Кровельщик со снаряжением</b>Вместо отсутствующего группового фото.</figcaption></figure>
+  </div>
+
+  <h2>5. Материалы</h2>
+  <div class="grid three">
+    <figure><img src="thumbs/material-architectural-shingle.jpg" alt=""><figcaption><span class="tag">SHINGLE</span><b>Архитектурная черепица</b>Фактура для сравнения материалов.</figcaption></figure>
+    <figure><img src="thumbs/material-metal-farmhouse.jpg" alt=""><figcaption><span class="tag">METAL</span><b>Фермерский дом, металл</b>Standing seam на американском доме.</figcaption></figure>
+    <figure><img src="thumbs/material-metal-dormer.jpg" alt=""><figcaption><span class="tag">METAL</span><b>Металл, слуховое окно</b>Крупный план фальца.</figcaption></figure>
+  </div>
+
+  <h2>6. Проекты (кейсы)</h2>
+  <p class="note">Дома с готовыми кровлями + реальные объекты «в процессе». На 6 кейсов хватает с учётом hero-1…3. Пар «до/после» нет — см. блок вверху.</p>
+  <div class="grid">
+    <figure><img src="thumbs/project-stone-house.jpg" alt=""><figcaption><span class="tag">AFTER</span><b>Камень + сайдинг</b>Архитектурная черепица.</figcaption></figure>
+    <figure><img src="thumbs/project-stone-house-2.jpg" alt=""><figcaption><span class="tag">AFTER</span><b>Каменный дом</b>Сложная крыша, много фронтонов.</figcaption></figure>
+    <figure><img src="thumbs/project-gray-colonial.jpg" alt=""><figcaption><span class="tag">AFTER</span><b>Серый двухэтажный</b>Сайдинг, зелень.</figcaption></figure>
+    <figure><img src="thumbs/project-stone-house-in-progress.jpg" alt=""><figcaption><span class="tag">IN PROGRESS</span><b>Каменный дом, замена</b>Реальный объект в работе.</figcaption></figure>
+  </div>
+
+  <h2>7. Зона обслуживания и About</h2>
+  <div class="grid three">
+    <figure class="pick"><img src="thumbs/area-columbus-skyline.jpg" alt=""><figcaption><span class="tag">COLUMBUS</span><b>Columbus, река Scioto</b>Реальный город. Для About и Service Area.</figcaption></figure>
+    <figure><img src="thumbs/area-ohio-suburb-aerial.jpg" alt=""><figcaption><span class="tag">OHIO</span><b>Пригород Огайо осенью, сверху</b>Под список городов.</figcaption></figure>
+    <figure><img src="thumbs/area-ohio-culdesac-aerial.jpg" alt=""><figcaption><span class="tag">OHIO</span><b>Пригород Цинциннати, cul-de-sac</b>Запасной вид сверху.</figcaption></figure>
+  </div>
+</body>
+</html>

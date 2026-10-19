@@ -1,0 +1,326 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import HomeHero from '../components/patterns/HomeHero.astro';
+import LeadForm from '../components/patterns/LeadForm.astro';
+import BeforeAfter from '../components/patterns/BeforeAfter.astro';
+import Logo from '../components/brand/Logo.astro';
+import Button from '../components/ui/Button.astro';
+import Field from '../components/ui/Field.astro';
+import ChipGroup from '../components/ui/ChipGroup.astro';
+import Badge from '../components/ui/Badge.astro';
+import AnnotatedPhoto from '../components/ui/AnnotatedPhoto.astro';
+import Annotation from '../components/ui/Annotation.astro';
+import ReportPlate from '../components/ui/ReportPlate.astro';
+import { problemTypes, site, storm } from '../config/site';
+import hailImg from '../assets/photos/storm-hail-3tab.jpg';
+import newShingleImg from '../assets/photos/material-architectural-shingle.jpg';
+import Phone from '@lucide/astro/icons/phone';
+import ArrowRight from '@lucide/astro/icons/arrow-right';
+import ShieldCheck from '@lucide/astro/icons/shield-check';
+import Landmark from '@lucide/astro/icons/landmark';
+import BadgeCheck from '@lucide/astro/icons/badge-check';
+import Ruler from '@lucide/astro/icons/ruler';
+import Camera from '@lucide/astro/icons/camera';
+import CloudHail from '@lucide/astro/icons/cloud-hail';
+import Clock from '@lucide/astro/icons/clock';
+import MapPin from '@lucide/astro/icons/map-pin';
+import CalendarCheck from '@lucide/astro/icons/calendar-check';
+import Hammer from '@lucide/astro/icons/hammer';
+import CircleAlert from '@lucide/astro/icons/circle-alert';
+import Check from '@lucide/astro/icons/check';
+
+// WCAG contrast, computed at build time so the table never drifts from the tokens.
+const lum = (hex: string) => {
+  const c = [1, 3, 5].map((i) => parseInt(hex.slice(i, i + 2), 16) / 255).map((v) => (v <= 0.03928 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4));
+  return 0.2126 * c[0] + 0.7152 * c[1] + 0.0722 * c[2];
+};
+const ratio = (a: string, b: string) => { const [x, y] = [lum(a), lum(b)].sort((m, n) => n - m); return ((x + 0.05) / (y + 0.05)).toFixed(1); };
+
+const colors = [
+  { token: 'paper', hex: '#F4F5F3', role: 'Page background', on: '#14181C' },
+  { token: 'white', hex: '#FFFFFF', role: 'Cards, fields, photo labels', on: '#14181C' },
+  { token: 'ink', hex: '#14181C', role: 'Text, storm banner, footer', on: '#F4F5F3' },
+  { token: 'ink-2', hex: '#2A3138', role: 'Hover / dividers on ink', on: '#F4F5F3' },
+  { token: 'graphite', hex: '#545C63', role: 'Secondary text', on: '#F4F5F3', test: '#F4F5F3' },
+  { token: 'mist', hex: '#9AA4AB', role: 'Text on ink only', on: '#14181C', test: '#14181C' },
+  { token: 'line', hex: '#D3D8DA', role: 'Hairlines, field borders', on: '#14181C' },
+  { token: 'blueprint', hex: '#2341D6', role: 'CTA, links, pins', on: '#FFFFFF' },
+  { token: 'blueprint-ink', hex: '#1A31A8', role: 'CTA hover', on: '#FFFFFF' },
+  { token: 'blueprint-soft', hex: '#E6EAFB', role: 'Info notes', on: '#1A31A8' },
+  { token: 'clear', hex: '#1E7A4C', role: 'Open now, in area, success', on: '#FFFFFF', test: '#F4F5F3' },
+  { token: 'alert', hex: '#B42318', role: 'Form errors', on: '#FFFFFF', test: '#FFFFFF' },
+];
+
+const type = [
+  { cls: 't-display', token: '--text-display', spec: '38 → 68px · 750 · wdth 125 · lh 1.0', sample: 'Measured before it’s priced' },
+  { cls: 't-h1', token: '--text-h1', spec: '34 → 54px · 750 · wdth 125', sample: 'Storm & hail damage' },
+  { cls: 't-h2', token: '--text-h2', spec: '28 → 42px · 700 · wdth 115', sample: 'A roof in one day' },
+  { cls: 't-h3', token: '--text-h3', spec: '21 → 26px · 700 · wdth 115', sample: '25 years on our workmanship' },
+  { cls: 't-lead', token: '--text-lead', spec: '18 → 20px · 400 · lh 1.5', sample: 'Free inspection, photos of everything we find, and a fixed price before work starts.' },
+  { cls: 'text-body', token: '--text-body', spec: '17px · 400 · lh 1.6 · max 65ch', sample: 'We take the old roof down to the deck, check every sheet and show you photos of anything soft before we replace it.' },
+  { cls: 't-small', token: '--text-small', spec: '15px · 400/500 · lh 1.5', sample: 'We call back within 2 business hours.' },
+  { cls: 't-label', token: '--text-label', spec: '13px · Plex Mono 500 · uppercase · +0.05em', sample: '07:40 · Tear-off' },
+];
+const space = [1, 2, 3, 4, 6, 8, 12, 16, 24, 32];
+const icons = [
+  { C: Phone, n: 'phone' }, { C: CalendarCheck, n: 'calendar-check' }, { C: ShieldCheck, n: 'shield-check' }, { C: Landmark, n: 'landmark' },
+  { C: BadgeCheck, n: 'badge-check' }, { C: Ruler, n: 'ruler' }, { C: Camera, n: 'camera' }, { C: CloudHail, n: 'cloud-hail' },
+  { C: Clock, n: 'clock' }, { C: MapPin, n: 'map-pin' }, { C: Hammer, n: 'hammer' }, { C: CircleAlert, n: 'circle-alert' },
+];
+---
+<BaseLayout title="Styleguide — Kestrel Roofing Co." description="Design tokens, type scale and components for the Kestrel Roofing Co. concept site." noindex>
+  <div class="border-b border-line bg-white">
+    <div class="wrap flex flex-col gap-2 py-6 md:flex-row md:items-end md:justify-between">
+      <div>
+        <p class="t-label text-blueprint">Design system · v1 · direction A “Field Report”</p>
+        <h1 class="t-h1 mt-2">Kestrel styleguide</h1>
+      </div>
+      <p class="t-small max-w-[52ch] text-graphite">Every value on this page comes from <code class="font-mono text-[0.875rem] text-ink">src/styles/tokens.css</code>. The storm banner, header, sticky bar and footer around this page are the live components.</p>
+    </div>
+  </div>
+
+  <nav aria-label="Styleguide sections" class="sticky top-16 z-30 border-b border-line bg-paper/95 backdrop-blur-sm lg:top-[4.5rem]">
+    <ul class="wrap flex gap-5 overflow-x-auto py-3 text-small font-medium whitespace-nowrap">
+      {['Hero', 'Color', 'Type', 'Space', 'Logo', 'Icons', 'Buttons', 'Forms', 'Badges', 'Annotations', 'Navigation', 'Before/after'].map((s) => (
+        <li><a href={`#${s.toLowerCase().replace('/', '-')}`} class="no-underline hover:text-blueprint">{s}</a></li>
+      ))}
+    </ul>
+  </nav>
+
+  <!-- 1. Hero pattern -->
+  <section id="hero" class="border-b border-line">
+    <div class="wrap pt-10"><p class="t-label text-graphite">Pattern · Home hero (live, form in demo mode)</p></div>
+    <HomeHero demo />
+  </section>
+
+  <div class="wrap flex flex-col gap-[var(--spacing-section)] py-[var(--spacing-section)]">
+
+    <!-- 2. Color -->
+    <section id="color" aria-labelledby="h-color">
+      <h2 id="h-color" class="t-h2">Color</h2>
+      <p class="measure mt-3 text-graphite">Cool paper, ink and one blueprint blue. Green and red appear only as status. No gradients, no shadows — depth comes from photography and hairlines.</p>
+      <ul class="mt-8 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6">
+        {colors.map((c) => (
+          <li class="overflow-hidden rounded-sm border border-line bg-white">
+            <div class="flex h-24 items-end p-3" style={`background:${c.hex};color:${c.on}`}><span class="t-label">Aa {ratio(c.hex, c.on)}:1</span></div>
+            <div class="p-3">
+              <p class="font-semibold">{c.token}</p>
+              <p class="t-label mt-0.5 text-graphite">{c.hex}</p>
+              <p class="t-small mt-1 text-graphite">{c.role}</p>
+              {c.test && <p class="t-small mt-1 text-clear">As text on {c.test === '#14181C' ? 'ink' : c.test === '#FFFFFF' ? 'white' : 'paper'}: {ratio(c.hex, c.test)}:1</p>}
+            </div>
+          </li>
+        ))}
+      </ul>
+    </section>
+
+    <!-- 3. Type -->
+    <section id="type" aria-labelledby="h-type">
+      <h2 id="h-type" class="t-h2">Typography</h2>
+      <div class="mt-3 grid gap-6 md:grid-cols-2">
+        <p class="measure text-graphite"><strong class="text-ink">Archivo</strong> (variable, width axis) does everything: wide 125 for display, 115 for headings, 100 for reading. Body is 17px because our readers are 35–65.</p>
+        <p class="measure text-graphite"><strong class="text-ink">IBM Plex Mono</strong> is reserved for data: times, measurements, photo numbers, field labels. Short labels only — six words at most — and never smaller than 13px.</p>
+      </div>
+      <dl class="mt-8 divide-y divide-line border-y border-line">
+        {type.map((t) => (
+          <div class="grid gap-2 py-5 md:grid-cols-[14rem_1fr] md:gap-8">
+            <dt class="flex flex-col gap-1"><code class="font-mono text-[0.875rem] text-blueprint">.{t.cls}</code><span class="t-small text-graphite">{t.spec}</span></dt>
+            <dd class={`${t.cls} min-w-0 break-words`}>{t.sample}</dd>
+          </div>
+        ))}
+      </dl>
+    </section>
+
+    <!-- 4. Space, radius, layout -->
+    <section id="space" aria-labelledby="h-space">
+      <h2 id="h-space" class="t-h2">Space, shape &amp; layout</h2>
+      <div class="mt-8 grid gap-10 lg:grid-cols-2">
+        <div>
+          <p class="t-label text-graphite">Spacing — 4px steps</p>
+          <ul class="mt-4 flex flex-col gap-2">
+            {space.map((s) => (
+              <li class="flex items-center gap-4"><span class="t-label w-24 text-graphite">{s} · {s * 4}px</span><span class="h-3 rounded-sm bg-blueprint" style={`width:${s * 4}px`}></span></li>
+            ))}
+          </ul>
+        </div>
+        <div class="flex flex-col gap-6">
+          <div>
+            <p class="t-label text-graphite">Section rhythm</p>
+            <p class="mt-2"><code class="font-mono text-[0.875rem]">--spacing-section</code> 64 → 128px · <code class="font-mono text-[0.875rem]">--spacing-gutter</code> 16 → 32px</p>
+          </div>
+          <div>
+            <p class="t-label text-graphite">Layout</p>
+            <p class="mt-2">Max content width 1344px on a 12-column grid. Reading text stops at 65 characters.</p>
+          </div>
+          <div>
+            <p class="t-label text-graphite">Radius</p>
+            <div class="mt-3 flex gap-4">
+              <div class="flex size-20 items-end rounded-sm border border-ink bg-white p-2"><span class="t-label">2px</span></div>
+              <div class="flex size-20 items-end rounded-md border border-ink bg-white p-2"><span class="t-label">4px</span></div>
+              <div class="flex h-20 w-28 items-center justify-center rounded-full border border-ink bg-white"><span class="t-label">pill</span></div>
+            </div>
+            <p class="t-small mt-3 text-graphite">Square-cut by default (2px). Pills only for status. No drop shadows anywhere.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 5. Logo -->
+    <section id="logo" aria-labelledby="h-logo">
+      <h2 id="h-logo" class="t-h2">Logo</h2>
+      <p class="measure mt-3 text-graphite">The mark is a roof at a measured pitch — also a kestrel’s wings as it hovers — with the blueprint pin above the ridge: the same pin we use to annotate photos. Wordmark in Archivo at full width, outlined to SVG.</p>
+      <div class="mt-8 grid gap-4 lg:grid-cols-[2fr_2fr_1fr]">
+        <div class="flex items-center rounded-sm border border-line bg-paper p-6 sm:p-8"><Logo class="h-auto w-full max-w-[22rem]" /></div>
+        <div class="flex items-center rounded-sm bg-ink p-6 sm:p-8"><Logo tone="paper" class="h-auto w-full max-w-[22rem]" /></div>
+        <div class="flex items-center justify-center gap-4 rounded-sm border border-line bg-white p-6 sm:p-8">
+          <img src="/brand/kestrel-mark.svg" alt="Kestrel mark" width="64" height="64" />
+          <img src="/brand/kestrel-mark.svg" alt="" width="32" height="32" />
+          <img src="/brand/kestrel-mark.svg" alt="" width="16" height="16" />
+        </div>
+      </div>
+      <ul class="t-small mt-4 flex flex-wrap gap-x-8 gap-y-2 text-graphite">
+        <li>Files: <code class="font-mono text-[0.875rem]">public/brand/kestrel-logo.svg</code>, <code class="font-mono text-[0.875rem]">-inverse.svg</code>, <code class="font-mono text-[0.875rem]">kestrel-mark.svg</code></li>
+        <li>Clear space: the height of the pin on every side</li>
+        <li>Minimum: 120px wide with subline, 88px without</li>
+      </ul>
+    </section>
+
+    <!-- 6. Icons -->
+    <section id="icons" aria-labelledby="h-icons">
+      <h2 id="h-icons" class="t-h2">Icons</h2>
+      <p class="measure mt-3 text-graphite">Lucide only, 2px stroke, ink or inherited colour. Icons support a label — they never replace one.</p>
+      <ul class="mt-6 grid grid-cols-3 gap-3 sm:grid-cols-4 md:grid-cols-6">
+        {icons.map(({ C, n }) => (
+          <li class="flex flex-col items-center gap-2 rounded-sm border border-line bg-white p-4"><C class="size-6" aria-hidden="true" /><span class="t-label text-center text-graphite">{n}</span></li>
+        ))}
+      </ul>
+    </section>
+
+    <!-- 7. Buttons -->
+    <section id="buttons" aria-labelledby="h-buttons">
+      <h2 id="h-buttons" class="t-h2">Buttons</h2>
+      <p class="measure mt-3 text-graphite">One primary action per view: blueprint. Minimum height 48px (56px for the form submit). Labels say what happens, not “Submit”.</p>
+      <div class="mt-8 grid gap-6 lg:grid-cols-2">
+        <div class="flex flex-wrap items-center gap-3 rounded-sm border border-line bg-white p-6">
+          <Button>Book free inspection</Button>
+          <Button variant="secondary"><Phone class="size-5" aria-hidden="true" />Call</Button>
+          <Button variant="dark">Free inspection</Button>
+          <Button variant="link" href="#buttons">See how we price <ArrowRight class="size-4" aria-hidden="true" /></Button>
+        </div>
+        <div class="flex flex-wrap items-center gap-3 rounded-sm bg-ink p-6">
+          <Button>Book free inspection</Button>
+          <Button variant="ghost-light"><Phone class="size-5" aria-hidden="true" />{site.phone.display}</Button>
+        </div>
+        <div class="flex flex-wrap items-center gap-3 rounded-sm border border-line bg-white p-6">
+          <Button size="lg">Book my free inspection</Button>
+          <Button disabled>Sending…</Button>
+        </div>
+        <ul class="t-small flex flex-col justify-center gap-1 text-graphite">
+          <li><b class="text-ink">Hover:</b> primary darkens to blueprint-ink, secondary fills with ink.</li>
+          <li><b class="text-ink">Focus:</b> 3px blueprint outline, 2px offset — on every interactive element.</li>
+          <li><b class="text-ink">Disabled:</b> 60% opacity, cursor not-allowed, label explains why (“Sending…”).</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- 8. Forms -->
+    <section id="forms" aria-labelledby="h-forms">
+      <h2 id="h-forms" class="t-h2">Forms</h2>
+      <p class="measure mt-3 text-graphite">Labels always visible (mono, 13px). Errors sit under the field in plain words and turn the field red. ZIP answers instantly whether we work there. Honeypot instead of a CAPTCHA.</p>
+      <div class="mt-8 grid gap-8 lg:grid-cols-2">
+        <div class="flex flex-col gap-5 rounded-sm border border-line bg-white p-6">
+          <Field id="sg-name" label="Your name" placeholder="Jordan Miller" />
+          <Field id="sg-zip" label="Your ZIP code" value="43221" hint="✓ Upper Arlington — storm area, priority inspections this week." />
+          <Field id="sg-phone" label="Phone" value="614 555" error="We need a 10-digit US number to call you back." />
+          <ChipGroup name="sg-problem" legend="What’s going on?" options={problemTypes} value="storm" />
+        </div>
+        <div>
+          <p class="t-label mb-3 text-graphite">Lead form · two steps · demo mode</p>
+          <LeadForm id="sg-form" demo />
+          <p class="t-small mt-3 text-graphite">Step 1 keeps the hero short (problem + ZIP, button visible on 1280×800). Step 2 asks for name and phone. Without JavaScript both steps show as one form.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 9. Badges -->
+    <section id="badges" aria-labelledby="h-badges">
+      <h2 id="h-badges" class="t-h2">Badges</h2>
+      <div class="mt-8 grid gap-6 border-t border-ink pt-6 sm:grid-cols-2 lg:grid-cols-4">
+        <Badge title="Licensed" detail="City of Columbus · #HIC-0000"><Landmark slot="icon" class="size-5" /></Badge>
+        <Badge title="$2M insured" detail="Liability + workers’ comp"><ShieldCheck slot="icon" class="size-5" /></Badge>
+        <Badge title="Master Installer" detail="Manufacturer-certified"><BadgeCheck slot="icon" class="size-5" /></Badge>
+        <Badge title={`$${site.nailBounty} a nail`} detail="Find one we missed, we pay"><Hammer slot="icon" class="size-5" /></Badge>
+      </div>
+      <div class="mt-8 flex flex-wrap items-center gap-3">
+        <Badge variant="status" tone="clear">Open now · until 7 pm</Badge>
+        <Badge variant="status" tone="blueprint">Storm area</Badge>
+        <Badge variant="status" tone="alert">Outside our area</Badge>
+        <Badge variant="note" tone="blueprint">Sample review</Badge>
+        <Badge variant="note" tone="clear">Insurance claim</Badge>
+      </div>
+    </section>
+
+    <!-- 10. Annotations -->
+    <section id="annotations" aria-labelledby="h-annotations">
+      <h2 id="h-annotations" class="t-h2">Annotations</h2>
+      <p class="measure mt-3 text-graphite">The signature element: pins, hairline leaders and short labels on real photos. Rules: a label never leaves the photo (it shrinks and wraps toward the centre); at most two on phones, where only the mono title shows — so the title must make sense on its own; on desktop one plain line is added.</p>
+      <div class="mt-8 grid gap-6 lg:grid-cols-[3fr_2fr] lg:items-start">
+        <AnnotatedPhoto src={hailImg} alt="Asphalt shingles with dark circular bruises from hail impacts" sizes="(min-width: 1024px) 55vw, 100vw">
+          <Annotation x={30} y={36} side="right" mobile rule={32} title="Hail hit · 1 in" text="Granules gone, mat exposed" />
+          <Annotation x={70} y={64} side="left" mobile mobileSide="left" rule={32} title="Photo 07/24 for adjuster" text="Logged with date and slope" />
+          <Annotation x={52} y={86} side="right" rule={24} title="Test square" text="10 × 10 ft, 9 hits — over the claim threshold" />
+          <ReportPlate class="absolute bottom-3 left-3 hidden lg:block" heading="Storm report · Upper Arlington" stats={[{ label: 'Hits / sq', value: '9' }, { label: 'Slopes', value: '4 of 4' }, { label: 'Claim', value: 'Yes' }]} />
+        </AnnotatedPhoto>
+        <div class="flex flex-col gap-4">
+          <div class="rounded-sm border border-line bg-white p-5">
+            <p class="t-label text-graphite">Anatomy</p>
+            <ol class="mt-3 flex flex-col gap-2 text-small">
+              <li><b>Pin</b> — 14px blueprint dot, white ring.</li>
+              <li><b>Leader</b> — 1px white hairline, 24–56px.</li>
+              <li><b>Label</b> — white plate: mono title (blueprint) + one plain line.</li>
+            </ol>
+          </div>
+          <ReportPlate heading="Inspection #26-1014 · Clintonville" stats={[{ label: 'Area', value: '31 sq' }, { label: 'Install', value: '1 day' }, { label: 'Our work', value: '25 yrs' }]} />
+          <p class="t-small text-graphite">The report plate summarises a photo in three numbers. Used once per photo, top or bottom corner.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 11. Navigation -->
+    <section id="navigation" aria-labelledby="h-navigation">
+      <h2 id="h-navigation" class="t-h2">Navigation, storm banner &amp; sticky bar</h2>
+      <div class="mt-8 grid gap-8 lg:grid-cols-2 [&>*]:min-w-0">
+        <div class="flex flex-col gap-3 text-graphite">
+          <p><b class="text-ink">Header</b> — sticky, logo, five links (from 1280px), phone with live “Open now” status in Columbus time, one primary button. Below 1280px the links move into a menu; below 640px the phone becomes a 48px call button.</p>
+          <p><b class="text-ink">Storm banner</b> — one switch in <code class="font-mono text-[0.875rem] text-ink">src/config/site.ts</code>: <code class="font-mono text-[0.875rem] text-ink">storm.enabled = {String(storm.enabled)}</code>, with date, areas and link. Turn it off and it disappears everywhere.</p>
+          <p><b class="text-ink">Sticky bar (phones)</b> — Call + Book free inspection in thumb reach. Appears after the hero, hides while a form is on screen or the keyboard is open, respects the iPhone home indicator.</p>
+        </div>
+        <div class="flex justify-center rounded-sm border border-line bg-white p-6">
+          <div class="w-full max-w-[375px] overflow-hidden rounded-[22px] border-8 border-ink bg-paper">
+            <div class="h-40 p-4"><p class="t-label text-graphite">…page content…</p></div>
+            <div class="border-t border-line bg-paper/95 px-3 pb-3 pt-2">
+              <div class="grid grid-cols-[auto_1fr] gap-2">
+                <span class="inline-flex min-h-12 items-center justify-center gap-2 rounded-sm border border-ink px-5 font-semibold"><Phone class="size-5" aria-hidden="true" />Call</span>
+                <span class="inline-flex min-h-12 items-center justify-center gap-2 rounded-sm bg-blueprint font-semibold text-white"><CalendarCheck class="size-5" aria-hidden="true" />Book free inspection</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 12. Before / after -->
+    <section id="before-after" aria-labelledby="h-ba">
+      <div class="flex flex-wrap items-center gap-3">
+        <h2 id="h-ba" class="t-h2">Before / after slider</h2>
+        <Badge variant="note" tone="alert">Off on the live site</Badge>
+      </div>
+      <p class="measure mt-3 text-graphite">Ready to switch on when the client has real before/after pairs of the same house. Until then, Projects uses “on the job → work details” cases. Drag or use the arrow keys.</p>
+      <div class="mt-8 grid gap-6 lg:grid-cols-[3fr_2fr] lg:items-start">
+        <BeforeAfter before={hailImg} after={newShingleImg} beforeAlt="Hail-damaged shingles" afterAlt="New architectural shingles" label="Compare hail-damaged and new shingles" />
+        <p class="t-small rounded-sm border border-alert bg-alert-soft p-4 text-ink"><CircleAlert class="mr-1 inline size-4 align-[-2px] text-alert" aria-hidden="true" /><b>Component demo only.</b> These two close-ups are different roofs, used to test the slider. Never ship two different houses as a before/after pair.</p>
+      </div>
+    </section>
+
+  </div>
+</BaseLayout>

@@ -1,0 +1,17 @@
+---
+// Single-choice chips. Real radio inputs underneath: keyboard arrows, form submission and screen readers just work.
+interface Option { value: string; label: string }
+interface Props { name: string; legend: string; options: readonly Option[]; value?: string; required?: boolean; class?: string }
+const { name, legend, options, value, required = false, class: cls = '' } = Astro.props;
+---
+<fieldset class={`chips ${cls}`}>
+  <legend class="t-label mb-2 text-graphite">{legend}</legend>
+  <div class="flex flex-wrap gap-2">
+    {options.map((o) => (
+      <label class="chip relative inline-flex">
+        <input type="radio" name={name} value={o.value} checked={o.value === value} required={required} class="peer absolute inset-0 m-0 cursor-pointer opacity-0" />
+        <span class="inline-flex min-h-11 items-center rounded-sm border border-line bg-white px-4 text-small font-medium text-ink transition-colors duration-(--duration-fast) peer-hover:border-line-strong peer-checked:border-ink peer-checked:bg-ink peer-checked:text-paper peer-focus-visible:outline-3 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-blueprint">{o.label}</span>
+      </label>
+    ))}
+  </div>
+</fieldset>

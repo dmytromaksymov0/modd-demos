@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kestrel Roofing — Direction A · Field Report</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource-variable/archivo@5/wdth.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/ibm-plex-mono@5/400.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/ibm-plex-mono@5/500.css">
+<style>
+  :root{
+    --paper:#F4F5F3; --ink:#14181C; --graphite:#545C63; --line:#D3D8DA;
+    --blueprint:#2341D6; --clear:#1E7A4C; --white:#FFFFFF;
+    --display:"Archivo Variable", system-ui, sans-serif;
+    --mono:"IBM Plex Mono", ui-monospace, monospace;
+    --s1:4px; --s2:8px; --s3:12px; --s4:16px; --s5:24px; --s6:32px; --s7:48px; --s8:64px;
+    --r:2px;
+  }
+  *{box-sizing:border-box;margin:0}
+  body{background:var(--paper);color:var(--ink);font-family:var(--display);font-size:16px;line-height:1.5;-webkit-font-smoothing:antialiased}
+  a{color:inherit}
+  .mono{font-family:var(--mono);font-size:12px;letter-spacing:.06em;text-transform:uppercase}
+
+  .storm{background:var(--ink);color:var(--paper);display:flex;gap:var(--s3);align-items:center;padding:10px var(--s5);font-size:14px}
+  .storm .dot{width:8px;height:8px;border-radius:50%;background:#6E86FF;box-shadow:0 0 0 4px rgba(110,134,255,.25);flex:none}
+  .storm b{font-weight:600}
+  .storm a{margin-left:auto;font-weight:600;text-underline-offset:3px;white-space:nowrap}
+
+  header{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:var(--s6);padding:var(--s4) var(--s5);border-bottom:1px solid var(--line)}
+  .wordmark{font-weight:800;font-variation-settings:"wdth" 125;font-size:22px;letter-spacing:-.01em;text-decoration:none;display:flex;align-items:baseline;gap:8px}
+  .wordmark span{font-family:var(--mono);font-weight:500;font-size:11px;letter-spacing:.08em;color:var(--graphite)}
+  nav ul{display:flex;gap:var(--s5);list-style:none;padding:0;font-size:15px;font-weight:500}
+  nav a{text-decoration:none}
+  .head-cta{display:flex;align-items:center;gap:var(--s4)}
+  .phone{text-align:right;line-height:1.2;text-decoration:none}
+  .phone strong{display:block;font-size:17px;font-weight:700;font-variation-settings:"wdth" 110}
+  .phone small{font-family:var(--mono);font-size:11px;color:var(--clear);letter-spacing:.04em}
+  .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:48px;padding:0 22px;border-radius:var(--r);background:var(--blueprint);color:var(--white);font-weight:600;font-size:16px;text-decoration:none;border:0;cursor:pointer;font-family:inherit}
+
+  .hero{display:grid;grid-template-columns:repeat(12,1fr);gap:var(--s5);padding:var(--s7) var(--s5) var(--s6);max-width:1680px;margin:0 auto}
+  .copy{grid-column:1 / span 5;display:flex;flex-direction:column;gap:var(--s5)}
+  .kicker{color:var(--graphite)}
+  h1{font-variation-settings:"wdth" 125;font-weight:750;font-size:clamp(40px,4.6vw,76px);line-height:.98;letter-spacing:-.025em}
+  h1 em{font-style:normal;color:var(--blueprint)}
+  .lede{font-size:19px;color:var(--graphite);max-width:34ch}
+  .lede b{color:var(--ink);font-weight:600}
+
+  form{border:1px solid var(--ink);background:var(--white);padding:var(--s5);display:grid;grid-template-columns:1fr 1fr;gap:var(--s4) var(--s4);border-radius:var(--r)}
+  .f{display:flex;flex-direction:column;gap:6px}
+  .f.full{grid-column:1 / -1}
+  label,.legend{font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--graphite)}
+  input{height:48px;border:1px solid var(--line);border-radius:var(--r);padding:0 12px;font:inherit;font-size:16px;background:var(--paper)}
+  .chips{display:flex;flex-wrap:wrap;gap:8px}
+  .chip{min-height:40px;padding:0 14px;border:1px solid var(--line);border-radius:var(--r);background:var(--white);font:inherit;font-size:15px;display:inline-flex;align-items:center}
+  .chip[aria-pressed=true]{border-color:var(--ink);background:var(--ink);color:var(--white)}
+  form .btn{grid-column:1 / -1;width:100%;font-size:17px}
+  .micro{grid-column:1 / -1;font-family:var(--mono);font-size:11.5px;color:var(--graphite);letter-spacing:.02em;line-height:1.5}
+
+  .photo{grid-column:6 / span 7;position:relative;min-height:620px;border-radius:var(--r);overflow:hidden;background:var(--line)}
+  .photo img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 40%}
+  .tag{position:absolute;display:flex;align-items:center;gap:0}
+  .tag .pin{width:12px;height:12px;border:2px solid var(--white);border-radius:50%;background:var(--blueprint);flex:none;box-shadow:0 0 0 1px rgba(0,0,0,.25)}
+  .tag .rule{height:1px;background:var(--white);box-shadow:0 0 0 .5px rgba(0,0,0,.3)}
+  .tag .lbl{background:var(--white);color:var(--ink);font-family:var(--mono);font-size:11.5px;letter-spacing:.04em;padding:6px 9px;border-radius:var(--r);white-space:nowrap;line-height:1.35}
+  .tag .lbl b{display:block;font-weight:500;color:var(--blueprint)}
+  .report{position:absolute;left:var(--s5);bottom:var(--s5);background:var(--ink);color:var(--paper);padding:var(--s4) var(--s5);border-radius:var(--r);display:grid;grid-template-columns:repeat(3,auto);gap:var(--s2) var(--s6)}
+  .report dt{font-family:var(--mono);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:#9AA4AB}
+  .report dd{font-weight:700;font-variation-settings:"wdth" 115;font-size:22px}
+  .report .t{grid-column:1 / -1;font-family:var(--mono);font-size:11px;color:#9AA4AB;letter-spacing:.06em;border-bottom:1px solid #2C333A;padding-bottom:8px;margin-bottom:4px}
+
+  .proof{grid-column:1 / -1;display:grid;grid-template-columns:repeat(4,1fr);border-top:1px solid var(--ink);margin-top:var(--s5)}
+  .proof div{padding:var(--s4) var(--s4) 0 0}
+  .proof div + div{padding-left:var(--s4);border-left:1px solid var(--line)}
+  .proof b{display:block;font-variation-settings:"wdth" 115;font-weight:700;font-size:18px}
+  .proof span{font-size:14px;color:var(--graphite)}
+
+  .m-cta{display:none}
+  .btn.ghost{background:transparent;color:var(--ink);border:1px solid var(--ink)}
+  :focus-visible{outline:3px solid var(--blueprint);outline-offset:2px}
+
+  @media (max-width:1100px){ nav{display:none} .copy{grid-column:1 / span 6} .photo{grid-column:7 / span 6} }
+  @media (max-width:760px){
+    .storm{font-size:13px;padding:10px var(--s4);align-items:flex-start}
+    .storm a{display:none}
+    header{grid-template-columns:1fr auto;padding:var(--s3) var(--s4);gap:var(--s3)}
+    .head-cta .btn{display:none}
+    .phone small{display:none}
+    .wordmark span{display:none}
+    .m-cta{display:grid;grid-template-columns:1fr auto;gap:var(--s2)}
+    .kicker{font-size:11px}
+    .hero{display:flex;flex-direction:column;padding:var(--s5) var(--s4);gap:var(--s5)}
+    h1{font-size:38px}
+    .lede{font-size:17px}
+    .copy{display:contents}
+    .kicker{order:0} h1{order:1} .lede{order:2} .m-cta{order:3}
+    .photo{min-height:300px;order:4}
+    .tag.t3,.tag.t4{display:none}
+    .report{left:var(--s3);bottom:var(--s3);padding:var(--s3) var(--s4);gap:4px var(--s5)}
+    .report dd{font-size:18px}
+    form{order:5;grid-template-columns:1fr}
+    .proof{order:6;grid-template-columns:1fr 1fr}
+    .proof div:nth-child(3){padding-left:0;border-left:0}
+    .proof div{padding-bottom:var(--s3)}
+  }
+</style>
+</head>
+<body>
+  <div class="storm" role="status"><span class="dot" aria-hidden="true"></span><span><b>Hail reported Oct 14</b> in Dublin, Hilliard &amp; Upper Arlington — free storm inspections this week.</span><a href="#">Book a storm inspection →</a></div>
+  <header>
+    <a class="wordmark" href="#">KESTREL <span>ROOFING CO. · EST. 2009</span></a>
+    <nav aria-label="Main"><ul><li><a href="#">Roof Replacement</a></li><li><a href="#">Storm &amp; Hail</a></li><li><a href="#">Cost Calculator</a></li><li><a href="#">Projects</a></li><li><a href="#">About</a></li></ul></nav>
+    <div class="head-cta">
+      <a class="phone" href="tel:+16145550142"><strong>(614) 555-0142</strong><small>● Open now · until 7 pm</small></a>
+      <a class="btn" href="#form">Free inspection</a>
+    </div>
+  </header>
+
+  <main class="hero">
+    <div class="copy">
+      <p class="mono kicker">Columbus, OH · Roof replacement &amp; storm repair</p>
+      <h1>Every roof measured <em>before</em> it’s priced.</h1>
+      <p class="lede">Free inspection with a <b>photo report in 24&nbsp;hours</b>. New roof installed in one day, and <b>25&nbsp;years on our workmanship</b> — in writing.</p>
+      <div class="m-cta"><a class="btn" href="#form">Book free inspection</a><a class="btn ghost" href="tel:+16145550142">Call</a></div>
+      <form id="form" onsubmit="return false">
+        <div class="f"><label for="n">Name</label><input id="n" autocomplete="name"></div>
+        <div class="f"><label for="p">Phone</label><input id="p" type="tel" autocomplete="tel"></div>
+        <div class="f full"><label for="z">ZIP code</label><input id="z" inputmode="numeric" value="43026"></div>
+        <div class="f full"><span class="legend" id="lg">What’s going on?</span>
+          <div class="chips" role="group" aria-labelledby="lg"><button type="button" class="chip" aria-pressed="false">Leak</button><button type="button" class="chip" aria-pressed="true">Storm / hail</button><button type="button" class="chip" aria-pressed="false">Old roof</button><button type="button" class="chip" aria-pressed="false">Not sure</button></div></div>
+        <button class="btn" type="submit">Book my free inspection</button>
+        <p class="micro">Free · 30–45 min · you don’t need to be home · Hilliard 43026: inspections this week</p>
+      </form>
+    </div>
+
+    <figure class="photo">
+      <img src="photos/roofer-brick-house--1l0iZaM8ms.jpg" alt="Roofer on a brick ranch house during a tear-off, ladder against the gutter">
+      <div class="tag t1" style="left:43%;top:13%"><span class="pin"></span><span class="rule" style="width:56px"></span><span class="lbl"><b>07:40 · TEAR-OFF</b>Down to the deck</span></div>
+      <div class="tag t2" style="left:6%;top:24%"><span class="lbl"><b>PITCH 6/12</b>Measured, not guessed</span><span class="rule" style="width:48px"></span><span class="pin"></span></div>
+      <div class="tag t3" style="right:48%;top:44%"><span class="lbl"><b>DECKING · PHOTO 14/32</b>2 soft sheets — $85 each, your OK first</span><span class="rule" style="width:40px"></span><span class="pin"></span></div>
+      <div class="tag t4" style="left:23%;top:66%"><span class="pin"></span><span class="rule" style="width:36px"></span><span class="lbl"><b>LADDER STANDOFF</b>Gutters protected</span></div>
+      <dl class="report">
+        <dt class="t">Inspection #26-1014 · Hilliard, OH</dt>
+        <div><dt>Area</dt><dd>28.4 sq</dd></div>
+        <div><dt>Install</dt><dd>1 day</dd></div>
+        <div><dt>Workmanship</dt><dd>25 yrs</dd></div>
+      </dl>
+    </figure>
+
+    <div class="proof">
+      <div><b>Licensed</b><span>City of Columbus BZS · #HIC-0000</span></div>
+      <div><b>$2M insured</b><span>Liability + workers’ comp</span></div>
+      <div><b>Master Installer</b><span>Manufacturer-certified</span></div>
+      <div><b>$25 a nail</b><span>Find one we missed, we pay</span></div>
+    </div>
+  </main>
+</body>
+</html>

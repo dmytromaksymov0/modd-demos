@@ -1,0 +1,26 @@
+---
+// Standalone "Do you work in my area?" check, same data as the lead form.
+import { serviceArea } from '../../config/site';
+const zipMap = Object.fromEntries(serviceArea.flatMap((a) => a.zips.map((z) => [z, { city: a.city, storm: !!a.storm }])));
+---
+<form class="flex flex-col gap-3" onsubmit="return false" data-zipcheck data-zips={JSON.stringify(zipMap)}>
+  <label for="zc-input" class="t-label text-graphite">Check your ZIP code</label>
+  <div class="flex gap-2">
+    <input id="zc-input" inputmode="numeric" maxlength="5" autocomplete="postal-code" placeholder="43221" class="h-12 w-36 rounded-sm border border-line bg-white px-3 text-lead font-semibold focus:border-blueprint" aria-describedby="zc-out" />
+  </div>
+  <p id="zc-out" class="t-small min-h-6 font-medium text-graphite" aria-live="polite">Enter 5 digits.</p>
+</form>
+<script>
+  document.querySelectorAll<HTMLFormElement>('[data-zipcheck]').forEach((f) => {
+    const zips = JSON.parse(f.dataset.zips!);
+    const input = f.querySelector('input')!; const out = f.querySelector<HTMLElement>('#zc-out')!;
+    input.addEventListener('input', () => {
+      input.value = input.value.replace(/\D/g, '').slice(0, 5);
+      const v = input.value; out.classList.remove('text-clear');
+      if (v.length < 5) { out.textContent = 'Enter 5 digits.'; return; }
+      const hit = zips[v] ?? (v.startsWith('432') ? { city: 'Columbus', storm: false } : null);
+      if (hit) { out.textContent = `✓ Yes — ${hit.city}${hit.storm ? ' (storm area, priority inspections this week)' : ', we’re there every week'}.`; out.classList.add('text-clear'); }
+      else out.textContent = `${v} is outside our usual area. Call us — if we can’t help, we’ll tell you who can.`;
+    });
+  });
+</script>

@@ -1,0 +1,73 @@
+---
+// Section 6 — proof. Format: "on the job → work details" with a spec sheet. One photo per job, never a
+// before/after made of two different houses. Reviews are labelled samples until real Google reviews exist.
+import Photo from '../ui/Photo.astro';
+import Badge from '../ui/Badge.astro';
+import Button from '../ui/Button.astro';
+import ArrowRight from '@lucide/astro/icons/arrow-right';
+import featuredImg from '../../assets/photos/hero-2-brick-house-decking.jpg';
+import dublinImg from '../../assets/photos/project-stone-house-in-progress.jpg';
+import westImg from '../../assets/photos/project-stone-house-2.jpg';
+
+const featured = {
+  img: featuredImg, alt: 'Kestrel crew tearing off a hail-damaged roof on a brick home; new plywood decking leans against the garage',
+  place: 'Hilliard, OH', kind: 'Hail claim',
+  specs: [['Roof', '34 squares · 8/12'], ['Material', 'Architectural shingle'], ['Time', '1 day'], ['Paid by', 'Insurance — owner paid the $1,000 deductible']],
+  found: 'Hail bruising on all four slopes, 9 hits in a 10 × 10 ft test square.',
+  did: 'Met the adjuster on the roof with 212 photos — full replacement approved on the first visit. 6 soft decking sheets swapped, shown to the owner first.',
+  review: { text: 'They were up on the roof with the adjuster and pointed out things I’d never have seen. The yard was cleaner when they left than when they came.', who: 'Homeowner, Hilliard' },
+};
+const more = [
+  { img: dublinImg, alt: 'Stone-front home mid-replacement with crew on the roof', place: 'Dublin, OH', kind: 'Replacement', specs: [['Roof', '42 squares'], ['Time', '2 days'], ['Paid by', 'Owner']], note: 'Complex roof, 11 valleys. Ice & water shield in every valley.' },
+  { img: westImg, alt: 'Stone two-story home with a finished architectural shingle roof and many gables', place: 'Westerville, OH', kind: 'Finished', specs: [['Roof', '38 squares'], ['Time', '2 days'], ['Paid by', 'Financed, 0% / 12 mo']], note: 'Nine gables and two chimneys re-flashed. The owner paid monthly, no interest.' },
+];
+---
+<section class="bg-white py-[var(--spacing-section)]" aria-labelledby="proof-title">
+  <div class="wrap">
+    <div class="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+      <div>
+        <p class="t-label text-graphite">On the job</p>
+        <h2 id="proof-title" class="t-h2 mt-2">Recent roofs around Columbus</h2>
+      </div>
+      <Button variant="link" href="/projects/" class="self-start md:self-auto">See all projects <ArrowRight class="size-4" aria-hidden="true" /></Button>
+    </div>
+
+    <article class="mt-8 grid gap-6 border-t border-ink pt-6 lg:grid-cols-12 lg:gap-10" aria-labelledby="case-featured">
+      <div class="relative overflow-hidden rounded-sm bg-line lg:col-span-7" style="aspect-ratio:3/2">
+        <Photo src={featured.img} alt={featured.alt} sizes="(min-width: 1024px) 760px, 100vw" class="absolute inset-0" position="60% 50%" />
+        <span class="t-label absolute left-3 top-3 rounded-sm bg-ink px-2 py-1 text-paper">{featured.kind}</span>
+      </div>
+      <div class="flex flex-col gap-5 lg:col-span-5">
+        <h3 id="case-featured" class="t-h2">{featured.place}</h3>
+        <dl class="grid grid-cols-[7rem_1fr] gap-x-4 gap-y-2 border-y border-line py-4 text-small">
+          {featured.specs.map(([k, v]) => (<><dt class="t-label pt-0.5 text-graphite">{k}</dt><dd class="font-medium">{v}</dd></>))}
+        </dl>
+        <div class="grid gap-3 text-small">
+          <p><b>What we found.</b> <span class="text-graphite">{featured.found}</span></p>
+          <p><b>What we did.</b> <span class="text-graphite">{featured.did}</span></p>
+        </div>
+        <figure class="rounded-sm bg-paper p-4">
+          <blockquote class="text-body">“{featured.review.text}”</blockquote>
+          <figcaption class="mt-3 flex flex-wrap items-center gap-x-3 gap-y-2 text-small text-graphite">— {featured.review.who}<Badge variant="note" tone="blueprint">Sample review</Badge></figcaption>
+        </figure>
+      </div>
+    </article>
+
+    <div class="mt-10 grid gap-8 md:grid-cols-2">
+      {more.map((c) => (
+        <article class="flex flex-col gap-4">
+          <div class="relative overflow-hidden rounded-sm bg-line" style="aspect-ratio:3/2">
+            <Photo src={c.img} alt={c.alt} sizes="(min-width: 768px) 620px, 100vw" class="absolute inset-0" />
+            <span class="t-label absolute left-3 top-3 rounded-sm bg-ink px-2 py-1 text-paper">{c.kind}</span>
+          </div>
+          <h3 class="t-h3">{c.place}</h3>
+          <dl class="flex flex-wrap gap-x-6 gap-y-1 text-small">
+            {c.specs.map(([k, v]) => (<div class="flex gap-2"><dt class="t-label pt-0.5 text-graphite">{k}</dt><dd class="font-medium">{v}</dd></div>))}
+          </dl>
+          <p class="t-small text-graphite">{c.note}</p>
+        </article>
+      ))}
+    </div>
+    <p class="t-small mt-8 text-graphite">Sample reviews — replaced with real Google reviews at launch.</p>
+  </div>
+</section>

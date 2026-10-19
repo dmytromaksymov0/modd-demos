@@ -1,0 +1,48 @@
+---
+// Field Report callout: a pin on the photo, a hairline leader and a short label.
+// Place inside a `relative` container (AnnotatedPhoto). x / y are % of the photo.
+// The label never leaves the photo: its max-width is the space left on its side (cqw of the photo).
+interface Props {
+  x: number; y: number;
+  side?: 'left' | 'right';          // label direction on desktop
+  mobileSide?: 'left' | 'right';    // label direction below 768px (defaults to side)
+  mobile?: boolean;                 // show below 768px (keep ≤ 2 per photo)
+  mobileY?: number;                 // y below 768px, when the label needs more room
+  rule?: number;                    // leader length, px
+  title: string;                    // mono, ≤ 4 words
+  text?: string;                    // plain, ≤ 8 words — desktop only, so the title must stand alone
+}
+const { x, y, side = 'right', mobileSide = side, mobile = false, mobileY = y, rule = 40, title, text } = Astro.props;
+---
+<div
+  class:list={['annot', mobile ? 'flex' : 'hidden md:flex']}
+  data-side={side}
+  data-mside={mobileSide}
+  style={`--x:${x};--y:${y};--my:${mobileY};--rule:${rule}px`}
+>
+  <span class="annot-pin" aria-hidden="true"></span>
+  <span class="annot-rule" aria-hidden="true"></span>
+  <span class="annot-label">
+    <b class="t-label text-blueprint">{title}</b>
+    {text && <span class="hidden text-small leading-snug text-ink md:block">{text}</span>}
+  </span>
+</div>
+
+<style>
+  .annot { position: absolute; top: calc(var(--my) * 1%); align-items: center; transform: translateY(-50%); pointer-events: none; }
+  .annot[data-mside='right'] { left: calc(var(--x) * 1% - 7px); flex-direction: row; }
+  .annot[data-mside='left'] { right: calc((100 - var(--x)) * 1% - 7px); flex-direction: row-reverse; }
+  .annot[data-mside='right'] .annot-label { max-width: calc((100 - var(--x)) * 1cqw - var(--rule) - 16px); }
+  .annot[data-mside='left'] .annot-label { max-width: calc(var(--x) * 1cqw - var(--rule) - 16px); }
+  @media (min-width: 48rem) {
+    .annot { top: calc(var(--y) * 1%); }
+    .annot[data-side='right'] { left: calc(var(--x) * 1% - 7px); right: auto; flex-direction: row; }
+    .annot[data-side='left'] { right: calc((100 - var(--x)) * 1% - 7px); left: auto; flex-direction: row-reverse; }
+    .annot[data-side='right'] .annot-label { max-width: min(19rem, calc((100 - var(--x)) * 1cqw - var(--rule) - 16px)); }
+    .annot[data-side='left'] .annot-label { max-width: min(19rem, calc(var(--x) * 1cqw - var(--rule) - 16px)); }
+  }
+  .annot-pin { width: 14px; height: 14px; flex: none; border-radius: 50%; background: var(--color-blueprint); border: 2px solid var(--color-white); box-shadow: 0 0 0 1px rgb(0 0 0 / 0.3); }
+  .annot-rule { width: var(--rule); height: 1px; flex: none; background: var(--color-white); box-shadow: 0 0 0 0.5px rgb(0 0 0 / 0.35); }
+  .annot-label { background: var(--color-white); border-radius: var(--radius-sm); padding: 5px 8px 6px; }
+  @media (min-width: 48rem) { .annot-label { padding: 6px 10px 7px; min-width: 9rem; } }
+</style>
