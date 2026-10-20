@@ -1,0 +1,10 @@
+---
+// Sample review — clearly labelled; replaced with real Google reviews at launch.
+interface Props { name: string; car: string; text: string; master?: string }
+const { name, car, text, master } = Astro.props;
+---
+<figure class="grid gap-3 border-2 border-steel bg-paper p-5">
+  <p class="t-plate inline-flex w-fit bg-glass-50 px-2 py-1 text-glass-deep">Приклад відгуку</p>
+  <blockquote class="text-[1.0625rem] leading-relaxed">«{text}»</blockquote>
+  <figcaption class="t-small text-glass-deep"><b class="font-semibold text-steel">{name}</b> · {car}{master && ` · майстер ${master}`}</figcaption>
+</figure>

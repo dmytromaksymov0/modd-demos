@@ -1,0 +1,38 @@
+---
+// Mobile bottom bar: Записатися · Telegram · Viber · ☎. Appears once the hero's main button ([data-hero-cta], else [data-hero])
+// is off screen (also covers short phones where that button starts below the fold),
+// hides while the booking form ([data-booking]) is on screen or the keyboard is open.
+import { site, cta } from '../../config/site';
+import Icon from '../ui/Icon.astro';
+interface Props { alwaysVisible?: boolean }
+const { alwaysVisible = false } = Astro.props;
+const item = 'inline-flex min-h-12 min-w-0 items-center justify-center gap-1.5 border-2 border-steel px-1 font-display text-[0.875rem] font-[740] [font-variation-settings:"wdth"_84] max-[22.5rem]:text-[0.8125rem] max-[22.5rem]:[font-variation-settings:"wdth"_70] no-underline';
+---
+<nav class="mbar fixed inset-x-0 bottom-0 z-40 border-t-2 border-steel bg-paper px-2.5 pt-2 md:hidden" aria-label="Швидкі дії"
+  style="padding-bottom: max(0.5rem, env(safe-area-inset-bottom))" data-mbar data-visible={alwaysVisible ? 'true' : 'false'}>
+  <div class="grid grid-cols-[minmax(0,1.4fr)_minmax(0,1.15fr)_minmax(0,0.85fr)_2.75rem] gap-1.5">
+    <a href={cta.book.href} class={`${item} bg-ochre`}>{cta.book.label}</a>
+    <a href={site.channels.telegram.href} class={`${item} bg-paper`}><Icon name="send" class="size-4 max-[25rem]:hidden" />Telegram</a>
+    <a href={site.channels.viber.href} class={`${item} bg-paper`}><Icon name="message" class="size-4 max-[25rem]:hidden" />Viber</a>
+    <a href={site.phone.href} class={`${item} bg-paper`} aria-label={`Подзвонити: ${site.phone.display}`}><Icon name="phone" class="size-5" /></a>
+  </div>
+</nav>
+<style>
+  .mbar { transform: translateY(110%); transition: transform var(--duration-base) var(--ease-out); }
+  .mbar[data-visible='true'] { transform: none; }
+</style>
+<script>
+  const bar = document.querySelector<HTMLElement>('[data-mbar]');
+  if (bar && bar.dataset.visible !== 'true') {
+    const hero = document.querySelector('[data-hero-cta]') ?? document.querySelector('[data-hero]');
+    let pastHero = !hero, bookingOnScreen = false, typing = false;
+    const render = () => { const show = pastHero && !bookingOnScreen && !typing; bar.dataset.visible = String(show); bar.inert = !show; };
+    if (hero) new IntersectionObserver(([e]) => { pastHero = !e.isIntersecting; render(); }).observe(hero);
+    const seen = new Set<Element>();
+    const bo = new IntersectionObserver((es) => { es.forEach((e) => (e.isIntersecting ? seen.add(e.target) : seen.delete(e.target))); bookingOnScreen = seen.size > 0; render(); });
+    document.querySelectorAll('[data-booking]').forEach((el) => bo.observe(el));
+    document.addEventListener('focusin', (e) => { typing = (e.target as HTMLElement).matches('input, textarea, select'); render(); });
+    document.addEventListener('focusout', () => { typing = false; render(); });
+    render();
+  }
+</script>

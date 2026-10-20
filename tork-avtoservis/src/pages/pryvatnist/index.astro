@@ -1,0 +1,23 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { site } from '../../config/site.ts';
+import Booking from '../../components/home/Booking.astro';
+const items = [
+  ['Що збираємо', 'Лише те, що ви вписуєте у форму запису: телефон, за бажанням — ім’я, авто, опис проблеми, зручний канал відповіді та розрахунок із калькулятора.'],
+  ['Навіщо', 'Щоб зв’язатися з вами щодо запису й ремонту. Не продаємо й не передаємо даних третім особам для реклами.'],
+  ['Де зберігаються', 'Заявка надходить у робочий Telegram сервісу. Сайт не зберігає її в базі й не ставить рекламних cookies.'],
+  ['Аналітика', 'У демо-версії вимкнена. Якщо її увімкнуть — лише знеособлена статистика відвідувань без cookies.'],
+  ['Ваші права', `Напишіть на ${site.email} або в Telegram — видалимо ваші дані з робочого чату.`],
+];
+---
+<BaseLayout title="Політика приватності — ТОРК Автосервіс" description="Які дані збирає форма запису ТОРК Автосервіс і як ми їх використовуємо.">
+  <div class="wrap py-section">
+    <div class="facade grid-cols-1">
+      <article class="window grid gap-8 p-5 sm:p-8">
+        <header data-hero><p class="t-plate text-glass-deep">Документ</p><h1 class="t-h1 mt-2">Політика приватності</h1><p class="mt-3 t-small text-glass-deep">Демонстраційний сайт вигаданої компанії. Редакція від 20.10.2026.</p></header>
+        {items.map(([t, d]) => <section class="measure"><h2 class="t-h3">{t}</h2><p class="mt-2">{d}</p></section>)}
+      </article>
+    </div>
+  </div>
+  <Booking faq={[]} />
+</BaseLayout>

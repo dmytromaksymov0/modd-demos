@@ -1,0 +1,69 @@
+---
+// «Як ми працюємо»: the whole «Ремонт у чаті» thread (interactive estimate), then each step in detail,
+// payment, outages/air-raid alerts and booking.
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { breadcrumbs, faqSchema } from '../../lib/schema.ts';
+import { homeFaq } from '../../data/faq.ts';
+import PageHero from '../../components/page/PageHero.astro';
+import SectionHead from '../../components/ui/SectionHead.astro';
+import Icon from '../../components/ui/Icon.astro';
+import RepairChat from '../../components/home/RepairChat.astro';
+import PowerSection from '../../components/home/PowerSection.astro';
+import Booking from '../../components/home/Booking.astro';
+import { site } from '../../config/site.ts';
+import measure from '../../assets/photos/andrii-measure.jpg';
+const steps = [
+  { n: '1', t: 'Діагностика', time: '30–90 хв', items: ['Приймаємо авто, записуємо пробіг і скарги своїми словами', 'Сканер, підйомник, заміри — за потреби при вас', 'Діагностика ходової безкоштовна, якщо ремонт у нас'] },
+  { n: '2', t: 'Кошторис у Telegram', time: 'до 15 хв після діагностики', items: ['Кожна знахідка — з фото, цифрою заміру й ціною', '«Терміново / Можна відкласти / Не потрібно»', 'Робота й запчастини окремими сумами, з артикулами'] },
+  { n: '3', t: 'Ремонт з фотозвітом', time: 'за погодженим', items: ['Робимо лише те, на що ви відповіли «так»', 'Знайшли ще щось — окреме повідомлення з фото', 'Можна свої запчастини'] },
+  { n: '4', t: 'Видача й гарантія', time: 'у той самий день для більшості робіт', items: ['Старі деталі — у пакеті з номером замовлення', `Гарантія ${site.warranty.months} міс / 10 000 км на роботу й наші запчастини`, 'Нагадування про відкладене — у Telegram за пробігом'] },
+];
+const pay = [
+  { t: 'Картка або готівка', d: 'Термінал працює й під час відключень.' },
+  { t: 'Рахунок для ФОП/ТОВ', d: 'Виставляємо рахунок, після ремонту — акт виконаних робіт.' },
+  { t: 'Лише за погоджене', d: 'Сума в чеку = сума в повідомленні, на яке ви відповіли «так».' },
+];
+---
+<BaseLayout og="yak-my-pratsyuyemo" schema={[breadcrumbs(Astro.site, [{ name: 'Як ми працюємо', path: '/yak-my-pratsyuyemo/' }]), faqSchema(homeFaq)]} title="Як ми працюємо — кошторис у Telegram до ремонту · ТОРК Автосервіс" description="Діагностика → кошторис у Telegram → ремонт з фотозвітом → видача старих деталей і гарантія 12 міс / 10 000 км. Нічого без вашого «так».">
+  <PageHero crumbs={[{ label: 'Головна', href: '/' }, { label: 'Як ми працюємо' }]} title="Нічого без вашого&nbsp;«так»"
+    lead="Діагностика → кошторис у Telegram → ремонт з фотозвітом → видача старих деталей і гарантія. Нижче — як це виглядає на прикладі одного авто."
+    photo={{ src: measure, alt: 'Андрій міряє деталь мікрометром біля авто на підйомнику', position: '60% 35%', plate: 'Замір' }}
+    cta={{ label: 'Записатися на діагностику', href: '#zapys' }} />
+
+  <RepairChat />
+
+  <section class="border-t-2 border-steel bg-paper" aria-labelledby="steps-title">
+    <div class="wrap py-section">
+      <SectionHead id="steps-title" kicker="Чотири кроки" title="Що відбувається на&nbsp;кожному кроці" />
+      <ol class="facade mt-10 grid-cols-1 md:grid-cols-2 lg:grid-cols-4">
+        {steps.map((s, i) => (
+          <li class={`window grid content-start gap-4 p-5 ${i === 1 ? 'bg-ochre!' : ''}`}>
+            <span class="font-display text-[3rem] leading-none font-[850] [font-variation-settings:'wdth'_60]" aria-hidden="true">{s.n}</span>
+            <div><h3 class="t-h3">{s.t}</h3><p class={`mt-1 t-small ${i === 1 ? 'text-steel' : 'text-glass-deep'}`}>{s.time}</p></div>
+            <ul class="grid gap-2">{s.items.map((x) => <li class="flex gap-2"><Icon name="check" class="mt-1 size-4" />{x}</li>)}</ul>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <section class="border-t-2 border-steel" aria-labelledby="pay-title">
+    <div class="wrap py-section">
+      <SectionHead id="pay-title" kicker="Оплата" title="Як платити" />
+      <ul class="facade mt-10 grid-cols-1 md:grid-cols-3">
+        {pay.map((p) => <li class="window p-5"><b class="t-h3 block">{p.t}</b><p class="mt-1.5">{p.d}</p></li>)}
+      </ul>
+    </div>
+  </section>
+
+  <PowerSection />
+  <Booking />
+</BaseLayout>
+<script>
+  // The estimate in the chat is interactive; its UI loads on the first interaction (same module as on the home page).
+  let loading: Promise<void> | null = null, ready = false, pending: HTMLElement | null = null;
+  const load = () => (loading ??= import('../../lib/home-ui').then((m) => { m.init(); ready = true; pending?.click(); pending = null; }));
+  for (const ev of ['pointerdown', 'keydown', 'focusin', 'touchstart'] as const) addEventListener(ev, load, { once: true, passive: true, capture: true });
+  addEventListener('change', load, { once: true, capture: true });
+  addEventListener('click', (e) => { const t = (e.target as HTMLElement).closest<HTMLElement>('[data-approve]'); if (t && !ready) { pending = t; load(); } }, { capture: true });
+</script>

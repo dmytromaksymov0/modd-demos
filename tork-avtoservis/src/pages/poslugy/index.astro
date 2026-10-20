@@ -1,0 +1,120 @@
+---
+// Services hub: «Що турбує?» — type a symptom or tap one, the matching service window lights up.
+// Without JS the symptom chips are plain links to the service pages.
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { breadcrumbs, faqSchema } from '../../lib/schema.ts';
+import { homeFaq } from '../../data/faq.ts';
+import PageHero from '../../components/page/PageHero.astro';
+import SectionHead from '../../components/ui/SectionHead.astro';
+import Photo from '../../components/ui/Photo.astro';
+import Icon from '../../components/ui/Icon.astro';
+import Booking from '../../components/home/Booking.astro';
+import { services } from '../../data/services.ts';
+import { servicePages } from '../../data/servicePages.ts';
+import { works } from '../../data/works.ts';
+import { carClasses, site } from '../../config/site.ts';
+import { workPrice, fmtMoney } from '../../lib/calc.ts';
+import bay from '../../assets/photos/bay-04-wide.jpg';
+
+// Symptom → service, with search words (stems) for the finder.
+const symptoms = [
+  { t: 'Стукає спереду на ямах', s: 'khodova', k: 'стук ям підвіс ходов' },
+  { t: 'Тягне вбік', s: 'khodova', k: 'тягне вбік кермо розвал' },
+  { t: 'Скрипить при гальмуванні', s: 'halma', k: 'скрип гальм свист' },
+  { t: 'Б’є в кермо при гальмуванні', s: 'halma', k: 'б’є бє кермо диск педаль' },
+  { t: 'Горить «Check»', s: 'diagnostyka', k: 'check чек помилк лампа горить' },
+  { t: 'Троїть, гірше тягне', s: 'diagnostyka', k: 'троїть тягне смика двигун' },
+  { t: 'Пора міняти мастило', s: 'to-ta-zamina-olyvy', k: 'мастил масл олив фільтр то пробіг' },
+  { t: 'Дме тепле', s: 'kondytsioner', k: 'кондиц тепл холод фреон заправ' },
+  { t: 'Пахне сирістю з дефлекторів', s: 'kondytsioner', k: 'пах запах сиріст' },
+];
+const from = (ids: string[], cls: number) => Math.min(...ids.map((id) => workPrice(works.find((w) => w.id === id)!, carClasses[cls].rate)));
+const lead = Object.fromEntries(servicePages.map((p) => [p.slug, p.master]));
+---
+<BaseLayout og="poslugy" schema={[breadcrumbs(Astro.site, [{ name: 'Послуги', path: '/poslugy/' }])]} title="Послуги — ТОРК Автосервіс, Салтівка, Харків" description="Діагностика, ходова, ТО та заміна мастила, гальма, кондиціонер. Ціни за класами авто, кошторис у Telegram до ремонту.">
+  <PageHero crumbs={[{ label: 'Головна', href: '/' }, { label: 'Послуги' }]} title="Послуги ТОРК" lead="П’ять напрямків, у яких ми сильні щодня. Почніть із того, що відчуваєте за кермом, — назву роботи підкажемо ми."
+    photo={{ src: bay, alt: 'Subaru Forester на двостійковому підйомнику, майстер оглядає авто знизу', position: '50% 50%', plate: 'Бокс 04' }} />
+
+  <section class="border-t-2 border-steel bg-paper" aria-labelledby="find-title">
+    <div class="wrap py-section">
+      <SectionHead id="find-title" kicker="Підказка" title="Що турбує?" />
+      <div class="facade mt-8 grid-cols-1" data-finder>
+        <div class="window grid gap-4 p-5 sm:p-7">
+          <label for="sym" class="t-plate">Опишіть своїми словами</label>
+          <input id="sym" type="search" autocomplete="off" placeholder="Наприклад: стукає спереду на ямах" class="min-h-14 w-full rounded-xs border-2 border-line-strong bg-white px-4 text-[1.125rem] focus:border-steel" data-finder-input />
+          <p class="t-small text-glass-deep" aria-live="polite" data-finder-out>Або оберіть:</p>
+          <ul class="flex flex-wrap gap-2">
+            {symptoms.map((x) => <li><a href={`/poslugy/${x.s}/`} data-s={x.s} data-k={x.k} class="inline-flex min-h-11 items-center border-2 border-steel bg-white px-3 text-[0.9375rem] font-semibold no-underline hover:bg-ochre aria-pressed:bg-ochre">{x.t}</a></li>)}
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="border-t-2 border-steel" aria-labelledby="list-title">
+    <div class="wrap py-section">
+      <SectionHead id="list-title" kicker="П’ять напрямків" title="Оберіть послугу" />
+      <ul class="facade mt-10 grid-cols-1 md:grid-cols-2 lg:grid-cols-12">
+        {services.map((s, i) => (
+          <li class={`svc window flex flex-col transition-colors ${['lg:col-span-7', 'lg:col-span-5', 'lg:col-span-4', 'lg:col-span-4', 'md:col-span-2 lg:col-span-4'][i]}`} data-svc={s.slug}>
+            {s.photo && <div class="relative min-h-52 flex-1 overflow-hidden lg:min-h-60 [&_img]:absolute [&_img]:inset-0"><Photo src={s.photo.src} alt={s.photo.alt} widths={[360, 540, 720, 1080]} quality={45} sizes="(min-width: 86rem) 46rem, (min-width: 64rem) 55vw, (min-width: 48rem) 50vw, calc(100vw - 2.75rem)" position={s.photo.position} /></div>}
+            <a href={`/poslugy/${s.slug}/`} class="group grid content-start gap-3 p-5 no-underline">
+              <span class="flex items-start justify-between gap-3"><h3 class="t-h2 group-hover:underline decoration-ochre decoration-4 underline-offset-6">{s.title}</h3><Icon name="arrow-right" class="mt-2 size-6" /></span>
+              <p>{s.symptom}</p>
+              {s.includes && <ul class="flex flex-wrap gap-1.5">{s.includes.map((x) => <li class="border border-line-strong px-2 py-0.5 text-label">{x}</li>)}</ul>}
+              <p class="flex flex-wrap gap-x-4 gap-y-1 t-small text-glass-deep">
+                {from(s.works, 0) === from(s.works, 3)
+                  ? <span>Для всіх класів <b class="font-semibold text-steel num">від {fmtMoney(from(s.works, 0))}</b></span>
+                  : <><span>Клас A <b class="font-semibold text-steel num">від {fmtMoney(from(s.works, 0))}</b></span><span>Клас D <b class="font-semibold text-steel num">від {fmtMoney(from(s.works, 3))}</b></span></>}
+                <span class="inline-flex items-center gap-1"><Icon name="clock" class="size-4" />{s.time}</span>
+                <span>веде: {lead[s.slug]}</span>
+              </p>
+            </a>
+          </li>
+        ))}
+        <li class="window flex flex-wrap items-center gap-x-6 gap-y-3 bg-ochre! p-5 md:col-span-2 lg:col-span-12">
+          <p class="t-plate">Інша робота?</p>
+          <p class="t-h3 flex-1">ГРМ, зчеплення, електрика — напишіть, порахуємо</p>
+          <a href={site.channels.telegram.href} class="inline-flex min-h-11 w-fit items-center gap-2 font-semibold underline decoration-steel decoration-2 underline-offset-4"><Icon name="send" class="size-4" />Написати в Telegram</a>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <Booking faq={[]} />
+</BaseLayout>
+<style>
+  .svc[data-hit] { outline: 6px solid var(--color-ochre); outline-offset: -6px; }
+  .svc[data-dim] { opacity: 0.55; }
+</style>
+<script>
+  // Tiny symptom finder (~1 KB): matches typed words against stems, highlights the service window.
+  const root = document.querySelector('[data-finder]');
+  if (root) {
+    const input = root.querySelector<HTMLInputElement>('[data-finder-input]')!;
+    const out = root.querySelector<HTMLElement>('[data-finder-out]')!;
+    const chips = [...root.querySelectorAll<HTMLAnchorElement>('a[data-s]')];
+    const cards = [...document.querySelectorAll<HTMLElement>('.svc')];
+    const names = Object.fromEntries(cards.map((c) => [c.dataset.svc, c.querySelector('h3')!.textContent]));
+    const mark = (slug: string | null) => cards.forEach((c) => {
+      c.toggleAttribute('data-hit', !!slug && c.dataset.svc === slug);
+      c.toggleAttribute('data-dim', !!slug && c.dataset.svc !== slug);
+    });
+    input.addEventListener('input', () => {
+      const q = input.value.toLowerCase().replace(/'/g, '’');
+      const words = q.split(/[^\p{L}’]+/u).filter((w) => w.length > 2);
+      const score: Record<string, number> = {};
+      chips.forEach((c) => c.dataset.k!.split(' ').forEach((stem) => { if (words.some((w) => w.startsWith(stem) || stem.startsWith(w))) score[c.dataset.s!] = (score[c.dataset.s!] ?? 0) + 1; }));
+      const best = Object.entries(score).sort((a, b) => b[1] - a[1])[0]?.[0] ?? null;
+      mark(best);
+      out.textContent = !q ? 'Або оберіть:' : best ? `Схоже на «${names[best]}» — підсвітили нижче.` : 'Не впізнали — напишіть нам у Telegram, підкажемо.';
+    });
+    chips.forEach((c) => c.addEventListener('click', (e) => {
+      e.preventDefault();
+      chips.forEach((x) => x.setAttribute('aria-pressed', String(x === c)));
+      mark(c.dataset.s!);
+      out.textContent = `Схоже на «${names[c.dataset.s!]}» — підсвітили нижче.`;
+      document.querySelector(`.svc[data-svc="${c.dataset.s}"]`)?.scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'center' });
+    }));
+  }
+</script>

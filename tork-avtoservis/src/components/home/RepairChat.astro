@@ -1,0 +1,119 @@
+---
+// Signature moment 1+2: «Ремонт у чаті». The repair as a Telegram thread with a live estimate:
+// every finding is «Робимо / Відкласти», the total recalculates, «Погоджую» answers in the thread.
+// Without JS: radios still work, the total shows the default choice. Logic: src/lib/estimate.ts, UI: src/lib/home-ui.ts.
+import { Image } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+import SectionHead from '../ui/SectionHead.astro';
+import Chip from '../ui/Chip.astro';
+import Icon from '../ui/Icon.astro';
+import Plate from '../ui/Plate.astro';
+import Photo from '../ui/Photo.astro';
+import { lines, car } from '../../data/estimate.ts';
+import { estimateTotal } from '../../lib/estimate.ts';
+import { fmtMoney } from '../../lib/calc.ts';
+import { site } from '../../config/site.ts';
+import bay from '../../assets/photos/bay-04-wide.jpg';
+import measure from '../../assets/photos/andrii-measure.jpg';
+import disc from '../../assets/photos/report-disc.jpg';
+import olegUnder from '../../assets/photos/oleg-under-lift.jpg';
+import oleg from '../../assets/photos/oleg-portrait.jpg';
+import andrii from '../../assets/photos/andrii-portrait.jpg';
+
+const t0 = estimateTotal(lines);
+const thumbs: Record<string, { src: ImageMetadata; alt: string; pos: string }> = {
+  pads: { src: measure, alt: 'Андрій міряє деталь мікрометром біля знятого колеса', pos: '45% 55%' },
+  discs: { src: disc, alt: 'Замір гальмівного диска мікрометром', pos: '45% 50%' },
+};
+const steps = [
+  { time: '09:12', title: 'Прийняли авто', text: 'Фото одометра і боксу — у чат.' },
+  { time: '10:40', title: 'Кошторис у Telegram', text: 'Що терміново, що можна відкласти, що не потрібно. Вирішуєте ви.' },
+  { time: '13:05', title: 'Ремонт із фотозвітом', text: 'Лише погоджене. Знайшли ще щось — нове повідомлення.' },
+  { time: '17:30', title: 'Видача', text: `Старі деталі — вам. Гарантія ${site.warranty.months} міс / 10 000 км.` },
+];
+const who = { oleg: { name: 'Олег', role: 'майстер з ходової', img: oleg, pos: '50% 14%' }, andrii: { name: 'Андрій', role: 'діагност', img: andrii, pos: '74% 30%' } };
+---
+<section id="chat" class="border-t-2 border-steel" aria-labelledby="chat-title">
+  <div class="wrap grid gap-10 py-section lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:gap-12">
+    <div class="lg:sticky lg:top-8 lg:self-start">
+      <SectionHead id="chat-title" kicker="Як ми працюємо" title="Ремонт у&nbsp;чаті" lead="Ви не стоїте над підйомником і не гадаєте, що там у машини. Майстер пише вам у Telegram — і нічого не робить без вашого «так»." />
+      <ol class="facade mt-8 grid-cols-1">
+        {steps.map((s, i) => (
+          <li class="window grid grid-cols-[4.5rem_1fr] gap-3 p-4">
+            <span class="font-display text-[1.375rem] leading-none font-[850] [font-variation-settings:'wdth'_70] tabular-nums">{s.time}</span>
+            <span><b class="block font-semibold">{s.title}</b><span class="t-small text-glass-deep">{s.text}</span></span>
+          </li>
+        ))}
+      </ol>
+      <p class="mt-5 flex gap-2.5 border-2 border-steel bg-ochre p-4 font-semibold"><Icon name="shield" class="mt-0.5 size-5" />Нова робота під час ремонту = нове повідомлення. Без вашого «так» не&nbsp;крутимо.</p>
+    </div>
+
+    <div class="facade grid-cols-1" data-chat>
+      <!-- 09:12 -->
+      <article class="window on-dark grid gap-3 bg-steel! p-4 text-paper sm:p-5">
+        <header class="flex items-center gap-3"><Image src={who.oleg.img} alt="" width={80} height={80} class="size-10 object-cover object-[50%_14%]" /><p class="leading-tight"><b class="font-semibold">Олег, майстер з ходової</b><span class="block text-label text-glass">09:12 · {car.name} · {car.km}</span></p></header>
+        <p>Авто прийняли, стоїть у боксі 04. Пробіг записав. Андрій бере на діагностику ходової й гальм.</p>
+        <figure class="relative h-56 overflow-hidden sm:h-72"><Photo src={bay} alt="Subaru Forester на двостійковому підйомнику в боксі 04" sizes="(min-width: 64rem) 50vw, 100vw" position="50% 50%" /><figcaption class="absolute bottom-0 left-0"><Plate tone="steel" role="Бокс 04" class="!py-1.5" /></figcaption></figure>
+      </article>
+
+      <!-- 10:40 — the estimate -->
+      <form class="window on-dark grid gap-4 bg-steel! p-4 text-paper sm:p-5" data-estimate onsubmit="return false" aria-labelledby="est-title">
+        <header class="flex items-center gap-3"><Image src={who.andrii.img} alt="" width={80} height={80} class="size-10 object-cover object-[60%_20%]" /><p class="leading-tight"><b class="font-semibold" id="est-title">Андрій, діагност — кошторис</b><span class="block text-label text-glass">10:40 · Telegram</span></p></header>
+        <p>Діагностику зробили. Ось що знайшли — вирішуйте, що робимо сьогодні:</p>
+        <ul class="grid gap-0 border-t border-steel-2">
+          {lines.map((l) => (
+            <li class="grid gap-3 border-b border-steel-2 py-4 sm:grid-cols-[6.5rem_1fr]" data-line={l.id} data-labour={l.labour} data-parts={l.parts} data-combo-with={l.comboWith} data-combo-saving={l.comboSaving}>
+              {thumbs[l.id]
+                ? <Image src={thumbs[l.id].src} alt={thumbs[l.id].alt} widths={[208, 312]} sizes="104px" class="h-20 w-full object-cover sm:w-26" style={`object-position:${thumbs[l.id].pos}`} />
+                : <span class="hidden h-20 place-items-center border border-steel-2 text-glass sm:grid"><Icon name="check-circle" class="size-7" /></span>}
+              <div class="grid gap-2">
+                <div class="flex flex-wrap items-baseline justify-between gap-x-3">
+                  <b class={`font-semibold ${l.kind === 'none' ? 'text-glass line-through decoration-1' : ''}`}>{l.what}</b>
+                  <b class="font-display text-[1.25rem] font-[800] [font-variation-settings:'wdth'_80] num">{fmtMoney(l.labour + l.parts)}</b>
+                </div>
+                <p class="t-small text-glass">{l.finding}{l.kind !== 'none' && <><br />робота {fmtMoney(l.labour)} + {l.partsLabel} {fmtMoney(l.parts)}</>}</p>
+                <div class="flex flex-wrap items-center gap-2">
+                  <Chip kind={l.kind} label={l.laterLabel} onDark />
+                  {l.kind !== 'none' && (
+                    <fieldset class="ml-auto min-w-0">
+                      <legend class="sr-only">{l.what}: робимо зараз чи відкладаємо?</legend>
+                      <div class="grid grid-cols-2 border-2 border-glass">
+                        <label class="flex min-h-11 cursor-pointer items-center justify-center px-3 font-display text-[0.875rem] font-[740] [font-variation-settings:'wdth'_86] has-[:checked]:bg-ochre has-[:checked]:text-steel has-[:focus-visible]:outline-3 has-[:focus-visible]:outline-ochre"><input class="sr-only" type="radio" name={`est-${l.id}`} value="do" checked={l.doing} />Робимо</label>
+                        <label class="flex min-h-11 cursor-pointer items-center justify-center border-l-2 border-glass px-3 font-display text-[0.875rem] font-[740] [font-variation-settings:'wdth'_86] has-[:checked]:bg-paper has-[:checked]:text-steel has-[:focus-visible]:outline-3 has-[:focus-visible]:outline-ochre"><input class="sr-only" type="radio" name={`est-${l.id}`} value="later" checked={!l.doing} />Відкласти</label>
+                      </div>
+                    </fieldset>
+                  )}
+                </div>
+              </div>
+            </li>
+          ))}
+        </ul>
+        <p class="t-small text-glass" data-combo hidden>Диски разом із колодками — робота дешевша на <b class="text-paper num">{fmtMoney(lines[1].comboSaving ?? 0)}</b>: колесо й супорт знімаємо один раз.</p>
+        <div class="grid gap-3 sm:grid-cols-[1fr_auto] sm:items-end">
+          <p aria-live="polite"><span class="t-plate block text-glass">До сплати за погодженим</span><b class="t-figure text-paper" data-total>{fmtMoney(t0.total)}</b><span class="t-small block text-glass" data-split>робота {fmtMoney(t0.labour)} · запчастини {fmtMoney(t0.parts)}</span></p>
+          <button type="button" class="inline-flex min-h-13 items-center justify-center gap-2 border-2 border-ochre bg-ochre px-5 font-display text-[1.0625rem] font-[780] [font-variation-settings:'wdth'_86] text-steel" data-approve><Icon name="check" class="size-5" /><span data-approve-label>Погоджую {fmtMoney(t0.total)}</span></button>
+        </div>
+        <div class="grid gap-3" data-thread aria-live="polite"></div>
+        <p class="t-small border-t border-steel-2 pt-3 text-glass">Знайшли ще щось під час ремонту — окреме повідомлення з фото. Без вашого «так» не крутимо.</p>
+      </form>
+
+      <!-- 13:05 -->
+      <article class="window on-dark grid gap-3 bg-steel! p-4 text-paper sm:p-5">
+        <header class="flex items-center gap-3"><Image src={who.oleg.img} alt="" width={80} height={80} class="size-10 object-cover object-[50%_14%]" /><p class="leading-tight"><b class="font-semibold">Олег</b><span class="block text-label text-glass">13:05 · фотозвіт</span></p></header>
+        <p>Колодки поміняли за погодженим. Поки авто на підйомнику — оглянув підвіску знизу, зауважень немає. Диски записали в нагадування на ~10&nbsp;000&nbsp;км.</p>
+        <figure class="relative h-64 overflow-hidden sm:h-80"><Photo src={olegUnder} alt="Олег із ліхтарем оглядає днище й підвіску авто на двостійковому підйомнику" sizes="(min-width: 64rem) 50vw, 100vw" position="30% 55%" /><figcaption class="absolute bottom-0 left-0"><Plate tone="steel" role="Огляд знизу" class="!py-1.5" /></figcaption></figure>
+      </article>
+
+      <!-- 17:30 -->
+      <article class="window on-dark grid gap-3 bg-steel! p-4 text-paper sm:p-5">
+        <header class="flex items-center gap-3"><Image src={who.oleg.img} alt="" width={80} height={80} class="size-10 object-cover object-[50%_14%]" /><p class="leading-tight"><b class="font-semibold">Олег</b><span class="block text-label text-glass">17:30 · видача</span></p></header>
+        <p>Готово, можна забирати. До сплати — рівно стільки, скільки ви погодили.</p>
+        <ul class="grid gap-2 sm:grid-cols-3">
+          <li class="flex items-start gap-2 border border-steel-2 p-3 t-small"><Icon name="package" class="mt-0.5 size-5 text-ochre" />Старі колодки — у пакеті з номером замовлення</li>
+          <li class="flex items-start gap-2 border border-steel-2 p-3 t-small"><Icon name="shield" class="mt-0.5 size-5 text-ochre" />Гарантія {site.warranty.months} міс / 10&nbsp;000&nbsp;км</li>
+          <li class="flex items-start gap-2 border border-steel-2 p-3 t-small"><Icon name="credit-card" class="mt-0.5 size-5 text-ochre" />Картка, готівка або рахунок для ФОП/ТОВ</li>
+        </ul>
+      </article>
+    </div>
+  </div>
+</section>

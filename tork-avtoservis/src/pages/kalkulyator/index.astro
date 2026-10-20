@@ -1,0 +1,100 @@
+---
+// Full calculator: class A–D × any works (grouped by service), combo savings, time, transfer to booking.
+// Same markup contract as the home mini calculator ([data-calc], name="klas" / "robota"), same logic (src/lib/calc.ts).
+// Prefill: /kalkulyator/?klas=C&robota=pads-front&robota=discs-front (links from service pages, no-JS form on home).
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { breadcrumbs, faqSchema } from '../../lib/schema.ts';
+import { homeFaq } from '../../data/faq.ts';
+import Icon from '../../components/ui/Icon.astro';
+import Button from '../../components/ui/Button.astro';
+import Booking from '../../components/home/Booking.astro';
+import { carClasses } from '../../config/site.ts';
+import { works, combos, serviceLabels } from '../../data/works.ts';
+import { calculate, fmtMoney, fmtTime } from '../../lib/calc.ts';
+const defClass = 'B', defWorks = ['pads-front', 'discs-front'];
+const r = calculate(defWorks, carClasses.find((c) => c.id === defClass)!.rate, works, combos);
+// Brakes first: the default selection (front pads + discs) is then visible on the first screen.
+const groups = (['halma', 'khodova', 'to', 'diagnostyka', 'kondytsioner'] as (keyof typeof serviceLabels)[]).map((k) => ({ k, label: serviceLabels[k], items: works.filter((w) => w.service === k) }));
+const heights = ['min-h-14', 'min-h-15', 'min-h-16', 'min-h-17'];
+---
+<BaseLayout og="kalkulyator" schema={[breadcrumbs(Astro.site, [{ name: 'Калькулятор', path: '/kalkulyator/' }])]} mobileBar={false} title="Калькулятор вартості ремонту — ТОРК Автосервіс, Харків" description="Порахуйте ціну роботи й час до візиту: клас авто × роботи. Роботи, які робимо разом, дешевші. Ціна роботи з калькулятора = ціна роботи в чеку.">
+  <section id="kalk" class="bg-paper" aria-labelledby="calc-title">
+    <div class="wrap pb-section pt-5 md:pt-6">
+      <form action="/kalkulyator/#kalk" method="get" class="facade grid-cols-1 lg:grid-cols-[minmax(0,7fr)_minmax(0,5fr)]" data-calc data-calc-full data-hero>
+        <header class="window flex flex-wrap items-end gap-x-8 gap-y-2 px-5 py-4 sm:px-7 lg:col-span-2">
+          <div>
+            <nav aria-label="Ви тут" class="t-plate text-glass-deep"><ol class="flex flex-wrap items-center gap-x-2"><li><a href="/" class="-my-2.5 inline-flex min-h-11 items-center underline-offset-4 hover:underline">Головна</a></li><li aria-hidden="true">/</li><li aria-current="page">Калькулятор</li></ol></nav>
+            <h1 id="calc-title" class="t-h1 mt-1 text-[clamp(1.875rem,1.4rem+2vw,3rem)]!">Спершу ціна. Потім&nbsp;ремонт.</h1>
+          </div>
+          <p class="measure flex-1 basis-80 t-small text-glass-deep max-sm:hidden">Ціна роботи з калькулятора = ціна роботи в чеку, якщо клас і перелік збіглися. Запчастини окремо.</p>
+        </header>
+        <div class="window grid content-start gap-7 p-5 sm:p-7">
+          <fieldset class="min-w-0">
+            <legend class="t-plate mb-3">1 · Клас авто</legend>
+            <div class="grid grid-cols-2 items-end gap-1.5 sm:grid-cols-4">
+              {carClasses.map((c, i) => (
+                <label class={`flex cursor-pointer flex-col justify-end border-2 border-steel bg-white px-3 pb-2 pt-3 has-[:checked]:bg-ochre has-[:focus-visible]:outline-3 has-[:focus-visible]:outline-steel has-[:focus-visible]:outline-offset-2 ${heights[i]}`}>
+                  <input class="sr-only" type="radio" name="klas" value={c.id} checked={c.id === defClass} />
+                  <b class="font-display text-[1.375rem] leading-none font-[850] [font-variation-settings:'wdth'_60]">Клас {c.label}</b>
+                  <span class="mt-1 text-label leading-snug">{c.examples}</span>
+                </label>
+              ))}
+            </div>
+            <p class="mt-2 t-small text-glass-deep">Не знаєте клас? Напишіть модель у формі запису — підкажемо.</p>
+          </fieldset>
+          <div class="grid gap-7 md:grid-cols-2 md:gap-x-8">
+          {groups.map((g, gi) => (
+            <fieldset class="min-w-0">
+              <legend class="t-plate mb-3">{gi + 2} · {g.label}</legend>
+              <ul class="grid gap-0 border-t border-line">
+                {g.items.map((w) => (
+                  <li class="border-b border-line">
+                    <label class="flex min-h-12 cursor-pointer items-center gap-3 py-1">
+                      <input type="checkbox" name="robota" value={w.id} checked={defWorks.includes(w.id)} class="size-5 shrink-0 accent-steel" />
+                      <span class="flex-1">{w.label}{w.note && <span class="block text-label text-glass-deep">{w.note}</span>}</span>
+                      <span class="t-small text-glass-deep tabular-nums">{w.fixed ? fmtMoney(w.fixed) : fmtTime(w.minutes)}</span>
+                    </label>
+                  </li>
+                ))}
+              </ul>
+            </fieldset>
+          ))}
+          </div>
+          <noscript><Button type="submit" variant="secondary">Порахувати</Button></noscript>
+        </div>
+        <div class="window overflow-visible! bg-steel! max-lg:sticky max-lg:bottom-0 max-lg:z-30 max-lg:border-t-[6px] max-lg:border-steel">
+          <div class="grid content-between gap-6 bg-steel p-5 text-paper on-dark max-lg:grid-cols-[minmax(0,1fr)_auto] max-lg:items-center max-lg:gap-3 max-lg:px-4 max-lg:py-3 sm:p-7 lg:sticky lg:top-0" aria-live="polite">
+            <div>
+              <p class="t-plate text-glass max-lg:hidden">Робота · <span data-calc-class>клас {defClass}</span></p>
+              <p class="t-figure mt-2 text-[clamp(2rem,1.4rem+3vw,4.5rem)]! max-lg:mt-0" data-calc-total>{fmtMoney(r.total)}</p>
+              <p class="mt-2 flex items-center gap-2 text-lead max-lg:mt-0 max-lg:text-[0.9375rem]"><Icon name="clock" class="size-5 text-ochre" /><span data-calc-time>≈ {fmtTime(r.minutes)}</span><span class="max-lg:hidden">на підйомнику</span></p>
+              <p class="mt-4 border-l-4 border-ochre pl-3 t-small max-lg:hidden" data-calc-saving hidden={!r.saving}>{r.savings.map((s, i) => <>{i > 0 && <br />}{s.label}: <b class="num">−{fmtMoney(s.money)}</b>{s.minutes > 0 && <>, <span class="num">−{fmtTime(s.minutes)}</span></>}</>)}</p>
+              <p class="mt-4 t-small text-glass max-lg:hidden">Запчастини окремо — наші з гарантією або ваші. Ціна може змінитися лише з вашого «так»: якщо на діагностиці знайдемо інше.</p>
+            </div>
+            <Button href="#zapys" size="lg" data-calc-book class="max-lg:!min-h-12 max-lg:!px-3 max-lg:!text-[0.9375rem]"><span class="lg:hidden">Записатися</span><span class="max-lg:hidden">Записатися з цим розрахунком</span></Button>
+          </div>
+        </div>
+      </form>
+      <p class="mt-6 measure t-small text-glass-deep">Як рахуємо: робота = нормо-година класу × норматив виробника, округлено до 10 ₴. Діагностика ходової безкоштовна, якщо ремонт у нас. Роботи, які роблять разом, дешевші: колесо, супорт або фільтри знімаємо один раз.</p>
+    </div>
+  </section>
+
+  <Booking faq={[]} title="Записатися з розрахунком" lead="Розрахунок уже в заявці. Залиште телефон — підтвердимо час у Telegram, Viber або дзвінком." />
+</BaseLayout>
+<script>
+  // Prefill from the URL (?klas=…&robota=…), then load the calculator UI on the first interaction (or now, if prefilled).
+  const form = document.querySelector<HTMLFormElement>('[data-calc-full]');
+  const q = new URLSearchParams(location.search);
+  if (form && (q.has('klas') || q.has('robota'))) {
+    const k = q.get('klas');
+    if (k) form.querySelector<HTMLInputElement>(`input[name="klas"][value="${CSS.escape(k)}"]`)?.click();
+    const ids = q.getAll('robota');
+    if (ids.length) form.querySelectorAll<HTMLInputElement>('input[name="robota"]').forEach((i) => { i.checked = ids.includes(i.value); });
+  }
+  let loading: Promise<void> | null = null, ready = false, pending: HTMLElement | null = null;
+  const load = () => (loading ??= import('../../lib/home-ui').then((m) => { m.init(); ready = true; pending?.click(); pending = null; }));
+  if (q.has('klas') || q.has('robota')) load();
+  for (const ev of ['pointerdown', 'keydown', 'focusin', 'touchstart'] as const) addEventListener(ev, load, { once: true, passive: true, capture: true });
+  addEventListener('change', load, { once: true, capture: true });
+  addEventListener('click', (e) => { const t = (e.target as HTMLElement).closest<HTMLElement>('[data-calc-book]'); if (t && !ready) { pending = t; load(); } }, { capture: true });
+</script>

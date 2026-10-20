@@ -1,0 +1,32 @@
+---
+// «Ремонт у чаті», compact: the diagnostician's estimate message in Telegram — a dark facade window, not a document.
+// Data: src/data/estimate.ts (the car in the story is the Forester really standing in bay 04 on our photo).
+import { Image } from 'astro:assets';
+import Chip from '../ui/Chip.astro';
+import andrii from '../../assets/photos/andrii-portrait.jpg';
+import { lines, car } from '../../data/estimate.ts';
+import { fmtMoney } from '../../lib/calc.ts';
+interface Props { class?: string; href?: string }
+const { class: cls = '', href = '#chat' } = Astro.props;
+const shown = lines.slice(0, 2);
+const first = lines[0];
+---
+<section class={`on-dark flex h-full flex-col gap-3 bg-steel p-4 text-paper sm:p-5 ${cls}`} aria-label="Приклад: майстер пише вам у Telegram">
+  <header class="flex items-center gap-3">
+    <Image src={andrii} alt="" width={80} height={80} class="size-10 shrink-0 object-cover object-[60%_20%]" />
+    <p class="leading-tight"><b class="font-semibold">Андрій, діагност</b><span class="block text-label text-glass">Telegram · 10:40 · {car.name}</span></p>
+  </header>
+  <ul class="grid gap-0 border-t border-steel-2">
+    {shown.map((r) => (
+      <li class="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-x-3 gap-y-1 border-b border-steel-2 py-2">
+        <span class="text-[0.9375rem] leading-snug">{r.what} <span class="whitespace-nowrap text-glass">· {r.short}</span></span>
+        <b class="row-span-2 self-start font-display text-[1.125rem] font-[800] [font-variation-settings:'wdth'_80] num">{fmtMoney(r.labour + r.parts)}</b>
+        <span><Chip kind={r.kind} label={r.laterLabel} onDark /></span>
+      </li>
+    ))}
+  </ul>
+  <div class="mt-auto flex flex-wrap gap-2">
+    <a href={href} class="inline-flex min-h-11 flex-1 items-center justify-center whitespace-nowrap border-2 border-ochre bg-ochre px-3 font-display text-[0.9375rem] font-[780] [font-variation-settings:'wdth'_84] text-steel no-underline tabular-nums">Погоджую {fmtMoney(first.labour + first.parts)}</a>
+    <a href={href} class="inline-flex min-h-11 grow items-center justify-center whitespace-nowrap border-2 border-glass px-3 font-display text-[0.9375rem] font-[700] [font-variation-settings:'wdth'_84] no-underline">Як це працює</a>
+  </div>
+</section>

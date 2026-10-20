@@ -1,0 +1,150 @@
+---
+// Service page: shared frame (hero → symptoms → core → prices by class → photo report → parts → FAQ + booking)
+// with its own core section per service. Content: src/data/servicePages.ts.
+import { Image } from 'astro:assets';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHero from '../../components/page/PageHero.astro';
+import SectionHead from '../../components/ui/SectionHead.astro';
+import Photo from '../../components/ui/Photo.astro';
+import Plate from '../../components/ui/Plate.astro';
+import Icon from '../../components/ui/Icon.astro';
+import Button from '../../components/ui/Button.astro';
+import Booking from '../../components/home/Booking.astro';
+import { servicePages } from '../../data/servicePages.ts';
+import { faqSchema, breadcrumbs } from '../../lib/schema.ts';
+import { works, combos } from '../../data/works.ts';
+import { carClasses, site } from '../../config/site.ts';
+import { workPrice, fmtMoney, fmtTime, roundTo10 } from '../../lib/calc.ts';
+import oleg from '../../assets/photos/oleg-portrait.jpg';
+import andrii from '../../assets/photos/andrii-portrait.jpg';
+
+export function getStaticPaths() {
+  return servicePages.map((s) => ({ params: { slug: s.slug }, props: { s } }));
+}
+const { s } = Astro.props;
+const list = works.filter((w) => w.service === s.service);
+const from = (cls: number) => Math.min(...list.map((w) => workPrice(w, carClasses[cls].rate)));
+const svcCombos = combos.filter((c) => c.ids.every((id) => list.some((w) => w.id === id)));
+const avatar = s.report.author === 'Олег' ? { img: oleg, pos: 'object-[50%_14%]' } : { img: andrii, pos: 'object-[60%_20%]' };
+const fixedAll = list.every((w) => w.fixed);
+const calcHref = `/kalkulyator/?robota=${list.slice(0, 2).map((w) => w.id).join('&robota=')}#kalk`;
+const parts = s.service === 'diagnostyka'
+  ? [
+      { t: 'Діагностика при ремонті', d: 'Якщо ремонт робимо в нас, діагностику ходової не оплачуєте.' },
+      { t: 'Кошторис — ваш', d: 'Список із фото лишається у вас у Telegram, навіть якщо ремонтуватимете деінде.' },
+      { t: 'Можна бути поруч', d: 'Покажемо на підйомнику кожну знахідку.' },
+    ]
+  : [
+      { t: 'Наші запчастини', d: 'Оригінал або перевірений аналог — на вибір, з артикулом у кошторисі. Гарантія на роботу й деталь.' },
+      { t: 'Ваші запчастини', d: 'Привезли свої — ставимо. Гарантія на роботу; на деталь — від продавця.' },
+      { t: 'Старі деталі', d: 'Віддаємо в пакеті з номером замовлення.' },
+    ];
+---
+<BaseLayout og={s.slug} schema={[faqSchema(s.faq), breadcrumbs(Astro.site, [{ name: 'Послуги', path: '/poslugy/' }, { name: s.title, path: `/poslugy/${s.slug}/` }])]} title={`${s.title} — ТОРК Автосервіс, Салтівка, Харків`} description={s.meta}>
+  <PageHero
+    crumbs={[{ label: 'Головна', href: '/' }, { label: 'Послуги', href: '/poslugy/' }, { label: s.title }]}
+    title={s.h1} lead={s.lead} photo={s.hero}
+    cta={{ label: s.service === 'diagnostyka' ? 'Записатися на діагностику' : `Записатися: ${s.title.toLowerCase()}`, href: '#zapys' }}
+    facts={[
+      { label: fixedAll ? 'Ціна' : 'Клас A', value: `від ${fmtMoney(from(0))}` },
+      { label: fixedAll ? 'Для всіх класів' : 'Клас D', value: fixedAll ? 'фіксовано' : `від ${fmtMoney(from(3))}` },
+      { label: 'Час', value: s.time },
+      { label: 'Гарантія', value: `${site.warranty.months} міс / 10 000 км` },
+    ]}
+  />
+
+  <section class="border-t-2 border-steel" aria-labelledby="sym-title">
+    <div class="wrap py-section">
+      <SectionHead id="sym-title" kicker="Що відчуваєте" title="Симптом → що перевіряємо" lead="Розкажіть, що відчуваєте за кермом. Назву роботи підкажемо ми." />
+      <ul class="facade mt-10 grid-cols-1 md:grid-cols-2">
+        {s.symptoms.map((x) => (
+          <li class="window grid gap-2 p-5 sm:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] sm:gap-6">
+            <b class="t-h3">{x.feel}</b>
+            <p class="flex gap-2.5"><Icon name="arrow-right" class="mt-1 size-5 text-glass-deep" />{x.check}</p>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <section class="border-t-2 border-steel bg-paper" aria-labelledby="core-title">
+    <div class="wrap py-section">
+      <SectionHead id="core-title" kicker={s.core.kicker} title={s.core.title} lead={s.core.lead} />
+      <div class={`facade mt-10 grid-cols-1 ${s.core.photo ? 'lg:grid-cols-12' : 'md:grid-cols-3'}`}>
+        <ol class={`grid gap-1.5 bg-steel ${s.core.photo ? 'lg:col-span-7' : 'md:col-span-3 md:grid-cols-3'}`}>
+          {s.core.items.map((it, i) => (
+            <li class={`window grid content-start gap-2 p-5 ${i === 0 ? 'bg-ochre!' : ''}`}><b class="t-h3">{it.t}</b><p>{it.d}</p></li>
+          ))}
+        </ol>
+        {s.core.photo && (
+          <figure class="window relative min-h-72 lg:col-span-5 [&_img]:absolute [&_img]:inset-0">
+            <Photo src={s.core.photo.src} alt={s.core.photo.alt} sizes="(min-width: 64rem) 40vw, 100vw" position={s.core.photo.position} />
+            {s.core.photo.plate && <figcaption class="absolute bottom-0 left-0"><Plate tone="steel" role={s.core.photo.plate} class="!py-1.5" /></figcaption>}
+          </figure>
+        )}
+      </div>
+    </div>
+  </section>
+
+  <section class="border-t-2 border-steel" aria-labelledby="price-title">
+    <div class="wrap py-section">
+      <div class="flex flex-wrap items-end justify-between gap-6">
+        <SectionHead id="price-title" kicker="Ціни" title="Ціни за класами авто" lead="Ціна роботи. Запчастини окремо — наші або ваші." />
+        <Button href={calcHref} variant="secondary">Порахувати в калькуляторі<Icon name="arrow-right" class="size-4" /></Button>
+      </div>
+      <div class="mt-10 overflow-x-auto border-2 border-steel bg-paper">
+        <table class="w-full min-w-[40rem] border-collapse text-left">
+          <caption class="sr-only">{s.title}: ціна роботи за класами авто, гривень</caption>
+          <thead><tr class="bg-steel text-paper">
+            <th scope="col" class="t-plate px-4 py-3 font-[650]">Робота</th>
+            <th scope="col" class="t-plate px-4 py-3 text-right font-[650]">Час</th>
+            {carClasses.map((c) => <th scope="col" class="t-plate px-4 py-3 text-right font-[650]">Клас {c.label}</th>)}
+          </tr></thead>
+          <tbody class="tabular-nums">
+            {list.map((w) => (
+              <tr class="border-b border-line last:border-b-0">
+                <th scope="row" class="px-4 py-3 font-normal">{w.label}{w.note && <span class="block text-label text-glass-deep">{w.note}</span>}</th>
+                <td class="whitespace-nowrap px-4 py-3 text-right text-glass-deep">{fmtTime(w.minutes)}</td>
+                {w.fixed
+                  ? <td colspan="4" class="px-4 py-3 text-right font-semibold">{fmtMoney(w.fixed)} · для всіх класів</td>
+                  : carClasses.map((c) => <td class="whitespace-nowrap px-4 py-3 text-right font-semibold">{fmtMoney(workPrice(w, c.rate))}</td>)}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      {svcCombos.length > 0 && (
+        <p class="mt-4 flex flex-wrap gap-x-6 gap-y-1 border-l-4 border-ochre pl-3 t-small">
+          {svcCombos.map((c) => <span><b class="font-semibold">{c.label}:</b> робота дешевша на <span class="num">{fmtMoney(roundTo10(c.hours * carClasses[0].rate))}–{fmtMoney(roundTo10(c.hours * carClasses[3].rate))}</span>, −{fmtTime(c.minutes)}</span>)}
+        </p>
+      )}
+      <p class="mt-3 t-small text-glass-deep">Класи: A — {carClasses[0].examples}; B — {carClasses[1].examples}; C — {carClasses[2].examples}; D — {carClasses[3].examples}.</p>
+    </div>
+  </section>
+
+  <section class="border-t-2 border-steel" aria-labelledby="rep-title">
+    <div class="wrap grid gap-10 py-section lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:gap-12">
+      <div class="grid content-start gap-6">
+        <SectionHead id="rep-title" kicker="Фотозвіт" title="Так виглядає повідомлення від майстра" lead={`${s.master} пише вам у Telegram — з фото, цифрою заміру й ціною. Нова робота = нове повідомлення.`} />
+        <div class="facade grid-cols-1">
+          {parts.map((p, i) => <div class={`window p-5 ${i === 0 ? '' : ''}`}><b class="t-h3 block">{p.t}</b><p class="mt-1.5 t-small">{p.d}</p></div>)}
+        </div>
+      </div>
+      <article class="facade grid-cols-1 self-start">
+        <div class="window on-dark grid gap-3 bg-steel! p-4 text-paper sm:p-5">
+          <header class="flex items-center gap-3"><Image src={avatar.img} alt="" width={80} height={80} class={`size-10 object-cover ${avatar.pos}`} /><p class="leading-tight"><b class="font-semibold">{s.report.author}</b><span class="block text-label text-glass">{s.report.time} · Telegram</span></p></header>
+          <p>{s.report.text}</p>
+          {s.report.photo && (
+            <figure class="relative h-64 overflow-hidden sm:h-80 [&_img]:absolute [&_img]:inset-0">
+              <Photo src={s.report.photo.src} alt={s.report.photo.alt} sizes="(min-width: 64rem) 50vw, 100vw" position={s.report.photo.position} />
+              {s.report.photo.plate && <figcaption class="absolute bottom-0 left-0"><Plate tone="steel" role={s.report.photo.plate} class="!py-1.5" /></figcaption>}
+            </figure>
+          )}
+          <a href="/yak-my-pratsyuyemo/" class="inline-flex min-h-11 w-fit items-center gap-2 text-glass underline decoration-ochre decoration-2 underline-offset-4">Як працює ремонт у чаті<Icon name="arrow-right" class="size-4" /></a>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <Booking faq={s.faq} title={`Записатися: ${s.title.toLowerCase()}`} />
+</BaseLayout>

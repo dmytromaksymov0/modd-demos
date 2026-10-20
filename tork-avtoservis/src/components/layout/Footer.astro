@@ -1,0 +1,46 @@
+---
+import { site, hours } from '../../config/site';
+// Pages without a booking form (thanks page) send messenger links to the contacts page form.
+interface Props { formPath?: string }
+const { formPath = '' } = Astro.props;
+const ch = (k: string) => `${formPath}?kanal=${k}#zapys`;
+import Icon from '../ui/Icon.astro';
+const services = [
+  { label: 'Діагностика', href: '/poslugy/diagnostyka/' },
+  { label: 'Ходова', href: '/poslugy/khodova/' },
+  { label: 'ТО та заміна мастила', href: '/poslugy/to-ta-zamina-olyvy/' },
+  { label: 'Гальма', href: '/poslugy/halma/' },
+  { label: 'Кондиціонер', href: '/poslugy/kondytsioner/' },
+];
+const link = 'inline-flex min-h-11 items-center no-underline hover:underline decoration-ochre decoration-2 underline-offset-4';
+---
+<footer class="on-dark mt-auto bg-steel text-paper">
+  <div class="wrap grid gap-10 py-14 md:grid-cols-2 lg:grid-cols-[1.3fr_1fr_1fr_1fr]">
+    <div class="grid content-start gap-4">
+      <img src="/brand/tork-logo-mono-light.svg" alt="ТОРК Автосервіс" width="166" height="40" loading="lazy" decoding="async" class="h-10 w-auto" />
+      <p class="t-small max-w-[34ch] text-glass">Автосервіс на Салтівці з {site.since}. Кошторис у Telegram до ремонту, фотозвіт, старі деталі — вам.</p>
+    </div>
+    <div class="grid content-start gap-2 t-small">
+      <p class="t-plate text-glass">Адреса</p>
+      <p class="flex gap-2"><Icon name="map-pin" class="mt-0.5 size-4" />{site.address.street}, {site.address.city}<br />{site.address.metro} · {site.address.walk}</p>
+      <p class="flex gap-2"><Icon name="clock" class="mt-0.5 size-4" /><span class="num">{hours.summary.split(' · ').map((x) => <span class="block">{x}</span>)}</span></p>
+    </div>
+    <div class="grid content-start gap-1 t-small">
+      <p class="t-plate mb-1 text-glass">Зв’язок</p>
+      <a href={site.phone.href} class={`${link} num font-semibold`}>{site.phone.display}</a>
+      <a href={ch('telegram')} class={link}>Telegram</a>
+      <a href={ch('viber')} class={link}>Viber</a>
+      <p class="mt-2 text-glass">Оплата: картка, готівка, рахунок для ФОП/ТОВ</p>
+    </div>
+    <nav aria-label="Послуги" class="grid content-start gap-0 t-small">
+      <p class="t-plate mb-1 text-glass">Послуги</p>
+      {services.map((s) => <a href={s.href} class={link}>{s.label}</a>)}
+    </nav>
+  </div>
+  <div class="border-t border-steel-2">
+    <div class="wrap flex flex-wrap items-center justify-between gap-x-6 gap-y-2 pb-28 pt-5 text-label text-glass md:pb-5">
+      <p>Concept site · fictional company · designed &amp; built by <strong class="font-semibold text-paper">modd.</strong></p>
+      <p class="flex flex-wrap items-center gap-x-4">Телефон і адреса — демонстраційні<a href="/pryvatnist/" class="inline-flex min-h-11 items-center underline underline-offset-2">Приватність</a></p>
+    </div>
+  </div>
+</footer>

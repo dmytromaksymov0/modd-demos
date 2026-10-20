@@ -1,0 +1,46 @@
+---
+import { site, nav, cta } from '../../config/site';
+import Logo from '../brand/Logo.astro';
+import Button from '../ui/Button.astro';
+import Icon from '../ui/Icon.astro';
+import OpenStatus from './OpenStatus.astro';
+interface Props { bookHref?: string }
+const { bookHref = cta.book.href } = Astro.props;
+const path = Astro.url.pathname;
+---
+<header class="relative z-20 border-b-2 border-steel bg-concrete">
+  <div class="wrap flex min-h-18 items-center gap-6">
+    <a href="/" class="-my-1 inline-flex min-h-11 items-center py-1" aria-label="ТОРК Автосервіс — на головну"><Logo class="h-9 w-auto lg:h-10" /></a>
+    <nav aria-label="Головне меню" class="hidden xl:block">
+      <ul class="flex gap-4 whitespace-nowrap text-[0.9375rem]">
+        {nav.map((n) => <li><a href={n.href} class="inline-flex min-h-11 min-w-11 items-center justify-center no-underline decoration-ochre decoration-2 underline-offset-6 hover:underline aria-[current=page]:underline" aria-current={path === n.href ? 'page' : undefined}>{n.label}</a></li>)}
+      </ul>
+    </nav>
+    <div class="ml-auto flex items-center gap-5">
+      <span class="hidden min-[90rem]:block"><OpenStatus class="text-[0.9375rem]" /></span>
+      <span class="hidden lg:block"><a href={site.phone.href} class="inline-flex min-h-11 items-center font-semibold no-underline num">{site.phone.display}</a></span>
+      <span class="hidden sm:inline-flex"><Button href={bookHref} size="sm">{cta.book.label}</Button></span>
+      <details class="menu relative xl:hidden">
+        <summary class="inline-flex size-11 cursor-pointer list-none items-center justify-center border-2 border-steel [&::-webkit-details-marker]:hidden" aria-label="Меню">
+          <Icon name="menu" class="size-5 group-open:hidden" />
+        </summary>
+        <div class="absolute right-0 top-[calc(100%+0.5rem)] z-30 w-[min(20rem,calc(100vw-2rem))] border-2 border-steel bg-paper p-4 shadow-float">
+          <ul class="grid">
+            {nav.map((n) => <li><a href={n.href} class="flex min-h-12 items-center border-b border-line font-display text-[1.125rem] font-[760] [font-variation-settings:'wdth'_80] no-underline">{n.label}</a></li>)}
+          </ul>
+          <div class="mt-4 grid gap-3">
+            <OpenStatus class="text-[0.9375rem]" />
+            <a href={site.phone.href} class="inline-flex min-h-11 items-center gap-2 font-semibold no-underline num"><Icon name="phone" class="size-4" />{site.phone.display}</a>
+            <Button href={bookHref} full>{cta.book.label}</Button>
+          </div>
+        </div>
+      </details>
+    </div>
+  </div>
+</header>
+<script>
+  // Close the menu after picking a link (anchors on the same page) and on Escape.
+  const menu = document.querySelector<HTMLDetailsElement>('details.menu');
+  menu?.addEventListener('click', (e) => { if ((e.target as HTMLElement).closest('a')) menu.open = false; });
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && menu?.open) { menu.open = false; menu.querySelector('summary')?.focus(); } });
+</script>

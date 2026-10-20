@@ -1,0 +1,15 @@
+---
+// Estimate status chips — the vocabulary of the master's estimate in Telegram.
+type Kind = 'urgent' | 'later' | 'none';
+interface Props { kind: Kind; label?: string; class?: string; onDark?: boolean }
+const { kind, class: cls = '', onDark = false } = Astro.props;
+const label = Astro.props.label ?? { urgent: 'Терміново', later: 'Можна відкласти', none: 'Не потрібно' }[kind];
+const styles: Record<Kind, string> = {
+  urgent: 'bg-ochre text-steel border-ochre',
+  later: onDark ? 'bg-transparent text-paper border-glass' : 'bg-transparent text-steel border-steel',
+  none: onDark ? 'bg-steel-2 text-glass border-steel-2' : 'bg-glass-50 text-glass-deep border-glass-50',
+};
+---
+<span class={`inline-flex min-h-6 items-center gap-1.5 whitespace-nowrap border px-2 t-plate !tracking-[0.04em] ${styles[kind]} ${cls}`}>
+  {label}
+</span>

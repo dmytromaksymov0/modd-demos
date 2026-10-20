@@ -1,0 +1,20 @@
+/* Self-hosted subsets built by design/phase-2/subset_fonts.py from the full OFL fonts in design/fonts-src/.
+   core = Ukrainian Cyrillic + ASCII + ₴ № and typographic punctuation; latin = rare Latin-1 symbols, loaded on demand.
+   Display: Science Gothic (wght 600–900, wdth 50–150). Text and every figure: Onest (wght 400–700). */
+@font-face{font-family:"TORK Display";src:url(/fonts/tork-display-core.woff2) format("woff2");font-weight:600 900;font-stretch:50% 150%;font-display:swap;unicode-range:U+0020-007E,U+00A0,U+00AB,U+00B0,U+00B7,U+00BB,U+00D7,U+2013-2014,U+2018-201E,U+2026,U+2116,U+20B4,U+2192,U+2212,U+2248,U+0401,U+0404,U+0406-0407,U+0410-044F,U+0451,U+0454,U+0456-0457,U+0490-0491}
+@font-face{font-family:"TORK Display";src:url(/fonts/tork-display-latin.woff2) format("woff2");font-weight:600 900;font-stretch:50% 150%;font-display:swap;unicode-range:U+00A1-00AA,U+00AC-00AF,U+00B1-00B6,U+00B8-00BA,U+00BC-00BF,U+02BC,U+2010-2012,U+2022,U+2039-203A}
+@font-face{font-family:"TORK Text";src:url(/fonts/tork-text-core.woff2) format("woff2");font-weight:400 700;font-display:swap;unicode-range:U+0020-007E,U+00A0,U+00AB,U+00B0,U+00B7,U+00BB,U+00D7,U+2013-2014,U+2018-201E,U+2026,U+2116,U+20B4,U+2192,U+2212,U+2248,U+0401,U+0404,U+0406-0407,U+0410-044F,U+0451,U+0454,U+0456-0457,U+0490-0491}
+@font-face{font-family:"TORK Text";src:url(/fonts/tork-text-latin.woff2) format("woff2");font-weight:400 700;font-display:swap;unicode-range:U+00A1-00AA,U+00AC-00AF,U+00B1-00B6,U+00B8-00BA,U+00BC-00BF,U+02BC,U+2010-2012,U+2022,U+2039-203A}
+/* Hero face: only the home H1 glyphs, static wght 850 / wdth 50 (design/phase-2/subset_fonts.py).    preloaded on the home page so the LCP headline does not wait for the 45 KB display file. Used via .t-hero, falls back to TORK Display for anything else. */
+@font-face{font-family:"TORK Hero";src:url(/fonts/tork-hero.woff2) format("woff2");font-weight:850;font-display:swap;unicode-range:U+0020,U+00A0,U+0420,U+0431,U+0432,U+0435,U+0437,U+0438,U+043A,U+043C,U+043D,U+043E,U+043F,U+0440,U+0441,U+0442,U+0443,U+0447,U+044E,U+0456}
+/* Metric-matched fallbacks: while the web fonts load, text is set in Arial (Liberation Sans on Linux, Roboto on Android)
+   scaled to the same width, so headlines keep their line count when the swap happens (no layout shift).
+   system-ui is not a safe fallback here: SF honours wdth 56 and comes out ~35% narrower. Science Gothic runs from wdth 50 to 150,
+   so there is one fallback per width band (tokens --font-display / -80 / -100 / -150). Ratios measured in Chrome on real
+   headings, buttons and plates; scripts/font-swap-check.cjs measures CLS with the fonts held back. */
+@font-face{font-family:"TORK Display Fallback";src:local("Arial Bold"),local("Arial-BoldMT"),local("Liberation Sans Bold"),local("LiberationSans-Bold"),local("Roboto Bold"),local("Roboto-Bold");font-weight:600 900;size-adjust:103.5%}
+@font-face{font-family:"TORK Display Fallback 80";src:local("Arial Bold"),local("Arial-BoldMT"),local("Liberation Sans Bold"),local("LiberationSans-Bold"),local("Roboto Bold"),local("Roboto-Bold");font-weight:600 900;size-adjust:110%}
+@font-face{font-family:"TORK Display Fallback 100";src:local("Arial Bold"),local("Arial-BoldMT"),local("Liberation Sans Bold"),local("LiberationSans-Bold"),local("Roboto Bold"),local("Roboto-Bold");font-weight:600 900;size-adjust:126%}
+@font-face{font-family:"TORK Display Fallback 150";src:local("Arial Bold"),local("Arial-BoldMT"),local("Liberation Sans Bold"),local("LiberationSans-Bold"),local("Roboto Bold"),local("Roboto-Bold");font-weight:600 900;size-adjust:162%}
+@font-face{font-family:"TORK Text Fallback";src:local("Arial"),local("ArialMT"),local("Liberation Sans"),local("LiberationSans"),local("Roboto"),local("Roboto-Regular");font-weight:400 500;size-adjust:103.9%}
+@font-face{font-family:"TORK Text Fallback";src:local("Arial Bold"),local("Arial-BoldMT"),local("Liberation Sans Bold"),local("LiberationSans-Bold"),local("Roboto Bold"),local("Roboto-Bold");font-weight:600 700;size-adjust:99.5%}

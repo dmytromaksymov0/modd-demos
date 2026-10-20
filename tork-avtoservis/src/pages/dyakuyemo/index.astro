@@ -1,0 +1,52 @@
+---
+// Thanks page after a booking request. noindex, not in the sitemap. ?kanal=telegram|viber|call tailors the first step.
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Icon from '../../components/ui/Icon.astro';
+import Button from '../../components/ui/Button.astro';
+import OpenStatus from '../../components/layout/OpenStatus.astro';
+import Photo from '../../components/ui/Photo.astro';
+import Plate from '../../components/ui/Plate.astro';
+import { site } from '../../config/site.ts';
+import andrii from '../../assets/photos/andrii-portrait.jpg';
+const steps = [
+  { t: 'Відповімо протягом 15 хвилин', d: 'У робочий час. Якщо зараз зачинено — першими зранку.', id: 'reply' },
+  { t: 'Узгодимо час', d: 'Запропонуємо найближчі вільні вікна на підйомнику.' },
+  { t: 'Діагностика й кошторис у Telegram', d: 'Що терміново, що можна відкласти, що не потрібно — з фото й цінами.' },
+  { t: 'Ремонт лише погодженого', d: `Старі деталі — вам. Гарантія ${site.warranty.months} міс / 10 000 км.` },
+];
+---
+<BaseLayout title="Заявку прийнято — ТОРК Автосервіс" description="Дякуємо! Ми отримали вашу заявку й відповімо протягом 15 хвилин у робочий час." noindex mobileBar={false} bookHref="/kontakty/#zapys">
+  <div class="wrap py-section">
+    <div class="facade grid-cols-1 lg:grid-cols-12" data-hero>
+      <div class="window grid content-start gap-5 p-5 sm:p-8 lg:col-span-8">
+        <p class="t-plate text-glass-deep">Заявку прийнято</p>
+        <h1 class="t-h1">Дякуємо! Майстер уже бачить вашу заявку</h1>
+        <p class="t-lead measure" data-channel-line>Ми зв’яжемося з вами <span data-channel>у зручний спосіб</span>.</p>
+        <OpenStatus class="text-[0.9375rem]" sub={false} />
+        <ol class="facade mt-2 grid-cols-1 sm:grid-cols-2">
+          {steps.map((s, i) => (
+            <li class={`window grid grid-cols-[2.5rem_1fr] gap-3 p-4 ${i === 0 ? 'bg-ochre!' : ''}`}>
+              <span class="font-display text-[2rem] leading-none font-[850] [font-variation-settings:'wdth'_60]" aria-hidden="true">{i + 1}</span>
+              <span><b class="block font-semibold">{s.t}</b><span class="t-small">{s.d}</span></span>
+            </li>
+          ))}
+        </ol>
+        <div class="flex flex-wrap gap-3 pt-2">
+          <Button href="/" variant="secondary">На головну</Button>
+          <Button href="/kalkulyator/" variant="secondary">Порахувати ціну<Icon name="arrow-right" class="size-4" /></Button>
+          <a href={site.phone.href} class="inline-flex min-h-13 items-center gap-2 font-semibold no-underline"><Icon name="phone" class="size-4" /><span class="num">{site.phone.display}</span></a>
+        </div>
+      </div>
+      <figure class="window relative min-h-72 lg:col-span-4 [&_img]:absolute [&_img]:inset-0">
+        <Photo src={andrii} alt="Андрій, діагност, усміхається біля авто на підйомнику" sizes="(min-width: 64rem) 30vw, 100vw" position="74% 30%" priority />
+        <figcaption class="absolute bottom-0 left-0"><Plate name="Андрій" role="діагностика<br>8 років" narrow /></figcaption>
+      </figure>
+    </div>
+  </div>
+</BaseLayout>
+<script>
+  const k = new URLSearchParams(location.search).get('kanal');
+  const text = { telegram: 'у Telegram', viber: 'у Viber', call: 'дзвінком' }[k ?? ''];
+  const el = document.querySelector('[data-channel]');
+  if (text && el) el.textContent = text;
+</script>

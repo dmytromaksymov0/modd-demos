@@ -1,0 +1,193 @@
+<!doctype html>
+<html lang="uk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ТОРК Автосервіс — Напрям A · Світлий бокс</title>
+<style>
+  @font-face{font-family:"Unbounded";src:url(fonts/unbounded-cyrillic-wght-normal.woff2) format("woff2");font-weight:200 900;unicode-range:U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116}
+  @font-face{font-family:"Unbounded";src:url(fonts/unbounded-latin-wght-normal.woff2) format("woff2");font-weight:200 900;unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+2000-206F,U+20AC,U+20B4,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+  @font-face{font-family:"Onest";src:url(fonts/onest-cyrillic-wght-normal.woff2) format("woff2");font-weight:100 900;unicode-range:U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116}
+  @font-face{font-family:"Onest";src:url(fonts/onest-latin-wght-normal.woff2) format("woff2");font-weight:100 900;unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+2000-206F,U+20AC,U+20B4,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+
+  :root{
+    --floor:#EDEFEC;   /* світла епоксидна підлога — фон */
+    --white:#FFFFFF;
+    --graphite:#17191C;/* текст, кнопки-контури */
+    --steel:#565E66;   /* вторинний текст */
+    --marking:#F4C21B; /* жовта розмітка підлоги: CTA-фон, лінії. Текст на ній — лише graphite */
+    --line:#D2D6D3;
+    --display:"Unbounded", system-ui, sans-serif;
+    --text:"Onest", system-ui, sans-serif;
+    --s1:4px;--s2:8px;--s3:12px;--s4:16px;--s5:24px;--s6:32px;--s7:48px;--s8:64px;
+    --r-s:6px;--r-m:12px;
+  }
+  *{box-sizing:border-box;margin:0}
+  html{-webkit-text-size-adjust:100%}
+  body{background:var(--floor);color:var(--graphite);font-family:var(--text);font-size:16px;line-height:1.5;-webkit-font-smoothing:antialiased;font-variant-numeric:tabular-nums}
+  a{color:inherit}
+  svg{flex:none}
+  :focus-visible{outline:3px solid var(--graphite);outline-offset:3px;box-shadow:0 0 0 6px var(--marking)}
+
+  .power{background:var(--white);border-bottom:1px solid var(--line);font-size:14px}
+  .power .wrap{display:flex;align-items:center;gap:var(--s3);padding:var(--s2) var(--s6);max-width:1440px;margin:0 auto}
+  .power b{font-weight:600}
+  .power a{margin-left:auto;color:var(--steel);text-underline-offset:3px}
+
+  header{display:flex;align-items:center;gap:var(--s6);padding:var(--s4) var(--s6);max-width:1440px;margin:0 auto}
+  .wordmark{display:flex;align-items:center;gap:10px;text-decoration:none}
+  .wordmark .mark{width:30px;height:30px;border-radius:7px;background:var(--marking);display:grid;place-items:center}
+  .wordmark b{font-family:var(--display);font-weight:700;font-size:22px;letter-spacing:.02em}
+  .wm-text{display:flex;flex-direction:column;line-height:1}
+  .wm-text small{font-size:12.5px;color:var(--steel);margin-top:3px}
+  nav ul{display:flex;gap:var(--s5);list-style:none;padding:0;font-size:15.5px;white-space:nowrap}
+  nav a{text-decoration:none}
+  nav a:hover{text-decoration:underline;text-underline-offset:4px}
+  .head-right{margin-left:auto;display:flex;align-items:center;gap:var(--s4)}
+  .status{display:flex;align-items:center;gap:var(--s2);font-size:14px;line-height:1.2;white-space:nowrap}
+  .status i{width:9px;height:9px;border-radius:50%;background:#1F8A4C;box-shadow:0 0 0 4px #D5EBDD}
+  .status small{display:block;color:var(--steel);font-size:12.5px}
+  .phone{font-weight:650;text-decoration:none;white-space:nowrap}
+
+  .btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;min-height:52px;padding:0 24px;border-radius:var(--r-s);background:var(--marking);color:var(--graphite);font-family:var(--text);font-weight:700;font-size:17px;text-decoration:none;border:2px solid var(--marking);white-space:nowrap}
+  .btn.line{background:var(--white);border-color:var(--graphite);font-weight:600}
+  .btn.sm{min-height:44px;padding:0 16px;font-size:15.5px}
+
+  .hero{display:grid;grid-template-columns:repeat(12,1fr);gap:var(--s6);max-width:1440px;margin:0 auto;padding:var(--s6) var(--s6) var(--s8)}
+  .copy{grid-column:1 / span 6;align-self:center;padding-right:var(--s4)}
+  .kicker{display:inline-flex;align-items:center;gap:var(--s2);font-size:14px;font-weight:600;color:var(--steel)}
+  .kicker:before{content:"";width:28px;height:4px;background:var(--marking)}
+  h1{font-family:var(--display);font-weight:650;font-size:clamp(34px,4.1vw,58px);line-height:1.06;letter-spacing:-.025em;margin:var(--s4) 0 var(--s5);text-wrap:balance}
+  .lead{font-size:19px;line-height:1.5;max-width:34ch;color:#2A2E33}
+  .cta{display:flex;flex-direction:column;align-items:flex-start;gap:var(--s4);margin:var(--s6) 0 var(--s5)}
+  .msgr{display:flex;align-items:center;flex-wrap:wrap;gap:var(--s2) var(--s3);font-size:15px;color:var(--steel)}
+  .facts{display:flex;flex-wrap:wrap;gap:var(--s2) var(--s5);font-size:14.5px;color:var(--steel);list-style:none;padding:0}
+  .facts li{display:flex;align-items:center;gap:6px}
+  .facts b{color:var(--graphite);font-weight:600}
+
+  /* фото боксу в рамці жовтої розмітки — фірмовий елемент */
+  .bay{grid-column:7 / span 6;position:relative;align-self:stretch;min-height:560px}
+  .bay figure{position:absolute;inset:0 0 0 22px;border-radius:var(--r-m);overflow:hidden;background:#cfd3d0}
+  .bay picture{display:block;height:100%}
+  .bay img{width:100%;height:100%;object-fit:cover;object-position:40% 60%;display:block}
+  .bay .lane{position:absolute;left:0;top:28px;bottom:28px;width:6px;background:var(--marking);border-radius:3px}
+  .bay .tag{position:absolute;left:44px;top:20px;background:var(--marking);color:var(--graphite);font-family:var(--display);font-weight:700;font-size:15px;padding:6px 12px;border-radius:4px;letter-spacing:.04em}
+
+  /* тизер «Ремонт у чаті» */
+  .chat{position:absolute;right:20px;bottom:20px;width:min(360px,calc(100% - 64px));background:var(--white);border-radius:var(--r-m);box-shadow:0 18px 40px -18px rgba(23,25,28,.45);padding:var(--s4);font-size:14.5px}
+  .chat header{padding:0 0 var(--s3);gap:var(--s3);border-bottom:1px solid var(--line);margin-bottom:var(--s3)}
+  .chat header .ava{width:34px;height:34px;border-radius:50%;background:var(--graphite);color:var(--marking);display:grid;place-items:center;font-family:var(--display);font-size:13px;font-weight:700}
+  .chat header small{display:block;color:var(--steel);font-size:12.5px}
+  .msg{position:relative;padding-left:var(--s5);margin-bottom:var(--s3)}
+  .msg:before{content:"";position:absolute;left:5px;top:6px;bottom:-14px;width:2px;background:var(--marking)}
+  .msg:last-of-type:before{display:none}
+  .msg:after{content:"";position:absolute;left:1px;top:4px;width:10px;height:10px;border-radius:50%;background:var(--marking)}
+  .msg time{color:var(--steel);font-size:12.5px;margin-right:6px}
+  .msg.done:after{background:var(--graphite)}
+  .est{display:grid;grid-template-columns:1fr auto;gap:2px var(--s3);margin-top:6px;padding:var(--s2) var(--s3);background:var(--floor);border-radius:var(--r-s);font-size:13.5px}
+  .est span:nth-child(even){text-align:right;font-weight:600}
+  .chip{display:inline-block;font-style:normal;font-size:11.5px;font-weight:700;padding:1px 7px;border-radius:999px;margin-left:4px;vertical-align:1px}
+  .chip.now{background:var(--graphite);color:var(--white)}
+  .chip.later{background:var(--white);border:1px solid var(--steel);color:var(--steel)}
+  .chat .approve{display:flex;gap:var(--s2);margin-top:var(--s2)}
+  .chat .approve a{flex:1;text-align:center;min-height:40px;display:grid;place-items:center;border-radius:var(--r-s);font-weight:650;text-decoration:none;font-size:14px}
+  .chat .approve .yes{background:var(--marking)}
+  .chat .approve .talk{border:1.5px solid var(--graphite)}
+
+  .mbar{display:none}
+
+  @media (max-width:1380px){ .head-right .tg{display:none} nav ul{gap:var(--s4)} }
+  @media (max-width:1100px){ nav{display:none} }
+  @media (max-width:900px){
+    .power .wrap{padding:var(--s2) var(--s4);font-size:13px}
+    .power a{display:none}
+    header{padding:var(--s3) var(--s4)}
+    .head-right .status,.head-right .phone,.head-right .tg{display:none}
+    .hero{display:flex;flex-direction:column;gap:var(--s5);padding:var(--s4) var(--s4) 110px}
+    .copy{padding:0}
+    h1{font-size:32px;line-height:1.1}
+    .lead{font-size:17px}
+    .cta{margin:var(--s5) 0 var(--s4)}
+    .cta{align-items:stretch}
+    .msgr{display:grid;grid-template-columns:1fr 1fr}
+    .msgr span{grid-column:1/-1}
+    .bay{min-height:0}
+    .bay figure{position:relative;inset:auto;margin-left:18px;aspect-ratio:4/5}
+    .bay .lane{top:16px;bottom:auto;height:calc(100% - 32px)}
+    .chat{position:relative;right:auto;bottom:auto;width:auto;margin:-72px 10px 0 30px}
+    .mbar{display:grid;grid-template-columns:1.6fr 1fr 1fr 56px;gap:6px;position:fixed;left:0;right:0;bottom:0;padding:8px 10px calc(8px + env(safe-area-inset-bottom));background:var(--white);border-top:1px solid var(--line);z-index:10}
+    .mbar a{min-height:48px;display:flex;align-items:center;justify-content:center;gap:6px;border-radius:var(--r-s);text-decoration:none;font-weight:650;font-size:14px;border:1.5px solid var(--graphite)}
+    .mbar a.main{background:var(--marking);border-color:var(--marking)}
+  }
+  @media (prefers-reduced-motion:no-preference){ .btn{transition:transform .15s ease} .btn:active{transform:translateY(1px)} }
+</style>
+</head>
+<body>
+<div class="power"><div class="wrap">
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13 2 3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+  <span><b>Працюємо під час відключень:</b> генератор + Starlink</span>
+  <a href="#svitlo">Що працює</a>
+</div></div>
+
+<header>
+  <a class="wordmark" href="#" aria-label="ТОРК Автосервіс, на головну">
+    <span class="mark" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#17191C" stroke-width="2.4" stroke-linecap="round"><path d="M4 6h16M12 6v13"/></svg></span>
+    <span class="wm-text"><b>ТОРК</b><small>автосервіс · Салтівка</small></span>
+  </a>
+  <nav aria-label="Головне меню"><ul>
+    <li><a href="#">Послуги</a></li><li><a href="#">Ціни</a></li><li><a href="#">Калькулятор</a></li><li><a href="#">Як ми працюємо</a></li><li><a href="#">Контакти</a></li>
+  </ul></nav>
+  <div class="head-right">
+    <div class="status"><i aria-hidden="true"></i><span>Відчинено до 19:00<small>Сб 9:00–16:00</small></span></div>
+    <a class="phone" href="tel:+380570001414">+380 57&nbsp;000-14-14</a>
+    <a class="btn sm line tg" href="#zapys?kanal=telegram">Telegram</a>
+    <a class="btn sm" href="#zapys">Записатися</a>
+  </div>
+</header>
+
+<main class="hero">
+  <div class="copy">
+    <span class="kicker">З 2014 на Салтівці · 7&nbsp;хв від м. Студентська</span>
+    <h1>Ремонт, у&nbsp;якому видно кожну деталь і&nbsp;кожну гривню</h1>
+    <p class="lead">Діагностика → кошторис у Telegram → ремонт з фотозвітом. Без вашого «так» нічого не&nbsp;робимо.</p>
+    <div class="cta">
+      <a class="btn" href="#zapys"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>Записатися на діагностику</a>
+      <div class="msgr"><span>або напишіть:</span>
+        <a class="btn sm line" href="#zapys?kanal=telegram"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m22 2-7 20-4-9-9-4z"/><path d="M22 2 11 13"/></svg>Telegram</a>
+        <a class="btn sm line" href="#zapys?kanal=viber"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22z"/></svg>Viber</a>
+      </div>
+    </div>
+    <ul class="facts">
+      <li><b>12&nbsp;міс / 10&nbsp;000&nbsp;км</b> гарантії</li>
+      <li>Старі деталі віддаємо</li>
+      <li>Можна свої запчастини</li>
+    </ul>
+  </div>
+
+  <div class="bay">
+    <span class="lane" aria-hidden="true"></span>
+    <figure><picture><source media="(max-width:900px)" srcset="photos/a-bay-tall.jpg" width="900" height="1350"><img src="photos/a-bay-wide.jpg" alt="Світлий цех: позашляховик на двостійковому підйомнику, майстер оглядає задню підвіску" width="1400" height="1204"></picture></figure>
+    <span class="tag" aria-hidden="true">БОКС 2</span>
+
+    <section class="chat" aria-label="Приклад: ремонт у чаті з майстром">
+      <header><span class="ava" aria-hidden="true">ОМ</span><div><b>Олег, майстер</b><small>Octavia 1.4 TSI · 182&nbsp;400&nbsp;км</small></div></header>
+      <div class="msg done"><time>09:12</time>Авто прийняли, фото одометра надіслав.</div>
+      <div class="msg"><time>10:40</time>Кошторис після діагностики:
+        <div class="est">
+          <span>Колодки передні, 2,1&nbsp;мм <i class="chip now">терміново</i></span><span>780&nbsp;₴</span>
+          <span>Пильник ШРУСа <i class="chip later">до ~15 тис. км</i></span><span>950&nbsp;₴</span>
+        </div>
+        <div class="approve"><a class="yes" href="#">Погоджую</a><a class="talk" href="#">Обговорити</a></div>
+      </div>
+    </section>
+  </div>
+</main>
+
+<nav class="mbar" aria-label="Швидкі дії">
+  <a class="main" href="#zapys">Записатися</a>
+  <a href="#zapys?kanal=telegram">Telegram</a>
+  <a href="#zapys?kanal=viber">Viber</a>
+  <a href="tel:+380570001414" aria-label="Подзвонити"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2z"/></svg></a>
+</nav>
+</body>
+</html>

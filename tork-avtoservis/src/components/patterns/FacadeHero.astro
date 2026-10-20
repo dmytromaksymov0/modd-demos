@@ -1,0 +1,79 @@
+---
+// Direction F hero: the Derzhprom facade with five windows and a clear order —
+// main window (headline + booking) → two masters → master's chat → real Derzhprom photo.
+// Rules: steel frames, name plates, unequal proportions (not a bento grid of equal cards).
+import Photo from '../ui/Photo.astro';
+import Plate from '../ui/Plate.astro';
+import Button from '../ui/Button.astro';
+import Icon from '../ui/Icon.astro';
+import MasterChat from './MasterChat.astro';
+import { site } from '../../config/site';
+import oleg from '../../assets/photos/oleg-portrait.jpg';
+import andrii from '../../assets/photos/andrii-portrait.jpg';
+import derzh from '../../assets/photos/derzhprom-bridges.jpg';
+---
+<div class="hero-facade facade" data-hero>
+  <div class="window w-main">
+    <div class="m-head">
+      <p class="t-plate text-glass-deep"><span class="max-sm:hidden">Автосервіс · </span>Салтівка · з&nbsp;{site.since}</p>
+      <h1 class="t-display t-hero mt-4">Ремонт без <span class="mark">сюрпризів</span> у&nbsp;чеку</h1>
+      <p class="t-lead mt-5 max-w-[40ch]">Майстер сам пише вам у Telegram: що знайшов, що терміново, що можна відкласти. <span class="max-sm:hidden">Без вашого «так» не&nbsp;ремонтуємо.</span></p>
+    </div>
+    <div class="m-act">
+      <div class="grid gap-3">
+        <Button href="#zapys" size="lg" data-hero-cta class="max-sm:min-h-13 max-sm:px-2.5 max-sm:text-[1rem] max-sm:[font-variation-settings:'wdth'_84] sm:justify-self-start"><Icon name="calendar" class="size-5 max-sm:hidden" />Записатися на діагностику</Button>
+        <div class="flex flex-wrap items-center gap-2.5">
+          <span class="t-small text-glass-deep max-sm:sr-only">або напишіть:</span>
+          <Button href={site.channels.telegram.href} variant="secondary" size="sm" class="flex-1 sm:flex-none"><Icon name="send" class="size-4" />Telegram</Button>
+          <Button href={site.channels.viber.href} variant="secondary" size="sm" class="flex-1 sm:flex-none"><Icon name="message" class="size-4" />Viber</Button>
+        </div>
+      </div>
+      <ul class="mt-6 grid gap-x-6 gap-y-1 border-t border-line pt-4 t-small text-glass-deep sm:mt-auto sm:grid-cols-3">
+        <li><b class="font-semibold text-steel num">{site.warranty.months} міс / 10 000 км</b> гарантія</li>
+        <li><b class="font-semibold text-steel">{site.address.walk}</b> від&nbsp;{site.address.metro}</li>
+        <li><b class="font-semibold text-steel">Старі деталі</b> — вам</li>
+      </ul>
+    </div>
+  </div>
+
+  <figure class="window w-oleg">
+    <Photo src={oleg} alt="Олег, майстер з ходової, у синьому робочому комбінезоні в цеху" sizes="(min-width: 64rem) 17vw, 50vw" position="50% 14%" />
+    <figcaption class="absolute bottom-0 left-0"><Plate name="Олег" role="ходова<br>11 років" narrow hideRoleMobile /></figcaption>
+  </figure>
+
+  <figure class="window w-andrii">
+    <Photo src={andrii} alt="Андрій, діагност, усміхається, міряє гальмівний диск штангенциркулем" sizes="(min-width: 64rem) 17vw, 50vw" position="74% 30%" />
+    <figcaption class="absolute bottom-0 left-0"><Plate name="Андрій" role="діагностика<br>8 років" narrow hideRoleMobile /></figcaption>
+  </figure>
+
+  <div class="window w-chat"><MasterChat href="/#chat" /></div>
+
+  <figure class="window w-derzh">
+    <Photo src={derzh} alt="Держпром у Харкові: переходи між корпусами, вигляд знизу" sizes="(min-width: 64rem) 17vw, 34vw" position="40% 40%" />
+    <figcaption class="absolute bottom-0 left-0"><Plate tone="steel" role="Держпром" narrow class="!px-2 !py-1.5 max-[22.5rem]:!px-1" /></figcaption>
+  </figure>
+</div>
+<style>
+  .hero-facade { grid-template-columns: repeat(12, minmax(0, 1fr)); grid-template-rows: minmax(0, 1fr) minmax(0, 1fr) auto; min-height: min(46rem, calc(100svh - 10rem)); }
+  .w-main { grid-column: 1 / span 6; grid-row: 1 / span 3; display: flex; flex-direction: column; padding: 2rem; }
+  .m-act { display: flex; flex-direction: column; flex: 1; margin-top: 2rem; }
+  .w-oleg { grid-column: 7 / span 2; grid-row: 1 / span 2; }
+  .w-andrii { grid-column: 9 / span 2; grid-row: 1 / span 2; }
+  .w-chat { grid-column: 7 / span 4; grid-row: 3; }
+  .w-derzh { grid-column: 11 / span 2; grid-row: 1 / span 3; }
+  @media (max-width: 63.99rem) {
+    .hero-facade { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) minmax(0, 0.8fr); grid-template-rows: auto 13rem auto auto; min-height: 0; }
+    .w-main { display: contents; }
+    .m-head, .m-act { grid-column: 1 / -1; background: var(--color-paper); padding: 1.5rem 1.75rem; }
+    .m-head { grid-row: 1; }
+    .m-act { grid-row: 3; margin-top: 0; }
+    .w-oleg { grid-column: 1; grid-row: 2; }
+    .w-andrii { grid-column: 2; grid-row: 2; }
+    .w-derzh { grid-column: 3; grid-row: 2; }
+    .w-chat { grid-column: 1 / -1; grid-row: 4; }
+  }
+  @media (max-width: 39.99rem) {
+    .hero-facade { grid-template-rows: auto 10.5rem auto auto !important; }
+    .m-head, .m-act { padding: 1.25rem; }
+  }
+</style>

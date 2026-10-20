@@ -1,0 +1,12 @@
+---
+// ТОРК wordmark from Science Gothic outlines (design/phase-2/make_logo.py). Colours come from tokens via currentColor.
+import p from './logo-paths.json';
+interface Props { class?: string; tagline?: boolean; inverse?: boolean }
+const { class: cls = 'h-10 w-auto', tagline = true, inverse = false } = Astro.props;
+const h = tagline ? p.height : p.bar[1] + p.bar[3];
+---
+<svg class={`${cls} ${inverse ? 'text-paper' : 'text-steel'}`} viewBox={`0 0 ${p.width} ${h}`} role="img" aria-label="ТОРК Автосервіс">
+  <path fill="currentColor" transform={p.wordTransform} d={p.word} />
+  <rect x={p.bar[0]} y={p.bar[1]} width={p.bar[2]} height={p.bar[3]} class="fill-ochre" />
+  {tagline && <path fill="currentColor" transform={p.tagTransform} d={p.tag} />}
+</svg>

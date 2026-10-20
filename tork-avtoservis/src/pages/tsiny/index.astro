@@ -1,0 +1,110 @@
+---
+// Prices by car class. Desktop: all four classes side by side. Mobile: pick a class on top, the table shows
+// only that column (pure CSS :has, works without JS).
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { breadcrumbs, faqSchema } from '../../lib/schema.ts';
+import { homeFaq } from '../../data/faq.ts';
+import SectionHead from '../../components/ui/SectionHead.astro';
+import Icon from '../../components/ui/Icon.astro';
+import Button from '../../components/ui/Button.astro';
+import Booking from '../../components/home/Booking.astro';
+import { carClasses } from '../../config/site.ts';
+import { works, combos, serviceLabels } from '../../data/works.ts';
+import { workPrice, fmtMoney, fmtTime, roundTo10 } from '../../lib/calc.ts';
+// Most-asked first: brakes, oil, suspension.
+const groups = (['halma', 'to', 'khodova', 'diagnostyka', 'kondytsioner'] as (keyof typeof serviceLabels)[]).map((k) => ({ k, label: serviceLabels[k], items: works.filter((w) => w.service === k) }));
+const slugOf: Record<string, string> = { diagnostyka: 'diagnostyka', khodova: 'khodova', to: 'to-ta-zamina-olyvy', halma: 'halma', kondytsioner: 'kondytsioner' };
+const check = [
+  { t: 'Робота', d: 'За нормою виробника × нормо-година вашого класу. Та сама сума, що в калькуляторі.' },
+  { t: 'Запчастини', d: 'Окремим рядком, з виробником і артикулом — щоб ви могли звірити ціну в магазині.' },
+  { t: 'Ваші запчастини', d: 'Позначені «запчастина клієнта»: гарантія на роботу, на деталь — від продавця.' },
+  { t: 'Гарантія', d: '12 міс / 10 000 км — до конкретної дати й пробігу, у акті й у Telegram.' },
+];
+---
+<BaseLayout og="tsiny" schema={[breadcrumbs(Astro.site, [{ name: 'Ціни', path: '/tsiny/' }])]} title="Ціни на ремонт за класами авто — ТОРК Автосервіс, Харків" description="Прайс ТОРК: діагностика, ходова, ТО, гальма, кондиціонер. Ціна роботи за класами A–D, нормо-година 800–1 300 ₴, запчастини окремо.">
+  <section class="prices" aria-labelledby="pr-title">
+    <div class="wrap pb-section pt-5 md:pt-6">
+      <div class="flex flex-wrap items-end justify-between gap-x-8 gap-y-3" data-hero>
+        <div>
+          <nav aria-label="Ви тут" class="t-plate text-glass-deep"><ol class="flex flex-wrap items-center gap-x-2"><li><a href="/" class="-my-2.5 inline-flex min-h-11 items-center underline-offset-4 hover:underline">Головна</a></li><li aria-hidden="true">/</li><li aria-current="page">Ціни</li></ol></nav>
+          <h1 id="pr-title" class="t-h1 mt-1 text-[clamp(1.875rem,1.4rem+2vw,3rem)]!">Ціна роботи за&nbsp;класами авто</h1>
+          <p class="mt-2 measure t-small text-glass-deep">Робота = нормо-година класу × норматив виробника. Запчастини окремо — наші або ваші. Час — орієнтовно, на підйомнику.</p>
+        </div>
+        <nav aria-label="Розділи прайсу" class="flex flex-wrap gap-1.5 max-md:hidden">
+          {groups.map((g) => <a href={`#g-${g.k}`} class="inline-flex min-h-11 items-center border-2 border-steel bg-paper px-3 text-[0.9375rem] font-semibold no-underline hover:bg-ochre">{g.label}</a>)}
+          <a href="/kalkulyator/#kalk" class="inline-flex min-h-11 items-center gap-2 border-2 border-steel bg-ochre px-3 text-[0.9375rem] font-semibold no-underline">Порахувати свій візит<Icon name="arrow-right" class="size-4" /></a>
+        </nav>
+      </div>
+      <fieldset class="mt-5 min-w-0 md:hidden">
+        <legend class="t-plate mb-2">Ваш клас авто</legend>
+        <div class="grid grid-cols-4 border-2 border-steel">
+          {carClasses.map((c, i) => (
+            <label class={`flex min-h-14 cursor-pointer flex-col items-center justify-center bg-white px-1 text-center has-[:checked]:bg-ochre has-[:focus-visible]:outline-3 has-[:focus-visible]:outline-steel ${i ? 'border-l-2 border-steel' : ''}`}>
+              <input class="sr-only" type="radio" name="tc" value={c.id} id={`tc-${c.id}`} checked={c.id === 'B'} />
+              <b class="font-display font-[850] [font-variation-settings:'wdth'_70]">{c.label}</b><span class="text-label leading-tight">{c.examples.split(',')[0]}</span><span class="text-label leading-tight tabular-nums">{c.rate} ₴/год</span>
+            </label>
+          ))}
+        </div>
+      </fieldset>
+      <div class="mt-5 border-[6px] border-steel bg-white md:mt-6">
+        <table class="w-full border-collapse text-left">
+          <caption class="sr-only">Ціна роботи за класами авто, гривень</caption>
+          <thead class="sticky top-0 z-10 bg-steel text-paper max-md:sr-only">
+            <tr>
+              <th scope="col" class="t-plate px-4 py-3 align-bottom font-[650]">Робота</th>
+              <th scope="col" class="t-plate hidden px-4 py-3 text-right align-bottom font-[650] sm:table-cell">Час</th>
+              {carClasses.map((c) => (
+                <th scope="col" data-c={c.id} class="px-4 py-3 text-right align-bottom font-normal">
+                  <b class="block font-display text-[1.25rem] leading-none font-[850] [font-variation-settings:'wdth'_70]">Клас {c.label}</b>
+                  <span class="mt-1 block text-label text-glass max-lg:hidden">{c.examples}</span>
+                  <span class="mt-1 block bg-ochre px-1.5 text-label font-semibold text-steel tabular-nums md:inline-block">{fmtMoney(c.rate)}/год</span>
+                </th>
+              ))}
+            </tr>
+          </thead>
+          {groups.map((g) => (
+            <tbody class="tabular-nums" id={`g-${g.k}`}>
+              <tr class="border-y-2 border-steel bg-paper">
+                <th scope="colgroup" colspan="6" class="px-4 py-1"><a href={`/poslugy/${slugOf[g.k]}/`} class="t-plate inline-flex min-h-11 items-center gap-2 underline-offset-4 hover:underline">{g.label}<Icon name="arrow-right" class="size-4" /></a></th>
+              </tr>
+              {g.items.map((w) => (
+                <tr class="border-b border-line last:border-b-0">
+                  <th scope="row" class="px-4 py-3 font-normal">{w.label}<span class="block text-label text-glass-deep sm:hidden">≈ {fmtTime(w.minutes)}</span>{w.note && <span class="block text-label text-glass-deep">{w.note}</span>}</th>
+                  <td class="hidden whitespace-nowrap px-4 py-3 text-right text-glass-deep sm:table-cell">{fmtTime(w.minutes)}</td>
+                  {carClasses.map((c) => <td data-c={c.id} class="whitespace-nowrap px-4 py-3 text-right font-semibold">{fmtMoney(workPrice(w, c.rate))}</td>)}
+                </tr>
+              ))}
+            </tbody>
+          ))}
+        </table>
+      </div>
+      <div class="mt-8 border-l-4 border-ochre pl-4">
+        <p class="font-semibold">Разом дешевше</p>
+        <ul class="mt-1 grid gap-1 t-small">{combos.map((c) => <li>{c.label}: −{fmtMoney(roundTo10(c.hours * carClasses[0].rate))}…{fmtMoney(roundTo10(c.hours * carClasses[3].rate))} за роботу, −{fmtTime(c.minutes)}</li>)}</ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="border-t-2 border-steel" aria-labelledby="chk-title">
+    <div class="wrap py-section">
+      <div class="flex flex-wrap items-end justify-between gap-6">
+        <SectionHead id="chk-title" kicker="Що буде в чеку" title="Чек, у якому нічого не&nbsp;сховано" lead="Що не входить у ціну роботи: запчастини, мастило, фреон, витратні матеріали — вони завжди окремими рядками." />
+        <Button href="/kalkulyator/#kalk" variant="secondary">До калькулятора<Icon name="arrow-right" class="size-4" /></Button>
+      </div>
+      <ul class="facade mt-10 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
+        {check.map((c, i) => <li class={`window p-5 ${i === 0 ? 'bg-ochre!' : ''}`}><b class="t-h3 block">{c.t}</b><p class="mt-1.5 t-small">{c.d}</p></li>)}
+      </ul>
+    </div>
+  </section>
+
+  <Booking faq={[]} />
+</BaseLayout>
+<style>
+  /* Mobile: show only the chosen class column. */
+  @media (max-width: 47.99rem) {
+    .prices:has(#tc-A:checked) [data-c]:not([data-c='A']),
+    .prices:has(#tc-B:checked) [data-c]:not([data-c='B']),
+    .prices:has(#tc-C:checked) [data-c]:not([data-c='C']),
+    .prices:has(#tc-D:checked) [data-c]:not([data-c='D']) { display: none; }
+  }
+</style>

@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="uk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ТОРК Автосервіс — Напрям F · Фасад майстрів</title>
+<style>
+  @font-face{font-family:"Science Gothic";src:url(fonts/science-gothic-cyrillic-full-normal.woff2) format("woff2");font-weight:100 900;font-stretch:50% 200%;unicode-range:U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116}
+  @font-face{font-family:"Science Gothic";src:url(fonts/science-gothic-latin-full-normal.woff2) format("woff2");font-weight:100 900;font-stretch:50% 200%;unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+2000-206F,U+20AC,U+20B4,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+  @font-face{font-family:"Finlandica";src:url(fonts/finlandica-cyrillic-wght-normal.woff2) format("woff2");font-weight:400 700;unicode-range:U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116}
+  @font-face{font-family:"Finlandica";src:url(fonts/finlandica-latin-wght-normal.woff2) format("woff2");font-weight:400 700;unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+2000-206F,U+20AC,U+20B4,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+
+  :root{
+    --concrete:#E2E1DC; /* бетон — фон сторінки */
+    --paper:#F4F4F1;    /* світлі «вікна» з текстом */
+    --steel:#20262A;    /* сталеві рами між вікнами, текст */
+    --glass:#A9BCB8;    /* скло: порожні вікна, плашка */
+    --glass-deep:#3F5A55;
+    --ochre:#E0A01A;    /* вохра: CTA, таблички з іменами */
+    --display:"Science Gothic", system-ui, sans-serif;
+    --text:"Finlandica", system-ui, sans-serif;
+    --frame:6px;        /* товщина рами */
+    --s1:4px;--s2:8px;--s3:12px;--s4:16px;--s5:24px;--s6:32px;--s7:48px;
+  }
+  *{box-sizing:border-box;margin:0}
+  html{-webkit-text-size-adjust:100%}
+  body{background:var(--concrete);color:var(--steel);font-family:var(--text);font-size:17px;line-height:1.45;-webkit-font-smoothing:antialiased;font-variant-numeric:tabular-nums}
+  a{color:inherit}
+  svg{flex:none}
+  :focus-visible{outline:3px solid var(--ochre);outline-offset:2px}
+  .wide{font-family:var(--display);font-variation-settings:"wdth" 150;font-weight:650;letter-spacing:.06em;text-transform:uppercase;font-size:12px}
+
+  .power{background:var(--glass)}
+  .power .wrap{display:flex;align-items:center;gap:var(--s3);max-width:1440px;margin:0 auto;padding:7px var(--s6);font-size:15px}
+  .power a{margin-left:auto}
+  header{display:flex;align-items:center;gap:var(--s6);max-width:1440px;margin:0 auto;padding:var(--s4) var(--s6)}
+  .wordmark{display:flex;align-items:center;gap:var(--s3);text-decoration:none}
+  .wordmark b{font-family:var(--display);font-variation-settings:"wdth" 170;font-weight:800;font-size:24px;letter-spacing:.08em}
+  nav ul{display:flex;gap:var(--s5);list-style:none;padding:0;font-size:16px;white-space:nowrap}
+  nav a{text-decoration:none}
+  .head-right{margin-left:auto;display:flex;align-items:center;gap:var(--s5);white-space:nowrap}
+  .status{font-size:15px;line-height:1.2}
+  .status small{display:block;color:var(--glass-deep);font-size:13px}
+  .btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;min-height:50px;padding:0 20px;background:var(--ochre);color:var(--steel);font-family:var(--display);font-variation-settings:"wdth" 100;font-weight:750;font-size:15.5px;text-decoration:none;border:2px solid var(--steel);white-space:nowrap}
+  .btn.line{background:var(--paper)}
+  .btn.sm{min-height:44px;padding:0 14px;font-size:14.5px}
+
+  /* фасад: сталева рама + вікна-модулі, як сітка вікон Держпрому */
+  .hero{max-width:1440px;margin:0 auto;padding:0 var(--s6) var(--s7)}
+  .facade{display:grid;grid-template-columns:repeat(8,1fr);grid-template-rows:repeat(4,minmax(118px,1fr));gap:var(--frame);background:var(--steel);border:var(--frame) solid var(--steel);height:min(620px,calc(100vh - 150px));min-height:520px}
+  .cell{position:relative;overflow:hidden;background:var(--paper);min-width:0}
+  .cell img{width:100%;height:100%;object-fit:cover;display:block}
+  .glass{background:linear-gradient(160deg,#BCCDC9,var(--glass) 60%,#93A9A4)}
+  .c-h1{grid-column:1 / span 5;grid-row:1 / span 2;padding:var(--s5) var(--s5) var(--s4);display:flex;flex-direction:column;justify-content:space-between}
+  h1{font-family:var(--display);font-variation-settings:"wdth" 52;font-weight:850;font-size:clamp(40px,4.8vw,74px);line-height:.92;margin-bottom:var(--s3)}
+  h1 .o{background:linear-gradient(transparent 60%,var(--ochre) 60%,var(--ochre) 92%,transparent 92%)}
+  .c-h1 p{font-size:17px;max-width:46ch;color:#2C3337}
+  .c-oleg{grid-column:6;grid-row:1 / span 3}
+  .c-andrii{grid-column:7 / span 2;grid-row:1 / span 4}
+  .c-viktor{grid-column:4 / span 2;grid-row:3 / span 2}
+  .c-cta{grid-column:1 / span 3;grid-row:3;padding:var(--s4);display:grid;gap:var(--s2);align-content:center}
+  .c-cta .msgr{display:grid;grid-template-columns:1fr 1fr;gap:var(--s2)}
+  .c-chat{grid-column:1 / span 3;grid-row:4;background:var(--steel);color:var(--paper);padding:var(--s3) var(--s4);display:grid;grid-template-columns:72px 1fr;gap:var(--s3);align-items:center}
+  .c-chat img{width:72px;height:72px;object-fit:cover}
+  .c-chat p{font-size:14.5px;line-height:1.35}
+  .c-chat time{display:block;color:var(--glass);font-size:12.5px}
+  .c-chat .yes{display:inline-block;margin-top:6px;background:var(--ochre);color:var(--steel);font-family:var(--display);font-weight:750;font-size:13px;padding:5px 10px;text-decoration:none}
+  .c-report{grid-column:6;grid-row:4}
+  .plate{position:absolute;left:0;bottom:0;background:var(--ochre);color:var(--steel);padding:6px 10px 5px;line-height:1.25;max-width:100%;white-space:nowrap;font-size:10.5px}
+  .plate b{display:block;font-family:var(--display);font-variation-settings:"wdth" 60;font-weight:850;font-size:24px;letter-spacing:0;text-transform:none}
+  .plate.dark{background:var(--steel);color:var(--paper)}
+  .quote{position:absolute;right:0;top:0;max-width:72%;background:var(--paper);padding:var(--s3) var(--s4);font-size:15px;line-height:1.35}
+
+  .mbar{display:none}
+  @media (max-width:1320px){ nav ul{gap:var(--s4)} }
+  @media (max-width:1120px){ nav{display:none} }
+  @media (max-width:900px){
+    :root{--frame:5px}
+    .power .wrap{padding:7px var(--s4);font-size:13.5px}
+    .power a{display:none}
+    header{padding:var(--s3) var(--s4)}
+    .head-right .status,.wordmark .wide{display:none}
+    .hero{padding:0 var(--s4) 110px}
+    .facade{grid-template-columns:1fr 1fr;grid-template-rows:auto 240px auto auto 200px;height:auto;min-height:0}
+    .c-h1{grid-column:1 / -1;grid-row:1;padding:var(--s4)}
+    h1{font-size:40px}
+    .c-h1 p{margin-top:var(--s3);font-size:16px}
+    .c-oleg{grid-column:1;grid-row:2}
+    .c-andrii{grid-column:2;grid-row:2}
+    .c-cta{grid-column:1 / -1;grid-row:3}
+    .c-chat{grid-column:1 / -1;grid-row:4}
+    .c-viktor{grid-column:1;grid-row:5}
+    .c-report{grid-column:2;grid-row:5}
+    .c-glass{display:none}
+    .quote{display:none}
+    .plate b{font-size:20px}
+    .mbar{display:grid;grid-template-columns:1.6fr 1fr 1fr 56px;gap:6px;position:fixed;left:0;right:0;bottom:0;padding:8px 10px calc(8px + env(safe-area-inset-bottom));background:var(--paper);border-top:2px solid var(--steel);z-index:10}
+    .mbar a{min-height:48px;display:flex;align-items:center;justify-content:center;text-decoration:none;font-family:var(--display);font-variation-settings:"wdth" 92;font-weight:700;font-size:13px;border:2px solid var(--steel)}
+    .mbar a.main{background:var(--ochre)}
+  }
+</style>
+</head>
+<body>
+<div class="power"><div class="wrap">
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13 2 3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+  <span><b>Працюємо під час відключень:</b> генератор + Starlink</span>
+  <a href="#svitlo">Що працює</a>
+</div></div>
+
+<header>
+  <a class="wordmark" href="#" aria-label="ТОРК Автосервіс, на головну"><b>ТОРК</b><span class="wide">Автосервіс · Салтівка</span></a>
+  <nav aria-label="Головне меню"><ul>
+    <li><a href="#">Майстри</a></li><li><a href="#">Послуги</a></li><li><a href="#">Ціни</a></li><li><a href="#">Калькулятор</a></li><li><a href="#">Контакти</a></li>
+  </ul></nav>
+  <div class="head-right">
+    <div class="status"><b>Відчинено до 19:00</b><small>Сб 9:00–16:00 · Нд вихідний</small></div>
+    <a class="btn sm" href="#zapys">Записатися</a>
+  </div>
+</header>
+
+<main class="hero">
+  <div class="facade">
+    <div class="cell c-h1">
+      <h1>Троє майстрів.<br>Жодних <span class="o">сюрпризів</span> у&nbsp;чеку.</h1>
+      <p>Автосервіс на Салтівці з 2014, 7 хв від м. Студентська. Майстер сам пише вам у Telegram: що знайшов, що терміново, що можна відкласти.</p>
+    </div>
+
+    <figure class="cell c-oleg">
+      <img src="photos/e-oleg.jpg" alt="Олег, майстер з ходової, у синьому комбінезоні" width="900" height="1350" style="object-position:50% 20%">
+      <figcaption class="plate wide"><b>Олег</b>ходова<br>11 років</figcaption>
+    </figure>
+
+    <figure class="cell c-andrii">
+      <img src="photos/e-andrii.jpg" alt="Андрій, діагност, усміхається біля авто на підйомнику" width="800" height="1045" style="object-position:45% 20%">
+      <figcaption class="plate wide"><b>Андрій</b>діагностика<br>8 років</figcaption>
+      <p class="quote">«Спершу причина, потім ціна. Фото скидаю одразу в чат.»</p>
+    </figure>
+
+    <figure class="cell c-viktor">
+      <img src="photos/e-viktor.jpg" alt="Віктор, старший майстер, біля верстака" width="900" height="1337" style="object-position:50% 15%">
+      <figcaption class="plate wide"><b>Віктор</b>старший майстер<br>з 2014</figcaption>
+    </figure>
+
+    <div class="cell c-cta">
+      <a class="btn" href="#zapys">Записатися до майстра</a>
+      <div class="msgr"><a class="btn sm line" href="#zapys?kanal=telegram">Telegram</a><a class="btn sm line" href="#zapys?kanal=viber">Viber</a></div>
+    </div>
+
+    <div class="cell c-chat" role="group" aria-label="Приклад повідомлення майстра">
+      <img src="photos/b-measure.jpg" alt="Замір гальмівного диска мікрометром" width="1000" height="725">
+      <p><time>Андрій · Telegram · 10:40</time>Колодки передні — 2,1&nbsp;мм. Міняємо сьогодні за 780&nbsp;₴?<br><a class="yes" href="#">Так, міняємо</a></p>
+    </div>
+
+    <figure class="cell c-report">
+      <img src="photos/a-bay-tall.jpg" alt="Авто на підйомнику в боксі 04" width="900" height="1350" style="object-position:50% 40%">
+      <figcaption class="plate dark wide">Бокс 04</figcaption>
+    </figure>
+  </div>
+</main>
+
+<nav class="mbar" aria-label="Швидкі дії">
+  <a class="main" href="#zapys">Записатися</a>
+  <a href="#zapys?kanal=telegram">Telegram</a>
+  <a href="#zapys?kanal=viber">Viber</a>
+  <a href="tel:+380570001414" aria-label="Подзвонити"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2z"/></svg></a>
+</nav>
+</body>
+</html>

@@ -1,0 +1,16 @@
+---
+// Car class picker for prices and the calculator. Buttons with aria-pressed; class heights grow A → D
+// like towers of different heights.
+import { carClasses } from '../../config/site';
+interface Props { selected?: string; name?: string }
+const { selected = 'B' } = Astro.props;
+const heights = ['min-h-16', 'min-h-18', 'min-h-20', 'min-h-22'];
+---
+<div class="grid grid-cols-2 items-end gap-1.5 sm:grid-cols-4" role="group" aria-label="Клас авто">
+  {carClasses.map((c, i) => (
+    <button type="button" class={`cls flex flex-col items-start justify-end border-2 border-steel bg-paper px-3 pb-2 pt-3 text-left ${heights[i]} aria-pressed:bg-ochre`} aria-pressed={c.id === selected ? 'true' : 'false'} data-class={c.id}>
+      <b class="font-display text-[1.375rem] leading-none font-[850] [font-variation-settings:'wdth'_60]">Клас {c.label}</b>
+      <span class="mt-1 text-label leading-snug">{c.examples}</span>
+    </button>
+  ))}
+</div>

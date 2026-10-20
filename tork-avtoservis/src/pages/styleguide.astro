@@ -1,0 +1,195 @@
+---
+// Design system page (noindex, not in sitemap). Everything here is the real component, not a mock.
+import BaseLayout from '../layouts/BaseLayout.astro';
+import FacadeHero from '../components/patterns/FacadeHero.astro';
+import MasterChat from '../components/patterns/MasterChat.astro';
+import ClassPicker from '../components/patterns/ClassPicker.astro';
+import SampleReview from '../components/patterns/SampleReview.astro';
+import Button from '../components/ui/Button.astro';
+import Field from '../components/ui/Field.astro';
+import ChannelPicker from '../components/ui/ChannelPicker.astro';
+import Chip from '../components/ui/Chip.astro';
+import Plate from '../components/ui/Plate.astro';
+import Photo from '../components/ui/Photo.astro';
+import Icon from '../components/ui/Icon.astro';
+import Logo from '../components/brand/Logo.astro';
+import { carClasses } from '../config/site';
+import bay from '../assets/photos/bay-04.jpg';
+import hub from '../assets/photos/report-hub-boot.jpg';
+import drum from '../assets/photos/report-old-drum.jpg';
+import square from '../assets/photos/derzhprom-square.jpg';
+
+const colors = [
+  { t: 'concrete', hex: '#E2E1DC', role: 'Фон сторінки — бетон Держпрому', on: 'steel 11.7:1' },
+  { t: 'paper', hex: '#F4F4F1', role: 'Світлі вікна, картки', on: 'steel 13.9:1' },
+  { t: 'white', hex: '#FFFFFF', role: 'Поля вводу', on: 'steel 15.8:1' },
+  { t: 'steel', hex: '#20262A', role: 'Текст, рами, темні вікна', on: 'paper 13.9:1', dark: true },
+  { t: 'steel-2', hex: '#343C41', role: 'Hover на сталі', on: 'paper 10.2:1', dark: true },
+  { t: 'glass', hex: '#A9BCB8', role: 'Скло: плашка відключень, текст на сталі', on: 'steel 7.7:1' },
+  { t: 'glass-50', hex: '#DCE5E3', role: 'Тихі підкладки, чип «Не потрібно»', on: 'steel 11.9:1' },
+  { t: 'glass-deep', hex: '#3F5A55', role: 'Вторинний текст', on: 'на concrete 5.7:1', dark: true },
+  { t: 'ochre', hex: '#E0A01A', role: 'Вохра — єдиний акцент: CTA, таблички, маркер', on: 'steel 6.7:1' },
+  { t: 'line-strong', hex: '#7A817F', role: 'Рамки полів (WCAG 1.4.11)', on: '4.0:1 на white', dark: true },
+  { t: 'open', hex: '#1D6B45', role: 'Статус «Відчинено»', on: '5.9:1 на paper', dark: true },
+  { t: 'alert', hex: '#B42318', role: 'Помилки форм', on: '6.6:1 на white', dark: true },
+];
+const sec = 'border-t-2 border-steel';
+const h = 't-h2 mb-2';
+const note = 't-small max-w-[60ch] text-glass-deep mb-8';
+---
+<BaseLayout heroFont title="Стайлгайд — ТОРК Автосервіс" description="Дизайн-система демо-сайту ТОРК Автосервіс." noindex>
+  <div class="wrap pb-14 pt-6 md:pt-8">
+    <FacadeHero />
+    <p class="t-small mt-3 text-glass-deep">↑ Фасад першого екрана: 5 вікон — головне (заголовок + запис) → два майстри → чат майстра → Держпром. Рами сталеві, вікна різних пропорцій, імена на табличках.</p>
+  </div>
+
+  <section class={sec}><div class="wrap py-14 md:py-20">
+    <p class="t-plate text-glass-deep">Стайлгайд · фаза 2</p>
+    <h2 class="t-h1 mt-2 mb-3">Фасад майстрів</h2>
+    <p class="t-lead measure">Харківський модернізм як рама для людей: бетон, скло, сталь Держпрому і одна вохра. Шрифт заголовків — Science Gothic (вузький для заголовків, широкий для табличок), текст і всі цифри — Onest.</p>
+  </div></section>
+
+  <section class={sec}><div class="wrap py-14 md:py-20">
+    <h2 class={h}>Кольори</h2>
+    <p class={note}>Усі токени — у <code>src/styles/tokens.css</code>, вони ж утиліти Tailwind. Вохра ніколи не буває текстом на світлому — лише фоном під текстом steel.</p>
+    <ul class="grid grid-cols-[repeat(2,minmax(0,1fr))] gap-1.5 bg-steel p-1.5 sm:grid-cols-3 lg:grid-cols-6">
+      {colors.map((c) => (
+        <li class="flex flex-col bg-paper">
+          <span class="block h-20" style={`background:${c.hex}`} aria-hidden="true"></span>
+          <span class="grid gap-0.5 p-3">
+            <b class="font-display text-[1.125rem] font-[800] [font-variation-settings:'wdth'_80]">{c.t}</b>
+            <span class="text-label tabular-nums">{c.hex} · {c.on}</span>
+            <span class="text-label leading-snug text-glass-deep">{c.role}</span>
+          </span>
+        </li>
+      ))}
+    </ul>
+  </div></section>
+
+  <section class={sec}><div class="wrap py-14 md:py-20">
+    <h2 class={h}>Типографіка</h2>
+    <p class={note}>Science Gothic: вісь ширини 50 — заголовки, 150 — таблички. Onest — текст і всі цифри (табличні). Перевірка: «1» з прапорцем, «7» без перекреслення, гривня ₴, апостроф ’, літери і ї є ґ.</p>
+    <div class="grid gap-6">
+      <div><p class="t-plate text-glass-deep">display · 42→84</p><p class="t-display">Ремонт без сюрпризів</p></div>
+      <div><p class="t-plate text-glass-deep">h1 · 36→60</p><p class="t-h1">Ходова, гальма, ТО</p></div>
+      <div><p class="t-plate text-glass-deep">h2 · 30→46</p><p class="t-h2">Як складається ціна</p></div>
+      <div><p class="t-plate text-glass-deep">h3 · 21→26</p><p class="t-h3">Кошторис у Telegram до ремонту</p></div>
+      <div><p class="t-plate text-glass-deep">lead · 18→20</p><p class="t-lead measure">Знайшли ще щось під час ремонту — окреме повідомлення і ваше «так». Ґанок, їжак, Євген, пʼять, м’ясо.</p></div>
+      <div><p class="t-plate text-glass-deep">body · 17</p><p class="measure">Діагностика ходової — 450 ₴, безкоштовно, якщо ремонт у нас. Заміна масла з фільтром ≈ 40 хв. Гарантія 12 міс / 10 000 км на роботу і наші запчастини.</p></div>
+      <div><p class="t-plate text-glass-deep">plate · 13</p><p class="t-plate">Бокс 04 · ходова · майстер Олег</p></div>
+      <div class="grid gap-4 border-2 border-steel bg-paper p-5 sm:grid-cols-2">
+        <div><p class="t-plate text-glass-deep">Цифри · Onest tabular</p><p class="text-[1.5rem] font-semibold tabular-nums">1 117 ₴ · 17:00 · 7 хв · 2014 · 10 000 км</p><p class="text-[1.5rem] tabular-nums">0 57 000-14-14 · №2417 · 1/7/1/7</p></div>
+        <div><p class="t-plate text-glass-deep">Великі цифри · Science Gothic</p><p class="t-figure">1 330 ₴ · 17:00</p><p class="t-figure !text-[2rem]">2014 · 71 · 17</p></div>
+      </div>
+    </div>
+  </div></section>
+
+  <section class={sec}><div class="wrap py-14 md:py-20">
+    <h2 class={h}>Логотип</h2>
+    <p class={note}>Вордмарк «ТОРК» у широкому Science Gothic стоїть на вохровому «переході» — галереї між корпусами Держпрому. Файли: <code>public/brand/*.svg</code>, генератор <code>design/phase-2/make_logo.py</code>.</p>
+    <div class="facade grid-cols-1 md:grid-cols-[2fr_2fr_1fr]">
+      <div class="window grid min-h-48 place-items-center p-8"><Logo class="h-20 w-auto max-w-full" /></div>
+      <div class="window grid min-h-48 place-items-center bg-steel! p-8"><Logo class="h-20 w-auto max-w-full" inverse /></div>
+      <div class="window grid min-h-48 place-items-center gap-3 p-6"><img src="/brand/tork-mark.svg" alt="Знак ТОРК" width="72" height="72" /><img src="/favicon.svg" alt="Favicon 32 px" width="32" height="32" /></div>
+    </div>
+  </div></section>
+
+  <section class={sec}><div class="wrap py-14 md:py-20">
+    <h2 class={h}>Кнопки</h2>
+    <p class={note}>Квадратні, в рамці — як вивіска на фасаді. Вохра — лише головна дія. Мінімум 44 px.</p>
+    <div class="flex flex-wrap items-center gap-3">
+      <Button href="#zapys" size="lg"><Icon name="calendar" />Записатися на діагностику</Button>
+      <Button href="#zapys">Записатися</Button>
+      <Button href="#" variant="secondary"><Icon name="send" class="size-4" />Telegram</Button>
+      <Button href="#" variant="secondary" size="sm"><Icon name="message" class="size-4" />Viber</Button>
+      <Button href="#" variant="link">Як складається ціна</Button>
+    </div>
+    <div class="on-dark mt-5 flex flex-wrap gap-3 bg-steel p-5"><Button href="#" variant="on-dark"><Icon name="phone" class="size-4" />Подзвонити</Button><Button href="#">Погоджую 780 ₴</Button></div>
+  </div></section>
+
+  <section class={sec} id="zapys" data-booking><div class="wrap py-14 md:py-20">
+    <h2 class={h}>Поля і форма запису</h2>
+    <p class={note}>Підпис завжди видно, помилка — одразу під полем. Обов’язковий лише телефон. Кнопки Telegram / Viber на сайті відкривають цю форму з вибраним каналом відповіді.</p>
+    <div class="grid gap-8 lg:grid-cols-2">
+      <form class="grid gap-4 border-2 border-steel bg-paper p-5 sm:p-6" onsubmit="return false">
+        <Field id="sg-phone" label="Телефон" type="tel" required autocomplete="tel" inputmode="tel" placeholder="+380" />
+        <Field id="sg-name" label="Ім’я" autocomplete="given-name" />
+        <Field id="sg-car" label="Авто" placeholder="Наприклад: Octavia 2016" hint="Модель і рік — щоб майстер підготувався." />
+        <ChannelPicker />
+        <Button type="submit" size="lg" full>Записатися</Button>
+      </form>
+      <div class="grid content-start gap-4 border-2 border-steel bg-paper p-5 sm:p-6">
+        <p class="t-plate text-glass-deep">Стан помилки</p>
+        <Field id="sg-phone-err" label="Телефон" type="tel" required value="+380 57 000" error="Номер закороткий — потрібно 12 цифр разом із +380." />
+        <Field id="sg-what" label="Що турбує?" multiline placeholder="Наприклад: стукає спереду на ямах" />
+        <ChannelPicker name="kanal2" selected="viber" />
+      </div>
+    </div>
+  </div></section>
+
+  <section class={sec}><div class="wrap py-14 md:py-20">
+    <h2 class={h}>Статуси кошторису</h2>
+    <p class={note}>Мова кошторису в Telegram. Колір не єдина ознака — завжди є текст.</p>
+    <div class="flex flex-wrap gap-3"><Chip kind="urgent" /><Chip kind="later" label="До ~15 000 км" /><Chip kind="none" /></div>
+    <div class="on-dark mt-4 flex flex-wrap gap-3 bg-steel p-4"><Chip kind="urgent" onDark /><Chip kind="later" label="До ~15 000 км" onDark /><Chip kind="none" onDark /></div>
+  </div></section>
+
+  <section class={sec}><div class="wrap py-14 md:py-20">
+    <h2 class={h}>Вікна фасаду і таблички</h2>
+    <p class={note}>Вікно — фото або зміст у сталевій рамі 6 px. Пропорції різні, табличка з іменем — вохра, службова — сталь. Не більше 6 вікон в одному фасаді.</p>
+    <div class="facade grid-cols-2 md:grid-cols-[1.4fr_1fr_1fr] md:grid-rows-[16rem_12rem]">
+      <figure class="window row-span-2 min-h-64"><Photo src={bay} alt="Позашляховик на двостійковому підйомнику в боксі 04" sizes="(min-width: 48rem) 40vw, 50vw" position="50% 40%" /><figcaption class="absolute bottom-0 left-0"><Plate tone="steel" role="Бокс 04 · ходова" narrow class="!py-1.5" /></figcaption></figure>
+      <figure class="window min-h-40"><Photo src={hub} alt="Маточина й гальмівний диск на авто без колеса" sizes="(min-width: 48rem) 28vw, 50vw" position="50% 60%" /><figcaption class="absolute bottom-0 left-0"><Plate role="Маточина · без колеса" narrow class="!py-1.5" /></figcaption></figure>
+      <figure class="window min-h-40"><Photo src={drum} alt="Знятий гальмівний барабан і ключі на підлозі цеху" sizes="(min-width: 48rem) 28vw, 50vw" position="30% 70%" /><figcaption class="absolute bottom-0 left-0"><Plate role="Знятий барабан" narrow class="!py-1.5" /></figcaption></figure>
+      <div class="window col-span-2 flex flex-col justify-end p-5 md:col-span-1"><p class="t-plate text-glass-deep">Вікно з текстом</p><p class="t-h3 mt-2">Старі деталі віддаємо в пакеті з номером замовлення</p></div>
+      <figure class="window col-span-2 min-h-40 md:col-span-1"><Photo src={square} alt="Держпром на площі Свободи в Харкові" sizes="(min-width: 48rem) 28vw, 100vw" position="50% 60%" /><figcaption class="absolute bottom-0 left-0"><Plate tone="steel" role="Харків" class="!py-1.5" /></figcaption></figure>
+    </div>
+  </div></section>
+
+  <section class={sec}><div class="wrap py-14 md:py-20">
+    <h2 class={h}>Ремонт у чаті</h2>
+    <p class={note}>Фірмовий момент: майстер пише в Telegram. Темне вікно, а не документ: фото заміру, строки з цінами, статуси, «Погоджую» / «Подзвоніть». На фазі 3 статуси стануть перемикачами, а сума — живою.</p>
+    <div class="grid items-start gap-8 lg:grid-cols-[1fr_1fr]">
+      <div class="facade"><div class="window"><MasterChat href="/#chat" /></div></div>
+      <p class="t-small text-glass-deep">Повна інтерактивна версія — на головній, секція «Ремонт у чаті».</p>
+    </div>
+  </div></section>
+
+  <section class={sec}><div class="wrap py-14 md:py-20">
+    <h2 class={h}>Класи авто і ціни</h2>
+    <p class={note}>Класи — «вежі» різної висоти. Ціна роботи = нормо-година класу × норматив. Запчастини — окремо: наші або ваші.</p>
+    <ClassPicker />
+    <div class="mt-6 overflow-x-auto border-2 border-steel bg-paper">
+      <table class="w-full min-w-[34rem] border-collapse text-left">
+        <thead><tr class="bg-steel text-paper">
+          <th class="t-plate px-4 py-3 font-[650]">Робота</th>
+          {carClasses.map((c) => <th class="t-plate px-4 py-3 text-right font-[650]">Клас {c.label}</th>)}
+        </tr></thead>
+        <tbody class="num">
+          <tr class="border-b border-line"><th class="px-4 py-3 font-normal">Нормо-година</th>{carClasses.map((c) => <td class="px-4 py-3 text-right font-semibold">{c.rate.toLocaleString('uk-UA')} ₴</td>)}</tr>
+          <tr class="border-b border-line"><th class="px-4 py-3 font-normal">Колодки передні · 45 хв</th>{carClasses.map((c) => <td class="px-4 py-3 text-right">{Math.round(c.rate * 0.75 / 10) * 10} ₴</td>)}</tr>
+          <tr><th class="px-4 py-3 font-normal">Діагностика ходової · 30 хв</th><td colspan="4" class="px-4 py-3 text-right">450 ₴ · безкоштовно при ремонті</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div></section>
+
+  <section class={sec}><div class="wrap py-14 md:py-20">
+    <h2 class={h}>Відгуки</h2>
+    <p class={note}>Позначка «Приклад відгуку» вбудована в компонент — замінимо на реальні відгуки з Google при запуску.</p>
+    <div class="grid gap-4 md:grid-cols-2">
+      <SampleReview name="Ірина" car="Hyundai Tucson" master="Андрій" text="Скинули фото колодок і сказали, що диски ще походять. Заплатила рівно стільки, скільки було в повідомленні." />
+      <SampleReview name="Сергій" car="Daewoo Lanos" master="Олег" text="Привіз свої запчастини з ринку — поставили без питань. Старі віддали в пакеті, з номером замовлення." />
+    </div>
+  </div></section>
+
+  <section class={sec}><div class="wrap py-14 md:py-20">
+    <h2 class={h}>Іконки</h2>
+    <p class={note}>Lucide, один набір, лінія 2 px, інлайном.</p>
+    <ul class="flex flex-wrap gap-2">
+      {['calendar','phone','send','message','zap','check','check-circle','map-pin','clock','camera','package','shield','wrench','wifi','credit-card','alert','arrow-right','menu'].map((n) => (
+        <li class="grid size-16 place-items-center border-2 border-steel bg-paper" title={n}><Icon name={n} class="size-6" /></li>
+      ))}
+    </ul>
+  </div></section>
+</BaseLayout>

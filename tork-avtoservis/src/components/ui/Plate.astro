@@ -1,0 +1,12 @@
+---
+// Name plate on a facade window: wide uppercase role over a narrow heavy name. Ochre or steel.
+// narrow: for small facade windows — the role line tightens below lg; with hideRoleMobile it disappears below sm.
+interface Props { name?: string; role?: string; tone?: 'ochre' | 'steel'; narrow?: boolean; hideRoleMobile?: boolean; class?: string }
+const { name, role, tone = 'ochre', narrow = false, hideRoleMobile = false, class: cls = '' } = Astro.props;
+const t = tone === 'ochre' ? 'bg-ochre text-steel' : 'bg-steel text-paper';
+---
+<span class={`inline-block px-3 pb-1.5 pt-1 ${t} ${cls}`}>
+  {name && <b class={`block font-display text-[1.5rem] leading-[1.05] font-[850] [font-variation-settings:'wdth'_58] ${narrow ? 'max-sm:text-[1.25rem] max-[22.5rem]:text-[1.0625rem]' : ''}`}>{name}</b>}
+  {role && <span class={`t-plate block ${narrow ? "max-lg:![font-variation-settings:'wdth'_96] max-lg:!tracking-[0.02em] max-sm:![font-variation-settings:'wdth'_64] max-sm:!tracking-normal max-[22.5rem]:![font-variation-settings:'wdth'_50]" : ""} ${hideRoleMobile ? "max-sm:hidden" : ""}`} set:html={role} />}
+  <slot />
+</span>

@@ -1,0 +1,32 @@
+---
+// Last section: FAQ + booking form + how to find us.
+import SectionHead from '../ui/SectionHead.astro';
+import BookingForm from '../patterns/BookingForm.astro';
+import Icon from '../ui/Icon.astro';
+import OpenStatus from '../layout/OpenStatus.astro';
+import Faq from '../page/Faq.astro';
+import { homeFaq as defaultFaq } from '../../data/faq.ts';
+import { site, hours } from '../../config/site.ts';
+interface Props { faq?: { q: string; a: string }[]; title?: string; lead?: string }
+
+const { faq = defaultFaq, title = 'Записатися на&nbsp;діагностику', lead = 'Залиште телефон — решту уточнимо. Відповісти можемо в Telegram, Viber або дзвінком.' } = Astro.props;
+---
+<section id="zapys" class="border-t-2 border-steel" aria-labelledby="book-title" data-booking>
+  <div class="wrap grid gap-10 py-section lg:grid-cols-[minmax(0,6fr)_minmax(0,6fr)] lg:gap-12">
+    <div class="grid content-start gap-8">
+      <SectionHead id="book-title" kicker="Запис" title={title} lead={lead} />
+      <div class="facade grid-cols-1">
+        <div class="window grid gap-3 p-5">
+          <p class="flex gap-2.5"><Icon name="map-pin" class="mt-1 size-5" /><span class="min-w-0"><b class="font-semibold">{site.address.street}, {site.address.city}</b><br /><span class="text-glass-deep">{site.address.metro} — {site.address.walk}, район {site.address.district}</span></span></p>
+          <p class="flex gap-2.5"><Icon name="clock" class="mt-1 size-5" /><span class="min-w-0 tabular-nums">{hours.summary}</span></p>
+          <OpenStatus class="text-[0.9375rem]" sub={false} />
+          <a href={site.phone.href} class="inline-flex min-h-11 w-fit items-center gap-2.5 font-semibold no-underline num"><Icon name="phone" class="size-5" />{site.phone.display}</a>
+        </div>
+      </div>
+      {faq.length > 0 && <Faq items={faq} />}
+    </div>
+    <div class="facade grid-cols-1 self-start lg:sticky lg:top-6">
+      <div class="window bg-paper p-5 sm:p-7"><BookingForm /></div>
+    </div>
+  </div>
+</section>

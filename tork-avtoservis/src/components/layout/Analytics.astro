@@ -1,0 +1,13 @@
+---
+// Analytics stub — off in the demo (src/config/site.ts → analytics.provider = 'none').
+// For a real client: set provider to 'plausible' (cookieless, no banner needed) or 'ga4' and fill the id.
+import { analytics } from '../../config/site.ts';
+const { provider, plausibleDomain, ga4Id } = analytics;
+---
+{provider === 'plausible' && <script is:inline defer data-domain={plausibleDomain} src="https://plausible.io/js/script.js"></script>}
+{provider === 'ga4' && (
+  <>
+    <script is:inline async src={`https://www.googletagmanager.com/gtag/js?id=${ga4Id}`}></script>
+    <script is:inline define:vars={{ ga4Id }}>window.dataLayer = window.dataLayer || []; function gtag(){dataLayer.push(arguments);} gtag('js', new Date()); gtag('config', ga4Id, { anonymize_ip: true });</script>
+  </>
+)}

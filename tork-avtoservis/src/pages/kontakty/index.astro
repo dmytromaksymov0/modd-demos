@@ -1,0 +1,89 @@
+---
+// Contacts: address, live status, hours, phone and messengers, a static route schema (no map iframe:
+// no third-party cookies, no extra MBs), how to get here from Studentska metro, demo requisites for FOP/TOV.
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { breadcrumbs, faqSchema } from '../../lib/schema.ts';
+import { homeFaq } from '../../data/faq.ts';
+import PageHero from '../../components/page/PageHero.astro';
+import SectionHead from '../../components/ui/SectionHead.astro';
+import Icon from '../../components/ui/Icon.astro';
+import OpenStatus from '../../components/layout/OpenStatus.astro';
+import Booking from '../../components/home/Booking.astro';
+import { site, hours } from '../../config/site.ts';
+import bay from '../../assets/photos/bay-clean.jpg';
+const days = ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Нд'];
+const fmt = (m: number) => `${Math.floor(m / 60)}:${String(m % 60).padStart(2, '0')}`;
+const row = (i: number) => { const d = hours.days.find((x) => x.day === (i + 1) % 7); return d ? `${fmt(d.open)}–${fmt(d.close)}` : 'вихідний'; };
+// The address is fictional, so route buttons lead to the real metro station next to it.
+const metroMaps = 'https://www.google.com/maps/search/?api=1&query=50.0170,36.3300';
+const metroWaze = 'https://waze.com/ul?ll=50.0170,36.3300&navigate=yes';
+---
+<BaseLayout og="kontakty" schema={[breadcrumbs(Astro.site, [{ name: 'Контакти', path: '/kontakty/' }])]} title="Контакти — ТОРК Автосервіс, Салтівка, біля м. Студентська" description="ТОРК Автосервіс: вул. Ремісна, 14, Харків (Салтівка), 7 хв пішки від м. Студентська. Пн–Пт 8:30–19:00, Сб 9:00–16:00. Телефон, Telegram, Viber.">
+  <PageHero crumbs={[{ label: 'Головна', href: '/' }, { label: 'Контакти' }]} title="7&nbsp;хвилин від м.&nbsp;Студентська"
+    lead={`${site.address.street}, ${site.address.city}, ${site.address.district}. Працюємо під час відключень — генератор і Starlink.`}
+    photo={{ src: bay, alt: 'Світлий бокс із підйомником і авто в глибині цеху', position: '45% 60%', plate: 'Цех' }} />
+
+  <section class="border-t-2 border-steel bg-paper" aria-labelledby="ct-title">
+    <div class="wrap py-section">
+      <SectionHead id="ct-title" kicker="Зв’язок" title="Адреса й графік" />
+      <div class="facade mt-10 grid-cols-1 lg:grid-cols-12">
+        <div class="window flex flex-col gap-4 p-5 sm:p-7 lg:col-span-5">
+          <p class="flex gap-3"><Icon name="map-pin" class="mt-1 size-5" /><span><b class="t-h3 block">{site.address.street}</b>{site.address.city}, {site.address.district}, {site.address.zip}</span></p>
+          <OpenStatus class="text-[0.9375rem]" sub={false} />
+          <a href={site.phone.href} class="inline-flex min-h-11 w-fit items-center gap-2.5 text-[1.25rem] font-semibold no-underline num"><Icon name="phone" class="size-5" />{site.phone.display}</a>
+          <div class="grid grid-cols-2 gap-2">
+            <a href={site.channels.telegram.href} class="inline-flex min-h-11 items-center justify-center gap-2 border-2 border-steel bg-white font-display font-[760] [font-variation-settings:'wdth'_96] no-underline"><Icon name="send" class="size-4" />Telegram</a>
+            <a href={site.channels.viber.href} class="inline-flex min-h-11 items-center justify-center gap-2 border-2 border-steel bg-white font-display font-[760] [font-variation-settings:'wdth'_96] no-underline"><Icon name="message" class="size-4" />Viber</a>
+          </div>
+          <p class="t-small text-glass-deep">Пошта: {site.email}</p>
+          <p class="mt-auto border-t border-line pt-3 t-small">Оплата: картка, готівка, рахунок для ФОП/ТОВ. Старі деталі віддаємо, гарантія {site.warranty.months} міс / 10 000 км.</p>
+        </div>
+        <table class="window w-full border-collapse lg:col-span-3">
+          <caption class="t-plate bg-steel px-5 py-3 text-left text-paper">Графік</caption>
+          <tbody class="tabular-nums">
+            {days.map((d, i) => <tr class="border-b border-line last:border-b-0"><th scope="row" class="px-5 py-2.5 text-left font-semibold">{d}</th><td class={`px-5 py-2.5 text-right ${row(i) === 'вихідний' ? 'text-glass-deep' : ''}`}>{row(i)}</td></tr>)}
+          </tbody>
+        </table>
+        <div class="window on-dark grid content-start gap-3 bg-steel! p-5 text-paper sm:p-7 lg:col-span-4">
+          <p class="t-plate text-glass">Під час відключень</p>
+          <p>Генератор і Starlink: підйомники, сканери, термінал і Telegram працюють.</p>
+          <p class="t-small text-glass">Під час повітряної тривоги роботи на підйомнику призупиняємо, клієнтів проводимо в укриття поруч.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="border-t-2 border-steel" aria-labelledby="route-title">
+    <div class="wrap py-section">
+      <SectionHead id="route-title" kicker="Маршрут" title="Як дістатися" />
+      <div class="facade mt-10 grid-cols-1 lg:grid-cols-12">
+        <figure class="window lg:col-span-8">
+          <img src="/maps/tork-schema.svg" alt="Схема: від станції метро «Студентська» на перетині Валентинівської вулиці й вулиці Академіка Павлова — 7 хвилин пішки до вулиці Ремісної, 14" width="960" height="600" loading="lazy" decoding="async" class="block h-auto w-full" />
+          <figcaption class="border-t-2 border-steel px-4 py-2.5 t-small text-glass-deep">Схема, не масштаб. Компанія й вулиця Ремісна — вигадані для демо; метро й вулиці навколо — справжні.</figcaption>
+        </figure>
+        <ol class="window grid content-start gap-0 lg:col-span-4">
+          <li class="border-b-2 border-steel p-5"><p class="t-plate text-glass-deep">Метро</p><p class="mt-1">Станція «Студентська», вихід на Валентинівську. Ліворуч по вулиці Академіка Павлова, перший поворот праворуч — на Ремісну. <b class="font-semibold">7 хв пішки.</b></p></li>
+          <li class="border-b-2 border-steel p-5"><p class="t-plate text-glass-deep">Авто</p><p class="mt-1">З вулиці Академіка Павлова — поворот на Ремісну, в’їзд у ворота під табличкою «ТОРК». Паркування для клієнтів біля боксів.</p></li>
+          <li class="grid gap-2 p-5">
+            <p class="t-plate text-glass-deep">Навігатор</p>
+            <a href={metroMaps} rel="noopener" class="inline-flex min-h-11 items-center gap-2 font-semibold underline decoration-ochre decoration-2 underline-offset-4">Google Maps: м. Студентська<Icon name="arrow-right" class="size-4" /></a>
+            <a href={metroWaze} rel="noopener" class="inline-flex min-h-11 items-center gap-2 font-semibold underline decoration-ochre decoration-2 underline-offset-4">Waze: м. Студентська<Icon name="arrow-right" class="size-4" /></a>
+          </li>
+        </ol>
+      </div>
+    </div>
+  </section>
+
+  <section class="border-t-2 border-steel bg-paper" aria-labelledby="req-title">
+    <div class="wrap py-section">
+      <SectionHead id="req-title" kicker="Для ФОП і ТОВ" title="Реквізити" lead="Виставляємо рахунок до ремонту, після — акт виконаних робіт. Реквізити нижче — демонстраційні." />
+      <dl class="facade mt-10 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
+        {[['Отримувач', 'ФОП «ТОРК» (демо)'], ['ЄДРПОУ / РНОКПП', '0000000000'], ['IBAN', 'UA00 0000 0000 0000 0000 0000 000'], ['Оплата', 'рахунок · картка · готівка']].map(([k, v]) => (
+          <div class="window p-5"><dt class="t-plate text-glass-deep">{k}</dt><dd class="mt-1 font-semibold tabular-nums break-all">{v}</dd></div>
+        ))}
+      </dl>
+    </div>
+  </section>
+
+  <Booking faq={[]} />
+</BaseLayout>

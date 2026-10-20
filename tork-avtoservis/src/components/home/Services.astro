@@ -1,0 +1,47 @@
+---
+// Five services as facade windows: symptom first, «від» for classes A and D, time on the lift.
+// Windows stretch to the tallest one in their row; the photo absorbs the extra height, so no window has an empty bottom.
+import SectionHead from '../ui/SectionHead.astro';
+import Photo from '../ui/Photo.astro';
+import Plate from '../ui/Plate.astro';
+import Icon from '../ui/Icon.astro';
+import { services } from '../../data/services.ts';
+import { works } from '../../data/works.ts';
+import { carClasses } from '../../config/site.ts';
+import { workPrice, fmtMoney } from '../../lib/calc.ts';
+const from = (ids: string[], cls: number) => Math.min(...ids.map((id) => workPrice(works.find((w) => w.id === id)!, carClasses[cls].rate)));
+// Unequal facade: a wide window, two narrow ones, then three equal — not a uniform card grid.
+const layout = ['lg:col-span-7', 'lg:col-span-5', 'lg:col-span-4', 'lg:col-span-4', 'md:col-span-2 lg:col-span-4'];
+---
+<section id="poslugy" class="border-t-2 border-steel" aria-labelledby="svc-title">
+  <div class="wrap py-section">
+    <div class="flex flex-wrap items-end justify-between gap-6">
+      <SectionHead id="svc-title" kicker="Послуги" title="З чим приїжджають на&nbsp;Салтівку" lead="Почніть із того, що відчуваєте за кермом, — назву роботи підкажемо ми." />
+      <a href="/poslugy/" class="inline-flex min-h-11 items-center gap-2 font-semibold underline decoration-ochre decoration-2 underline-offset-4">Усі послуги<Icon name="arrow-right" class="size-4" /></a>
+    </div>
+    <ul class="facade mt-10 grid-cols-1 md:grid-cols-2 lg:grid-cols-12">
+      {services.map((s, i) => (
+        <li class={`window flex flex-col ${layout[i]}`}>
+          {s.photo && <div class="relative min-h-52 flex-1 overflow-hidden lg:min-h-60 [&_img]:absolute [&_img]:inset-0"><Photo src={s.photo.src} alt={s.photo.alt} sizes="(min-width: 64rem) 50vw, (min-width: 48rem) 50vw, 100vw" position={s.photo.position} /></div>}
+          <a href={`/poslugy/${s.slug}/`} class="group grid content-start gap-3 p-5 no-underline">
+            <span class="flex items-start justify-between gap-3"><h3 class="t-h2 group-hover:underline decoration-ochre decoration-4 underline-offset-6">{s.title}</h3><Icon name="arrow-right" class="mt-2 size-6 transition-transform group-hover:translate-x-1" /></span>
+            <p class="text-steel">{s.symptom}</p>
+            {s.includes && <ul class="flex flex-wrap gap-1.5">{s.includes.map((x) => <li class="border border-line-strong px-2 py-0.5 text-label">{x}</li>)}</ul>}
+            <p class="flex flex-wrap gap-x-4 gap-y-1 t-small text-glass-deep">
+              {from(s.works, 0) === from(s.works, 3)
+                ? <span>Для всіх класів <b class="font-semibold text-steel num">від {fmtMoney(from(s.works, 0))}</b></span>
+                : <><span>Клас A <b class="font-semibold text-steel num">від {fmtMoney(from(s.works, 0))}</b></span><span>Клас D <b class="font-semibold text-steel num">від {fmtMoney(from(s.works, 3))}</b></span></>}
+              <span class="inline-flex items-center gap-1"><Icon name="clock" class="size-4" />{s.time}</span>
+            </p>
+            {s.note && <p class="t-small text-glass-deep">{s.note}</p>}
+          </a>
+        </li>
+      ))}
+      <li class="window flex flex-wrap items-center gap-x-6 gap-y-3 bg-ochre! p-5 md:col-span-2 lg:col-span-12">
+        <p class="t-plate">Інша робота?</p>
+        <p class="t-h3 flex-1">ГРМ, зчеплення, електрика — напишіть, порахуємо</p>
+        <a href="?kanal=telegram#zapys" data-kanal="telegram" class="inline-flex min-h-11 w-fit items-center gap-2 font-semibold underline decoration-steel decoration-2 underline-offset-4"><Icon name="send" class="size-4" />Написати в Telegram</a>
+      </li>
+    </ul>
+  </div>
+</section>

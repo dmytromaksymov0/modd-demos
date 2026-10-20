@@ -1,0 +1,64 @@
+---
+// Signature moment 3 (mini): class × works → labour sum + time, combo saving, «Записатися з цим розрахунком».
+// Without JS it is a GET form to the full calculator; the result shows the default selection.
+import SectionHead from '../ui/SectionHead.astro';
+import Icon from '../ui/Icon.astro';
+import Button from '../ui/Button.astro';
+import { carClasses } from '../../config/site.ts';
+import { works, combos, homeWorks } from '../../data/works.ts';
+import { calculate, fmtMoney, fmtTime } from '../../lib/calc.ts';
+const defClass = 'B', defWorks = ['pads-front', 'discs-front'];
+const rate = carClasses.find((c) => c.id === defClass)!.rate;
+const r = calculate(defWorks, rate, works, combos);
+const list = homeWorks.map((id) => works.find((w) => w.id === id)!);
+const heights = ['min-h-15', 'min-h-17', 'min-h-19', 'min-h-21'];
+---
+<section id="kalkulyator" class="border-t-2 border-steel bg-paper" aria-labelledby="calc-title">
+  <div class="wrap py-section">
+    <SectionHead id="calc-title" kicker="Калькулятор" title="Спершу ціна. Потім ремонт." lead="Оберіть клас авто і роботи — побачите суму за роботу й час на підйомнику. Ціна роботи з калькулятора = ціна роботи в чеку, якщо клас і перелік збіглися." />
+    <form action="/kalkulyator/" method="get" class="facade mt-10 grid-cols-1 lg:grid-cols-[minmax(0,7fr)_minmax(0,5fr)]" data-calc>
+      <div class="window grid gap-8 p-5 sm:p-7">
+        <fieldset class="min-w-0">
+          <legend class="t-plate mb-3">1 · Клас авто</legend>
+          <div class="grid grid-cols-2 items-end gap-1.5 sm:grid-cols-4">
+            {carClasses.map((c, i) => (
+              <label class={`flex cursor-pointer flex-col justify-end border-2 border-steel bg-white px-3 pb-2 pt-3 has-[:checked]:bg-ochre has-[:focus-visible]:outline-3 has-[:focus-visible]:outline-steel has-[:focus-visible]:outline-offset-2 ${heights[i]}`}>
+                <input class="sr-only" type="radio" name="klas" value={c.id} checked={c.id === defClass} data-rate={c.rate} />
+                <b class="font-display text-[1.375rem] leading-none font-[850] [font-variation-settings:'wdth'_60]">Клас {c.label}</b>
+                <span class="mt-1 text-label leading-snug">{c.examples}</span>
+              </label>
+            ))}
+          </div>
+        </fieldset>
+        <fieldset class="min-w-0">
+          <legend class="t-plate mb-3">2 · Роботи</legend>
+          <ul class="grid gap-0 border-t border-line">
+            {list.map((w) => (
+              <li class="border-b border-line">
+                <label class="flex min-h-13 cursor-pointer items-center gap-3 py-1">
+                  <input type="checkbox" name="robota" value={w.id} checked={defWorks.includes(w.id)} class="size-5 shrink-0 accent-steel" />
+                  <span class="flex-1">{w.label}{w.note && <span class="block text-label text-glass-deep">{w.note}</span>}</span>
+                  <span class="t-small text-glass-deep tabular-nums">{fmtTime(w.minutes)}</span>
+                </label>
+              </li>
+            ))}
+          </ul>
+        </fieldset>
+        <noscript><Button type="submit" variant="secondary">Порахувати</Button></noscript>
+      </div>
+      <div class="window grid content-between gap-6 bg-steel! p-5 text-paper on-dark sm:p-7" aria-live="polite">
+        <div>
+          <p class="t-plate text-glass">Робота · <span data-calc-class>клас {defClass}</span></p>
+          <p class="t-figure mt-2 text-[clamp(2.75rem,2rem+3vw,4.5rem)]!" data-calc-total>{fmtMoney(r.total)}</p>
+          <p class="mt-2 flex items-center gap-2 text-lead"><Icon name="clock" class="size-5 text-ochre" /><span data-calc-time>≈ {fmtTime(r.minutes)}</span> на підйомнику</p>
+          <p class="mt-4 border-l-4 border-ochre pl-3 t-small" data-calc-saving hidden={!r.saving}>{r.savings.map((s, i) => <>{i > 0 && <br />}{s.label}: <b class="num">−{fmtMoney(s.money)}</b>{s.minutes > 0 && <>, <span class="num">−{fmtTime(s.minutes)}</span></>}</>)}</p>
+          <p class="mt-4 t-small text-glass">Запчастини окремо — наші з гарантією або ваші.</p>
+        </div>
+        <div class="grid gap-3">
+          <Button href="#zapys" size="lg" data-calc-book>Записатися з цим розрахунком</Button>
+          <a href="/kalkulyator/" class="inline-flex min-h-11 items-center gap-2 text-glass underline decoration-ochre decoration-2 underline-offset-4">Усі роботи — повний калькулятор<Icon name="arrow-right" class="size-4" /></a>
+        </div>
+      </div>
+    </form>
+  </div>
+</section>

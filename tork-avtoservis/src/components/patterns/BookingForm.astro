@@ -1,0 +1,101 @@
+---
+// Booking form → POST /api/lead (functions/api/lead.ts). With JS: fetch + inline errors + redirect to /dyakuyemo/.
+// Without JS: plain POST, the function answers 303 to /dyakuyemo/ or back here: ?pomylka=1#pomylka (check the phone)
+// or ?pomylka=nadislaty#ne-nadislano (not delivered: phone + messengers). Both boxes appear via :target.
+// ?kanal=telegram|viber (from messenger buttons) preselects the reply channel — see the script below.
+// Honeypot field «company» is hidden from people and filled only by bots.
+import Field from '../ui/Field.astro';
+import ChannelPicker from '../ui/ChannelPicker.astro';
+import Button from '../ui/Button.astro';
+import Icon from '../ui/Icon.astro';
+import { site } from '../../config/site.ts';
+---
+<form action="/api/lead" method="post" class="relative grid gap-4" data-booking-form novalidate>
+  <div id="pomylka" role="alert" tabindex="-1" class="hidden border-2 border-alert bg-alert-50 p-3 font-semibold text-alert target:block" data-form-error>Не вдалося надіслати: перевірте номер телефону (10 цифр, наприклад 067 123 45 67) або подзвоніть нам.</div>
+  <div id="ne-nadislano" role="alert" tabindex="-1" class="hidden border-2 border-alert bg-alert-50 p-3 text-alert target:block" data-send-error>
+    <p class="font-semibold">Не вдалося надіслати заявку. Запишемо вас інакше:</p>
+    <ul class="mt-2 flex flex-wrap gap-x-5 gap-y-1 font-semibold text-steel">
+      <li><a href={site.phone.href} class="inline-flex min-h-11 items-center gap-2 underline decoration-alert decoration-2 underline-offset-4"><Icon name="phone" class="size-4" /><span class="num">{site.phone.display}</span></a></li>
+      <li><a href={site.messengers.telegram} class="inline-flex min-h-11 items-center gap-2 underline decoration-alert decoration-2 underline-offset-4"><Icon name="send" class="size-4" />Telegram</a></li>
+      <li><a href={site.messengers.viber} class="inline-flex min-h-11 items-center gap-2 underline decoration-alert decoration-2 underline-offset-4"><Icon name="message" class="size-4" />Viber</a></li>
+    </ul>
+  </div>
+  <Field id="bk-phone" name="phone" label="Телефон" type="tel" required autocomplete="tel" inputmode="tel" placeholder="+380" />
+  <Field id="bk-name" name="name" label="Ім’я" autocomplete="given-name" />
+  <Field id="bk-car" name="car" label="Авто" placeholder="Наприклад: Octavia 2016" hint="Марка, модель і рік — щоб майстер підготувався." />
+  <Field id="bk-what" name="what" label="Що турбує?" multiline placeholder="Наприклад: стукає спереду на ямах" />
+  <input type="hidden" name="calc_klas" value="" data-calc-klas />
+  <input type="hidden" name="calc_works" value="" data-calc-field />
+  <input type="hidden" name="est_doing" value="" data-est-field />
+  <input type="hidden" name="page" value={Astro.url.pathname} />
+  <p class="hidden border-l-4 border-ochre bg-white p-3 t-small" data-calc-summary></p>
+  <ChannelPicker />
+  <div aria-hidden="true" class="absolute -left-[9999px] h-px w-px overflow-hidden"><label>Компанія <input type="text" name="company" tabindex="-1" autocomplete="off" /></label></div>
+  <Button type="submit" size="lg" full data-submit><span data-submit-label>Записатися</span></Button>
+  <p class="t-small text-glass-deep">Передзвонимо або напишемо протягом 15 хвилин у робочий час. Без вашого «так» нічого не ремонтуємо. <a href="/pryvatnist/" class="underline underline-offset-2">Як ми використовуємо дані</a>.</p>
+</form>
+<script>
+  // Messenger buttons: preselect the reply channel and jump to the form without reloading.
+  const pick = (k: string | null) => {
+    if (!k) return;
+    const r = document.querySelector<HTMLInputElement>(`[data-booking-form] input[name="kanal"][value="${k}"]`);
+    if (r) r.checked = true;
+  };
+  pick(new URLSearchParams(location.search).get('kanal'));
+  document.addEventListener('click', (e) => {
+    const a = (e.target as HTMLElement).closest<HTMLAnchorElement>('a[href*="kanal="]');
+    const form = document.querySelector('[data-booking-form]');
+    if (!a || !form) return;
+    e.preventDefault();
+    pick(new URL(a.href).searchParams.get('kanal'));
+    document.getElementById('zapys')?.scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
+    form.querySelector<HTMLInputElement>('input[name="phone"]')?.focus({ preventScroll: true });
+  });
+
+  // Submit with fetch: field errors next to the field, a clear message on delivery failure, then /dyakuyemo/.
+  document.querySelectorAll<HTMLFormElement>('[data-booking-form]').forEach((form) => {
+    const box = form.querySelector<HTMLElement>('[data-form-error]')!;
+    const sendBox = form.querySelector<HTMLElement>('[data-send-error]')!;
+    const showSendError = () => { sendBox.classList.add('!block'); sendBox.focus(); };
+    const btn = form.querySelector<HTMLButtonElement>('[data-submit]')!;
+    const label = form.querySelector<HTMLElement>('[data-submit-label]')!;
+    const setError = (name: string, msg: string | null) => {
+      const input = form.querySelector<HTMLInputElement | HTMLTextAreaElement>(`[name="${name}"]`);
+      if (!input) return;
+      const id = `${input.id}-jserr`;
+      document.getElementById(id)?.remove();
+      input.removeAttribute('aria-invalid');
+      input.setAttribute('aria-describedby', (input.getAttribute('aria-describedby') ?? '').split(' ').filter((x) => x && x !== id).join(' '));
+      input.classList.remove('!border-alert');
+      if (!msg) return;
+      const p = document.createElement('p');
+      p.id = id; p.className = 't-small font-semibold text-alert'; p.textContent = msg;
+      input.insertAdjacentElement('afterend', p);
+      input.setAttribute('aria-invalid', 'true');
+      input.setAttribute('aria-describedby', `${input.getAttribute('aria-describedby') ?? ''} ${id}`.trim());
+      input.classList.add('!border-alert');
+    };
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      ['phone', 'name'].forEach((n) => setError(n, null));
+      [box, sendBox].forEach((x) => x.classList.remove('!block'));
+      const phone = (form.elements.namedItem('phone') as HTMLInputElement).value.replace(/\D/g, '');
+      if (!phone) { setError('phone', 'Вкажіть телефон — без нього не зможемо записати.'); (form.elements.namedItem('phone') as HTMLInputElement).focus(); return; }
+      btn.disabled = true; label.textContent = 'Надсилаємо…';
+      try {
+        const res = await fetch(form.action, { method: 'POST', body: new FormData(form), headers: { accept: 'application/json' } });
+        const body = await res.json().catch(() => ({}));
+        if (res.ok && body.ok) { location.href = body.thanks ?? '/dyakuyemo/'; return; }
+        const errors: Record<string, string> = body.errors ?? {};
+        Object.entries(errors).forEach(([k, v]) => k !== 'form' && setError(k, v));
+        const first = Object.keys(errors).find((k) => k !== 'form');
+        if (first) (form.elements.namedItem(first) as HTMLElement | null)?.focus();
+        if (errors.form || !first) showSendError(); // not delivered: phone + messengers instead of a dead end
+      } catch {
+        showSendError(); // offline or the function is unreachable
+      } finally {
+        btn.disabled = false; label.textContent = 'Записатися';
+      }
+    });
+  });
+</script>

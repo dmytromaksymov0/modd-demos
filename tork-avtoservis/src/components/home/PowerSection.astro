@@ -1,0 +1,27 @@
+---
+// «Світло є» — calm, practical. Generator + Starlink, what works, what happens during an air-raid alert.
+import SectionHead from '../ui/SectionHead.astro';
+import Icon from '../ui/Icon.astro';
+import Photo from '../ui/Photo.astro';
+import Plate from '../ui/Plate.astro';
+import { power } from '../../config/site.ts';
+import bay from '../../assets/photos/bay-clean.jpg';
+const icons = ['wrench', 'zap', 'credit-card', 'send', 'clock'];
+---
+<section id="svitlo" class="border-t-2 border-steel" aria-labelledby="power-title">
+  <div class="wrap py-section">
+    <div class="facade grid-cols-1 lg:grid-cols-12">
+      <div class="window grid content-start gap-6 p-5 sm:p-7 lg:col-span-5">
+        <SectionHead id="power-title" kicker="Відключення" title="Світло зникло — ремонт ні" lead="Генератор запускаємо одразу, Starlink тримає зв’язок. Записи не переносимо, кошторис і фотозвіт приходять як завжди." />
+      </div>
+      <ul class="window on-dark grid content-center gap-0 bg-steel! text-paper lg:col-span-4">
+        {power.works.map((w, i) => <li class="flex items-center gap-3 border-b border-steel-2 px-5 py-3.5 last:border-b-0"><Icon name={icons[i]} class="size-5 text-ochre" />{w}</li>)}
+      </ul>
+      <figure class="window relative min-h-56 lg:col-span-3">
+        <Photo src={bay} alt="Світлий порожній бокс із підйомником і авто в глибині цеху" sizes="(min-width: 64rem) 25vw, 100vw" position="45% 60%" />
+        <figcaption class="absolute bottom-0 left-0"><Plate tone="steel" role="Цех" class="!py-1.5" /></figcaption>
+      </figure>
+      <p class="window flex items-start gap-3 bg-glass! p-5 lg:col-span-12"><Icon name="shield" class="mt-0.5 size-5" /><span><b class="font-semibold">Під час повітряної тривоги</b> {power.alarm.replace('Під час повітряної тривоги ', '')}</span></p>
+    </div>
+  </div>
+</section>

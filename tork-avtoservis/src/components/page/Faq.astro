@@ -1,0 +1,17 @@
+---
+// FAQ on <details>: works without JS, one heading level below the section.
+import Icon from '../ui/Icon.astro';
+interface Props { items: { q: string; a: string }[]; title?: string }
+const { items, title = 'Часті питання' } = Astro.props;
+---
+<div>
+  {title && <h3 class="t-h3 mb-3">{title}</h3>}
+  <div class="border-t-2 border-steel">
+    {items.map((f) => (
+      <details class="group border-b-2 border-steel">
+        <summary class="flex min-h-14 cursor-pointer list-none items-center justify-between gap-4 py-3 font-semibold [&::-webkit-details-marker]:hidden">{f.q}<Icon name="chevron-down" class="size-5 shrink-0 transition-transform group-open:rotate-180" /></summary>
+        <p class="measure pb-4 text-steel" set:html={f.a} />
+      </details>
+    ))}
+  </div>
+</div>

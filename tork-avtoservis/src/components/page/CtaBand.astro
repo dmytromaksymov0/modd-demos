@@ -1,0 +1,22 @@
+---
+// Ochre facade strip before the footer on inner pages: one sentence + booking + messengers.
+import Button from '../ui/Button.astro';
+import Icon from '../ui/Icon.astro';
+import { site } from '../../config/site.ts';
+interface Props { title?: string; text?: string; href?: string; label?: string }
+const { title = 'Спершу діагностика і кошторис — потім ремонт', text = 'Без вашого «так» нічого не робимо. Старі деталі віддаємо.', href = '/#zapys', label = 'Записатися на діагностику' } = Astro.props;
+---
+<section class="border-t-2 border-steel" aria-label="Запис">
+  <div class="wrap py-section">
+    <div class="facade grid-cols-1">
+      <div class="window grid gap-5 bg-ochre! p-5 sm:p-8 lg:grid-cols-[1fr_auto] lg:items-center">
+        <div><p class="t-h2 max-w-[22ch]">{title}</p><p class="mt-2">{text}</p></div>
+        <div class="grid gap-2.5 sm:flex sm:flex-wrap">
+          <Button href={href} size="lg" variant="secondary"><Icon name="calendar" class="size-5" />{label}</Button>
+          <Button href={site.channels.telegram.href} variant="secondary"><Icon name="send" class="size-4" />Telegram</Button>
+          <Button href={site.phone.href} variant="secondary"><Icon name="phone" class="size-4" /><span class="num">{site.phone.display}</span></Button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

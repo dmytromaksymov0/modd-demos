@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="uk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ТОРК Автосервіс — Напрям E · Майстри</title>
+<style>
+  @font-face{font-family:"Noto Serif Display";src:url(fonts/noto-serif-display-cyrillic-standard-normal.woff2) format("woff2");font-weight:100 900;font-stretch:62.5% 100%;unicode-range:U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116}
+  @font-face{font-family:"Noto Serif Display";src:url(fonts/noto-serif-display-latin-standard-normal.woff2) format("woff2");font-weight:100 900;font-stretch:62.5% 100%;unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+2000-206F,U+20AC,U+20B4,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+  @font-face{font-family:"Akt";src:url(fonts/akt-cyrillic-wght-normal.woff2) format("woff2");font-weight:100 900;unicode-range:U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116}
+  @font-face{font-family:"Akt";src:url(fonts/akt-latin-wght-normal.woff2) format("woff2");font-weight:100 900;unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+2000-206F,U+20AC,U+20B4,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+
+  :root{
+    --paper:#FAFAF8;   /* білий журнальний папір (не кремовий) */
+    --ink:#18181A;
+    --stone:#63615B;   /* підписи, вторинний текст */
+    --rule:#E0DED8;
+    --wine:#8A2638;    /* вишневий: імена, CTA, позначки */
+    --wine-50:#F4E6E8;
+    --serif:"Noto Serif Display", Georgia, serif;
+    --text:"Akt", system-ui, sans-serif;
+    --s1:4px;--s2:8px;--s3:12px;--s4:16px;--s5:24px;--s6:32px;--s7:48px;--s8:64px;
+  }
+  *{box-sizing:border-box;margin:0}
+  html{-webkit-text-size-adjust:100%}
+  body{background:var(--paper);color:var(--ink);font-family:var(--text);font-size:16.5px;line-height:1.5;-webkit-font-smoothing:antialiased}
+  a{color:inherit}
+  svg{flex:none}
+  :focus-visible{outline:3px solid var(--wine);outline-offset:3px}
+
+  .power{border-bottom:1px solid var(--rule);font-size:14px}
+  .power .wrap{display:flex;align-items:center;gap:var(--s3);max-width:1440px;margin:0 auto;padding:7px var(--s6)}
+  .power a{margin-left:auto;color:var(--wine)}
+
+  header{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:var(--s6);max-width:1440px;margin:0 auto;padding:var(--s4) var(--s6) var(--s3)}
+  .wordmark{text-decoration:none;display:flex;align-items:baseline;gap:var(--s3)}
+  .wordmark b{font-family:var(--serif);font-stretch:62.5%;font-weight:800;font-size:40px;line-height:1;letter-spacing:.01em}
+  .wordmark small{font-size:13px;color:var(--stone)}
+  nav ul{display:flex;gap:var(--s5);list-style:none;padding:0;font-size:15.5px;white-space:nowrap}
+  nav a{text-decoration:none}
+  nav a:hover{color:var(--wine);text-decoration:underline;text-underline-offset:4px}
+  .head-right{display:flex;align-items:center;gap:var(--s5);white-space:nowrap;font-size:14.5px}
+  .head-right small{display:block;color:var(--stone);font-size:12.5px}
+  .btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;min-height:50px;padding:0 22px;border-radius:999px;background:var(--wine);color:#fff;font-family:var(--text);font-weight:650;font-size:16px;text-decoration:none;border:1.5px solid var(--wine);white-space:nowrap}
+  .btn.line{background:transparent;color:var(--ink);border-color:var(--ink)}
+  .btn.sm{min-height:44px;padding:0 16px;font-size:15px}
+
+  .hero{max-width:1440px;margin:0 auto;padding:0 var(--s6) var(--s7)}
+  .issue{display:flex;gap:var(--s5);border-top:3px solid var(--ink);border-bottom:1px solid var(--rule);padding:6px 0;font-size:13px;color:var(--stone);letter-spacing:.02em}
+  .issue b{color:var(--ink)}
+  .top{display:grid;grid-template-columns:repeat(12,1fr);gap:var(--s6);align-items:end;padding:var(--s4) 0 var(--s4)}
+  h1{grid-column:1 / span 9;font-family:var(--serif);font-stretch:62.5%;font-weight:560;font-size:clamp(40px,5.1vw,78px);line-height:.98;letter-spacing:-.015em;text-wrap:balance}
+  h1 em{font-style:normal;color:var(--wine)}
+  .act{grid-column:10 / span 3;display:grid;gap:var(--s2)}
+  .act p{font-size:15px;color:var(--stone);margin-bottom:var(--s2)}
+  .act .msgr{display:grid;grid-template-columns:1fr 1fr;gap:var(--s2)}
+
+  /* триптих: майстри на всю ширину, різна висота кадрів */
+  .crew{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--s5);align-items:end}
+  .m{position:relative;margin:0}
+  .m .ph{position:relative;overflow:hidden;min-height:220px}
+  .m img{display:block;width:100%;height:100%;object-fit:cover}
+  .m:nth-child(1) .ph{height:min(300px,calc(100vh - 500px))}
+  .m:nth-child(2) .ph{height:min(340px,calc(100vh - 460px))}
+  .m:nth-child(3) .ph{height:min(280px,calc(100vh - 520px))}
+  .m:nth-child(1) img{object-position:50% 18%}
+  .m:nth-child(2) img{object-position:40% 10%}
+  .m:nth-child(3) img{object-position:50% 12%}
+  .m figcaption{display:grid;grid-template-columns:auto 1fr;gap:0 var(--s3);align-items:baseline;padding-top:var(--s3);border-top:1px solid var(--ink);margin-top:var(--s3)}
+  .m .name{font-family:var(--serif);font-stretch:70%;font-weight:600;font-size:30px;line-height:1.05}
+  .m .role{font-size:14px;color:var(--wine);font-weight:600;text-align:right}
+  .m q{grid-column:1 / -1;font-family:var(--serif);font-stretch:85%;font-size:18px;line-height:1.35;margin-top:6px;quotes:"«" "»"}
+  /* голос майстра в чаті — бульбашка, не документ */
+  .bubble{position:absolute;left:-14px;right:28px;bottom:18px;background:#fff;border-radius:18px 18px 18px 4px;padding:var(--s3) var(--s4);box-shadow:0 14px 34px -14px rgba(24,24,26,.45);font-size:14.5px;line-height:1.4}
+  .bubble time{display:block;color:var(--stone);font-size:12px;margin-bottom:2px}
+  .bubble .opts{display:flex;gap:6px;margin-top:var(--s2)}
+  .bubble .opts a{flex:1;text-align:center;border-radius:999px;padding:7px 0;font-weight:650;text-decoration:none;font-size:13.5px;border:1.5px solid var(--ink)}
+  .bubble .opts a.yes{background:var(--wine);border-color:var(--wine);color:#fff}
+
+  .mbar{display:none}
+  @media (max-width:1320px){ nav ul{gap:var(--s4)} .head-right .phone{display:none} }
+  @media (max-width:1100px){ nav{display:none} }
+  @media (max-width:900px){
+    .power .wrap{padding:7px var(--s4);font-size:13px}
+    .power a{display:none}
+    header{grid-template-columns:1fr auto;padding:var(--s3) var(--s4) var(--s2)}
+    .wordmark b{font-size:34px}
+    .head-right .st{display:none}
+    .hero{padding:0 var(--s4) 110px}
+    .issue{gap:var(--s3);font-size:12px}
+    .issue span:nth-child(3){display:none}
+    .top{display:block;padding:var(--s4) 0}
+    h1{font-size:40px}
+    .act{margin-top:var(--s4)}
+    .act p{display:none}
+    .crew{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;gap:var(--s3);margin:0 calc(-1 * var(--s4));padding:0 var(--s4) var(--s2);scrollbar-width:none}
+    .m{flex:0 0 80%;scroll-snap-align:start}
+    .m .ph,.m:nth-child(n) .ph{height:280px}
+    .m .name{font-size:26px}
+    .m q{font-size:16.5px}
+    .bubble{left:8px;right:8px}
+    .order{display:flex;flex-direction:column}
+    .order .crew{order:2}
+    .order .top{order:1}
+    .order .act-m{order:3}
+    .mbar{display:grid;grid-template-columns:1.6fr 1fr 1fr 56px;gap:6px;position:fixed;left:0;right:0;bottom:0;padding:8px 10px calc(8px + env(safe-area-inset-bottom));background:var(--paper);border-top:1px solid var(--rule);z-index:10}
+    .mbar a{min-height:48px;display:flex;align-items:center;justify-content:center;border-radius:999px;text-decoration:none;font-weight:650;font-size:14.5px;border:1.5px solid var(--ink)}
+    .mbar a.main{background:var(--wine);border-color:var(--wine);color:#fff}
+  }
+</style>
+</head>
+<body>
+<div class="power"><div class="wrap">
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13 2 3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+  <span>Працюємо під час відключень: генератор + Starlink</span>
+  <a href="#svitlo">Що працює</a>
+</div></div>
+
+<header>
+  <a class="wordmark" href="#" aria-label="ТОРК Автосервіс, на головну"><b>ТОРК</b><small>автосервіс</small></a>
+  <nav aria-label="Головне меню"><ul>
+    <li><a href="#">Майстри</a></li><li><a href="#">Послуги</a></li><li><a href="#">Ціни</a></li><li><a href="#">Калькулятор</a></li><li><a href="#">Як ми працюємо</a></li><li><a href="#">Контакти</a></li>
+  </ul></nav>
+  <div class="head-right">
+    <span class="st"><b>Відчинено до 19:00</b><small>Сб 9:00–16:00</small></span>
+    <a class="phone" href="tel:+380570001414" style="text-decoration:none;font-weight:650">+380 57 000-14-14</a>
+    <a class="btn sm" href="#zapys">Записатися</a>
+  </div>
+</header>
+
+<main class="hero order">
+  <p class="issue"><b>Салтівка, з 2014</b><span>7 хв від м. Студентська</span><span>Троє майстрів · один бокс на людину</span></p>
+  <div class="top">
+    <h1>Ваше авто ремонтують люди, яких ви знаєте на&nbsp;<em>ім’я</em></h1>
+    <div class="act">
+      <p>Майстер сам пише вам у Telegram: що знайшов, скільки коштує, що можна відкласти.</p>
+      <a class="btn" href="#zapys">Записатися до майстра</a>
+      <div class="msgr"><a class="btn sm line" href="#zapys?kanal=telegram">Telegram</a><a class="btn sm line" href="#zapys?kanal=viber">Viber</a></div>
+    </div>
+  </div>
+
+  <div class="crew" aria-label="Майстри ТОРК">
+    <figure class="m">
+      <div class="ph"><img src="photos/e-oleg.jpg" alt="Олег, майстер з ходової, у синьому комбінезоні в цеху" width="900" height="1350"></div>
+      <figcaption><span class="name">Олег</span><span class="role">ходова · 11&nbsp;років</span><q>Салтівські ями знаю напам’ять. Стукає спереду — покажу, що саме.</q></figcaption>
+    </figure>
+    <figure class="m">
+      <div class="ph"><img src="photos/e-andrii.jpg" alt="Андрій, діагност, усміхається біля авто на підйомнику" width="800" height="1045">
+        <div class="bubble" role="group" aria-label="Повідомлення від Андрія в Telegram"><time>Telegram · 10:40</time>Колодки передні — 2,1&nbsp;мм, мінімум 3. Міняємо сьогодні за 780&nbsp;₴ чи до суботи доїздите?
+          <div class="opts"><a class="yes" href="#">Міняємо</a><a href="#">Подзвоніть</a></div></div>
+      </div>
+      <figcaption><span class="name">Андрій</span><span class="role">діагностика · 8&nbsp;років</span><q>Спершу причина, потім ціна. Фото скидаю одразу в чат.</q></figcaption>
+    </figure>
+    <figure class="m">
+      <div class="ph"><img src="photos/e-viktor.jpg" alt="Віктор, старший майстер, за роботою біля верстака" width="900" height="1337"></div>
+      <figcaption><span class="name">Віктор</span><span class="role">старший майстер · з&nbsp;2014</span><q>Старі деталі завжди віддаємо. Свої привезли — хоч з Барабашова — поставимо.</q></figcaption>
+    </figure>
+  </div>
+</main>
+
+<nav class="mbar" aria-label="Швидкі дії">
+  <a class="main" href="#zapys">Записатися</a>
+  <a href="#zapys?kanal=telegram">Telegram</a>
+  <a href="#zapys?kanal=viber">Viber</a>
+  <a href="tel:+380570001414" aria-label="Подзвонити"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2z"/></svg></a>
+</nav>
+</body>
+</html>

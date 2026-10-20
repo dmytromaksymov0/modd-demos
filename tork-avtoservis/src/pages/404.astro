@@ -1,0 +1,29 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Button from '../components/ui/Button.astro';
+import Icon from '../components/ui/Icon.astro';
+import Photo from '../components/ui/Photo.astro';
+import Plate from '../components/ui/Plate.astro';
+import { site } from '../config/site.ts';
+import Booking from '../components/home/Booking.astro';
+import derzh from '../assets/photos/derzhprom-bridges.jpg';
+const links = [['Послуги', '/poslugy/'], ['Ціни', '/tsiny/'], ['Калькулятор', '/kalkulyator/'], ['Як ми працюємо', '/yak-my-pratsyuyemo/'], ['Контакти', '/kontakty/']];
+---
+<BaseLayout title="Сторінку не знайдено — ТОРК Автосервіс" description="Такої сторінки немає. Перейдіть на головну або запишіться на діагностику." noindex mobileBar={false}>
+  <div class="wrap py-section">
+    <div class="facade grid-cols-1 lg:grid-cols-12">
+      <div class="window grid grid-cols-[minmax(0,1fr)] content-start gap-5 p-5 sm:p-8 lg:col-span-8">
+        <p class="t-plate text-glass-deep">Помилка 404</p>
+        <h1 class="t-h1 text-[clamp(2.25rem,1.4rem+4vw,4.5rem)]!">Цього боксу немає</h1>
+        <p class="t-lead measure">Сторінку переїхали або в посиланні помилка. Ось куди можна піти:</p>
+        <ul class="flex flex-wrap gap-2">{links.map(([l, h]) => <li><a href={h} class="inline-flex min-h-11 items-center border-2 border-steel bg-white px-3 font-semibold no-underline hover:bg-ochre">{l}</a></li>)}</ul>
+        <div class="flex flex-wrap gap-3 pt-2"><Button href="/" size="lg">На головну</Button><a href={site.phone.href} class="inline-flex min-h-13 items-center gap-2 font-semibold no-underline"><Icon name="phone" class="size-4" /><span class="num">{site.phone.display}</span></a></div>
+      </div>
+      <figure class="window relative min-h-72 lg:col-span-4 [&_img]:absolute [&_img]:inset-0">
+        <Photo src={derzh} alt="Держпром у Харкові: переходи між корпусами, вигляд знизу" sizes="(min-width: 64rem) 30vw, 100vw" position="40% 40%" />
+        <figcaption class="absolute bottom-0 left-0"><Plate tone="steel" role="Держпром" class="!py-1.5" /></figcaption>
+      </figure>
+    </div>
+  </div>
+  <Booking faq={[]} />
+</BaseLayout>

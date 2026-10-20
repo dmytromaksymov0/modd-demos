@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 600" role="img" aria-labelledby="t d">
+  <title id="t">Схема проїзду до ТОРК (демо)</title>
+  <desc id="d">Станція метро «Студентська» на перетині Валентинівської вулиці й вулиці Академіка Павлова. Від виходу — 7 хвилин пішки до вигаданої вулиці Ремісної, 14. Схема не в масштабі.</desc>
+  <rect width="960" height="600" fill="#F4F4F1"/>
+  <!-- streets: steel double lines only, no filled blocks -->
+  <g stroke="#20262A" stroke-width="4" fill="none" stroke-linecap="square">
+    <path d="M0 250 H960 M0 310 H960"/>          <!-- Valentynivska -->
+    <path d="M370 0 V600 M430 0 V600"/>           <!-- Akademika Pavlova -->
+  </g>
+  <g stroke="#20262A" stroke-width="3" fill="none" stroke-dasharray="2 0">
+    <path d="M430 436 H960 M430 484 H960"/>       <!-- Remisna (fictional) -->
+  </g>
+  <!-- open the junctions so streets read as streets, not crossing lines -->
+  <g fill="#F4F4F1">
+    <rect x="372" y="252" width="56" height="56"/>
+    <rect x="428" y="438" width="4" height="44"/>
+  </g>
+  <!-- street names on plates -->
+  <g font-family="system-ui, sans-serif" font-weight="700" fill="#20262A">
+    <text x="40" y="288" font-size="20" letter-spacing="1.5">ВАЛЕНТИНІВСЬКА ВУЛ.</text>
+    <text x="407" y="590" font-size="17" letter-spacing="1" transform="rotate(-90 407 590)">ВУЛ. АКАДЕМІКА ПАВЛОВА</text>
+    <text x="470" y="520" font-size="18" letter-spacing="1.2">ВУЛ. РЕМІСНА (ДЕМО)</text>
+  </g>
+  <!-- walking route, ochre -->
+  <path d="M430 330 H450 V460 H760" fill="none" stroke="#E0A01A" stroke-width="10" stroke-dasharray="18 10" stroke-linejoin="round"/>
+  <!-- metro -->
+  <g transform="translate(400 280)">
+    <circle r="34" fill="#20262A"/>
+    <text y="13" text-anchor="middle" font-family="system-ui, sans-serif" font-size="38" font-weight="800" fill="#F4F4F1">М</text>
+  </g>
+  <rect x="470" y="196" width="250" height="42" fill="#20262A"/>
+  <text x="484" y="224" font-family="system-ui, sans-serif" font-size="20" font-weight="700" fill="#F4F4F1" letter-spacing="1">М. «СТУДЕНТСЬКА»</text>
+  <!-- walk time plate -->
+  <rect x="470" y="356" width="150" height="38" fill="#F4F4F1" stroke="#20262A" stroke-width="3"/>
+  <text x="484" y="382" font-family="system-ui, sans-serif" font-size="20" font-weight="700" fill="#20262A">7 хв пішки</text>
+  <!-- destination: ochre plate on a steel post -->
+  <g transform="translate(760 460)">
+    <rect x="-30" y="-92" width="160" height="62" fill="#E0A01A" stroke="#20262A" stroke-width="4"/>
+    <text x="-16" y="-52" font-family="system-ui, sans-serif" font-size="26" font-weight="800" fill="#20262A" letter-spacing="2">ТОРК, 14</text>
+    <path d="M0 -30 V0" stroke="#20262A" stroke-width="4"/>
+    <circle r="12" fill="#20262A"/>
+  </g>
+  <!-- north + scale note -->
+  <g font-family="system-ui, sans-serif" font-weight="800" fill="#20262A">
+    <path transform="translate(900 556)" d="M0 -40 L12 -8 L0 -14 L-12 -8 Z"/>
+    <text x="900" y="574" text-anchor="middle" font-size="18">Пн</text>
+    <text x="40" y="578" font-size="16" font-weight="700" fill="#3F5A55">НЕ В МАСШТАБІ</text>
+  </g>
+</svg>

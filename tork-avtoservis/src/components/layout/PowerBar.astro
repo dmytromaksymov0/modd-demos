@@ -1,0 +1,21 @@
+---
+// Calm, practical outage notice. <details> works without JS. Neutral glass colour — no red, no military look.
+import { power } from '../../config/site';
+import Icon from '../ui/Icon.astro';
+---
+<details class="power group relative z-30 bg-glass text-steel">
+  <summary class="wrap flex min-h-11 cursor-pointer list-none items-center gap-2.5 text-[0.9375rem] [&::-webkit-details-marker]:hidden">
+    <Icon name="zap" class="size-4" />
+    <span class="min-w-0"><b class="font-semibold">Працюємо під час відключень:</b> генератор + Starlink</span>
+    <span class="ml-auto hidden items-center gap-1 underline underline-offset-3 sm:inline-flex">Що працює<Icon name="chevron-down" class="size-4 transition-transform group-open:rotate-180" /></span>
+    <Icon name="chevron-down" class="ml-auto size-4 transition-transform group-open:rotate-180 sm:hidden" />
+  </summary>
+  <div class="wrap pb-5 pt-1">
+    <div class="grid gap-x-10 gap-y-3 border-t border-steel/25 pt-4 md:grid-cols-[1fr_1fr]">
+      <ul class="grid gap-1.5 text-[0.9375rem]">
+        {power.works.map((w) => <li class="flex items-start gap-2"><Icon name="check" class="mt-1 size-4" />{w}</li>)}
+      </ul>
+      <p class="flex items-start gap-2 text-[0.9375rem]"><Icon name="shield" class="mt-1 size-4" />{power.alarm}</p>
+    </div>
+  </div>
+</details>

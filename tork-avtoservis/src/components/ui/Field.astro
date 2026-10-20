@@ -1,0 +1,15 @@
+---
+// Text field with a visible label, optional hint and an error shown right under the field.
+interface Props { id: string; name?: string; label: string; type?: string; hint?: string; error?: string; required?: boolean; placeholder?: string; autocomplete?: string; inputmode?: string; value?: string; multiline?: boolean; class?: string }
+const { id, name = id, label, type = 'text', hint, error, required = false, placeholder, autocomplete, inputmode, value, multiline = false, class: cls = '' } = Astro.props;
+const describedBy = [hint && `${id}-hint`, error && `${id}-err`].filter(Boolean).join(' ') || undefined;
+const field = `w-full border-2 bg-white px-3.5 text-[1.0625rem] text-steel placeholder:text-glass-deep/80 rounded-xs transition-colors focus:border-steel ${error ? 'border-alert' : 'border-line-strong'}`;
+---
+<div class={`grid gap-1.5 ${cls}`}>
+  <label for={id} class="t-plate !text-[0.8125rem]">{label}{required ? <span aria-hidden="true"> *</span> : <span class="normal-case tracking-normal font-sans font-normal [font-variation-settings:normal] text-glass-deep"> — за бажанням</span>}</label>
+  {multiline
+    ? <textarea id={id} name={name} rows="3" class={`${field} py-3`} placeholder={placeholder} required={required} aria-invalid={error ? 'true' : undefined} aria-describedby={describedBy}>{value}</textarea>
+    : <input id={id} name={name} type={type} class={`${field} min-h-13`} placeholder={placeholder} required={required} autocomplete={autocomplete} inputmode={inputmode as any} value={value} aria-invalid={error ? 'true' : undefined} aria-describedby={describedBy} />}
+  {hint && <p id={`${id}-hint`} class="t-small text-glass-deep">{hint}</p>}
+  {error && <p id={`${id}-err`} class="flex items-center gap-1.5 t-small font-semibold text-alert"><svg class="size-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>{error}</p>}
+</div>

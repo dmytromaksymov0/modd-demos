@@ -1,0 +1,18 @@
+---
+import type { HTMLAttributes } from 'astro/types';
+type Variant = 'primary' | 'secondary' | 'on-dark' | 'link';
+interface Props extends HTMLAttributes<'a'> { href?: string; variant?: Variant; size?: 'sm' | 'md' | 'lg'; type?: 'button' | 'submit'; full?: boolean }
+const { href, variant = 'primary', size = 'md', type = 'button', full = false, class: cls = '', ...rest } = Astro.props;
+// Square, framed buttons — like a facade sign. Ochre is the single action colour; text on it is always steel.
+const base = 'inline-flex items-center justify-center gap-2.5 font-display-100 font-[760] [font-variation-settings:"wdth"_100] no-underline cursor-pointer select-none text-center sm:whitespace-nowrap transition-colors duration-(--duration-fast) disabled:opacity-60 disabled:cursor-not-allowed';
+const sizes = { sm: 'min-h-11 px-4 text-[0.9375rem]', md: 'min-h-13 px-6 text-[1.0625rem]', lg: 'min-h-15 px-7 text-[1.1875rem]' };
+const variants: Record<Variant, string> = {
+  primary: 'border-2 border-steel bg-ochre text-steel hover:bg-ochre-2',
+  secondary: 'border-2 border-steel bg-paper text-steel hover:bg-white',
+  'on-dark': 'border-2 border-glass bg-transparent text-paper hover:bg-steel-2',
+  link: 'min-h-11 px-0 text-steel underline underline-offset-4 decoration-2 decoration-ochre hover:decoration-steel',
+};
+const classes = [base, variant === 'link' ? '' : sizes[size], variants[variant], full ? 'w-full' : '', cls].join(' ');
+const Tag = href ? 'a' : 'button';
+---
+<Tag href={href} type={href ? undefined : type} class={classes} {...rest}><slot /></Tag>

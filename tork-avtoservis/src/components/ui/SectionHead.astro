@@ -1,0 +1,11 @@
+---
+// Section heading: plate kicker + narrow heavy headline + optional lead.
+interface Props { kicker: string; title: string; lead?: string; id?: string; class?: string }
+const { kicker, title, lead, id, class: cls = '' } = Astro.props;
+---
+<header class={`grid gap-3 ${cls}`}>
+  <p class="t-plate text-glass-deep">{kicker}</p>
+  <h2 class="t-h1 max-w-[18ch]" id={id} set:html={title} />
+  {lead && <p class="t-lead measure text-steel">{lead}</p>}
+  <slot />
+</header>

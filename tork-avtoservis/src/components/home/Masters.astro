@@ -1,0 +1,39 @@
+---
+// Masters + sample reviews + warranty. Names are fictional, photos are stock models (CREDITS.md).
+import SectionHead from '../ui/SectionHead.astro';
+import Photo from '../ui/Photo.astro';
+import Plate from '../ui/Plate.astro';
+import SampleReview from '../patterns/SampleReview.astro';
+import { site } from '../../config/site.ts';
+import olegFull from '../../assets/photos/oleg-full.jpg';
+import andriiMeasure from '../../assets/photos/andrii-measure.jpg';
+---
+<section id="maistry" class="border-t-2 border-steel bg-paper" aria-labelledby="masters-title">
+  <div class="wrap py-section">
+    <SectionHead id="masters-title" kicker="Майстри" title="Пишуть вам ті, хто ремонтує" lead="Не кол-центр і не «менеджер». Повідомлення в Telegram приходять від майстра, який стоїть біля вашого авто." />
+    <div class="facade mt-10 grid-cols-2 lg:grid-cols-12">
+      <figure class="window relative min-h-80 lg:col-span-3 lg:row-span-2 lg:min-h-[34rem]">
+        <Photo src={olegFull} alt="Олег у робочому комбінезоні біля колони в цеху" sizes="(min-width: 64rem) 25vw, 50vw" position="62% 30%" />
+        <figcaption class="absolute bottom-0 left-0"><Plate name="Олег" role="ходова<br>11 років" narrow /></figcaption>
+      </figure>
+      <figure class="window relative min-h-80 lg:col-span-3 lg:row-span-2 lg:min-h-[34rem]">
+        <Photo src={andriiMeasure} alt="Андрій міряє деталь мікрометром біля авто на підйомнику" sizes="(min-width: 64rem) 25vw, 50vw" position="60% 30%" />
+        <figcaption class="absolute bottom-0 left-0"><Plate name="Андрій" role="діагностика<br>8 років" narrow /></figcaption>
+      </figure>
+      <blockquote class="window col-span-2 grid content-center gap-3 p-5 sm:p-7 lg:col-span-6">
+        <p class="t-h3">«Салтівські ями знаю напам’ять. Стукає спереду — покажу на підйомнику, що саме, і скажу, що можна відкласти.»</p>
+        <footer class="t-small text-glass-deep">Олег, майстер з ходової</footer>
+      </blockquote>
+      <div class="window col-span-2 grid content-center gap-2 bg-ochre! p-5 sm:p-7 lg:col-span-6">
+        <p class="t-plate">Гарантія</p>
+        <p class="t-figure">{site.warranty.months} міс / 10&nbsp;000 км</p>
+        <p class="t-small">На роботу й наші запчастини — що настане раніше. На ваші запчастини — гарантія на роботу. Фіксується в акті з артикулами.</p>
+      </div>
+    </div>
+    <div class="mt-8 grid gap-4 md:grid-cols-2">
+      <SampleReview name="Ірина" car="Hyundai Tucson" master="Андрій" text="Скинули фото колодок і написали, що диски ще походять. Заплатила рівно стільки, скільки було в повідомленні." />
+      <SampleReview name="Сергій" car="Daewoo Lanos" master="Олег" text="Привіз свої запчастини з ринку — поставили без питань. Старі віддали в пакеті з номером замовлення." />
+    </div>
+    <p class="mt-3 t-small text-glass-deep">Приклади відгуків — замінимо на реальні відгуки з Google при запуску.</p>
+  </div>
+</section>

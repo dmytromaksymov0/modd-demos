@@ -1,0 +1,30 @@
+---
+// "Відчинено до 19:00" — computed in the visitor's browser against Kyiv time. Without JS: the weekly hours,
+// which may wrap between day groups: a long nowrap line widened its grid column until the script ran (CLS 0.12).
+import { hours } from '../../config/site';
+interface Props { class?: string; sub?: boolean; onDark?: boolean }
+const { class: cls = '', sub = true, onDark = false } = Astro.props;
+---
+<span class={`inline-flex min-w-0 max-w-full items-center gap-2.5 ${cls}`} data-open-status>
+  <span class={`size-2.5 shrink-0 rounded-full ${onDark ? 'bg-glass' : 'bg-line-strong'}`} data-dot aria-hidden="true"></span>
+  <span class="min-w-0 leading-tight">
+    <span class="font-semibold" data-text>{hours.summary.split(' · ').map((g, i) => <>{i > 0 && ' · '}<span class="whitespace-nowrap">{g}</span></>)}</span>
+    {sub && <span class={`block whitespace-nowrap text-label ${onDark ? 'text-glass' : 'text-glass-deep'}`}>Сб 9:00–16:00 · Нд вихідний</span>}
+  </span>
+</span>
+<script>
+  import { hours } from '../../config/site';
+  import { nowIn, status } from '../../lib/hours';
+  function update() {
+    const { day, min } = nowIn(hours.tz);
+    const s = status(hours.days, day, min);
+    document.querySelectorAll<HTMLElement>('[data-open-status]').forEach((el) => {
+      el.querySelector('[data-text]')!.textContent = s.text;
+      const dot = el.querySelector<HTMLElement>('[data-dot]')!;
+      dot.style.background = s.open ? 'var(--color-open)' : '';
+      dot.style.boxShadow = s.open ? '0 0 0 4px color-mix(in srgb, var(--color-open) 22%, transparent)' : '';
+    });
+  }
+  update();
+  setInterval(update, 60_000);
+</script>

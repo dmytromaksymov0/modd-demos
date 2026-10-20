@@ -1,0 +1,20 @@
+---
+// "Як вам відповісти?" — Telegram / Viber / дзвінок. Messenger buttons elsewhere preselect this (?kanal=).
+interface Props { name?: string; selected?: 'telegram' | 'viber' | 'call'; legend?: string }
+const { name = 'kanal', selected = 'telegram', legend = 'Як вам відповісти?' } = Astro.props;
+const opts = [
+  { v: 'telegram', label: 'Telegram', note: 'Напишемо вам у Telegram' },
+  { v: 'viber', label: 'Viber', note: 'Напишемо вам у Viber' },
+  { v: 'call', label: 'Дзвінок', note: 'Передзвонимо' },
+];
+---
+<fieldset class="min-w-0">
+  <legend class="t-plate mb-1.5 !text-[0.8125rem]">{legend}</legend>
+  <div class="grid grid-cols-3 gap-0 border-2 border-steel">
+    {opts.map((o, i) => (
+      <label class={`relative flex min-h-12 cursor-pointer items-center justify-center px-2 text-center font-display-100 font-[700] [font-variation-settings:'wdth'_96] text-[0.9375rem] has-[:checked]:bg-steel has-[:checked]:text-paper has-[:focus-visible]:outline-3 has-[:focus-visible]:outline-ochre ${i ? 'border-l-2 border-steel' : ''}`}>
+        <input class="sr-only" type="radio" name={name} value={o.v} checked={o.v === selected} />{o.label}
+      </label>
+    ))}
+  </div>
+</fieldset>
