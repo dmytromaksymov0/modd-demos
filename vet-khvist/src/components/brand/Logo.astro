@@ -1,0 +1,18 @@
+---
+// Wordmark from font outlines (design/phase-2/make_logo.py). The door tile is the «Терміново» panel in miniature:
+// night fill + lamp light edge. Wordmark and tagline follow the surrounding text colour (currentColor / fg-mute).
+import P from './logo-paths.json';
+interface Props { class?: string; tagline?: boolean; title?: string }
+const { class: cls = 'h-10 w-auto', tagline = true, title = 'Ветклініка «Хвіст»' } = Astro.props;
+const t = P.tile;
+---
+<svg class={cls} viewBox={`0 0 ${P.width} ${P.height}`} role="img" aria-label={title}>
+  <rect x={t[0]} y={t[1]} width={t[2]} height={t[3]} fill="var(--color-night)" class="logo-tile" />
+  <rect x="0" y="0" width={P.edge} height={t[3]} fill="var(--color-lamp)" />
+  <path fill="currentColor" transform={P.wordTransform} d={P.word} />
+  {tagline && <path fill="var(--color-fg-mute)" transform={P.tagTransform} d={P.tag} />}
+</svg>
+<style>
+  /* On night surfaces the tile is lifted one step so the door stays visible. */
+  :global([data-time='night']) .logo-tile, :global([data-time='curfew']) .logo-tile, :global(.is-night-surface) .logo-tile { fill: var(--color-night-3); }
+</style>

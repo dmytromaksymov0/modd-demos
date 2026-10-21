@@ -1,0 +1,5 @@
+# Cloudflare Pages project config. Secrets (TELEGRAM_BOT_TOKEN, TELEGRAM_CHAT_ID) are set in the
+# Pages dashboard or with `wrangler pages secret put`, locally in .dev.vars — never in this file.
+name = "vet-khvist"
+pages_build_output_dir = "./dist"
+compatibility_date = "2026-10-01"

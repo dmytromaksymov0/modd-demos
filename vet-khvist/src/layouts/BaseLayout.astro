@@ -1,0 +1,73 @@
+---
+import '../styles/global.css';
+import PowerStrip from '../components/layout/PowerStrip.astro';
+import Header from '../components/layout/Header.astro';
+import Footer from '../components/layout/Footer.astro';
+import MobileBar from '../components/layout/MobileBar.astro';
+import { site, time } from '../config/site';
+import { veterinaryCare, faqPage, breadcrumbs } from '../lib/schema';
+import Analytics from '../components/layout/Analytics.astro';
+import { stateAt } from '../lib/time';
+// og: image slug in public/og (default «home»). faq / crumbs → FAQPage / BreadcrumbList JSON-LD.
+interface Props { title: string; description: string; noindex?: boolean; current?: string; chrome?: boolean; fixedTime?: 'day' | 'night' | 'curfew'; bookHref?: string; schema?: boolean; og?: string; faq?: readonly { q: string; a: string }[]; crumbs?: { href: string; label: string }[] }
+const { title, description, noindex = false, current = '', chrome = true, fixedTime, bookHref = '/zapys/', schema = false, og = 'home', faq, crumbs } = Astro.props;
+const ogImage = new URL(`/og/${og}.jpg`, Astro.site);
+const jsonld = [schema && veterinaryCare(Astro.site!), faq?.length && faqPage(faq), crumbs?.length && breadcrumbs(Astro.site!, crumbs.map((c) => ({ href: c.href || Astro.url.pathname, label: c.label })))].filter(Boolean);
+const canonical = new URL(Astro.url.pathname, Astro.site);
+// Theme by Kyiv time before first paint. ?t=day|night|curfew forces a state (QA, the styleguide iframes, «подивитися вночі»).
+// The state logic is src/lib/time.ts#stateAt (unit-tested), inlined via toString().
+const timeScript = `(function(){var stateAt=${stateAt.toString()};var b=${JSON.stringify({ nightFrom: time.nightFrom, nightTo: time.nightTo, curfewFrom: time.curfewFrom, curfewTo: time.curfewTo })};
+var d=document.documentElement,f=d.getAttribute('data-fixed-time'),q=location.search.match(/[?&]t=(day|night|curfew)\\b/),t,m;
+try{var p=new Intl.DateTimeFormat('en-GB',{timeZone:'${time.tz}',hour:'2-digit',minute:'2-digit',hourCycle:'h23'}).format(new Date()).split(':');m=+p[0]*60+ +p[1]}catch(e){}
+if(f)t=f;else if(q)t=q[1];else if(m!=null)t=stateAt(m,b);
+if(t){d.setAttribute('data-time',t);if(m!=null&&!f&&!q)d.setAttribute('data-now',String(Math.floor(m/60)).padStart(2,'0')+':'+String(m%60).padStart(2,'0'))}})()`;
+---
+<!doctype html>
+<html lang="uk" data-fixed-time={fixedTime}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script is:inline set:html={timeScript} />
+    <link rel="preload" href="/fonts/khvist-sans.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/fonts/khvist-serif.woff2" as="font" type="font/woff2" crossorigin />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    {noindex && <meta name="robots" content="noindex, nofollow" />}
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href="/favicon-32.png" sizes="32x32" type="image/png" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+    <meta name="theme-color" content="#2A211C" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={site.name} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:locale" content="uk_UA" />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content={title} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
+    {jsonld.map((s) => <script type="application/ld+json" set:html={JSON.stringify(s)} />)}
+    <Analytics />
+  </head>
+  <body class="flex min-h-dvh flex-col">
+    {chrome && <a href="#main" class="sr-only-focusable fixed left-3 top-3 z-50 inline-flex min-h-12 items-center rounded-sm bg-lamp px-5 font-semibold text-night">До змісту</a>}
+    {chrome && <PowerStrip />}
+    {chrome && <Header current={current} bookHref={bookHref} />}
+    <main id="main" class="flex-1"><slot /></main>
+    {chrome && <Footer />}
+    {chrome && <MobileBar bookHref={bookHref} />}
+    <script is:inline>
+      // Fill the live Kyiv time into [data-now] (forced states keep the sample times from the markup).
+      (function () { var n = document.documentElement.getAttribute('data-now'); if (!n) return;
+        document.querySelectorAll('[data-now]').forEach(function (el) { if (el !== document.documentElement) el.textContent = n; }); })();
+    </script>
+  </body>
+</html>

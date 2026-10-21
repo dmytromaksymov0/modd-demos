@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="uk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Хвіст · C «24 години»</title>
+<style>
+@font-face{font-family:"Commissioner";src:url(fonts/commissioner-cyrillic.woff2) format("woff2");font-weight:100 900;unicode-range:U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116}
+@font-face{font-family:"Commissioner";src:url(fonts/commissioner-cyrillic-ext.woff2) format("woff2");font-weight:100 900;unicode-range:U+0460-052F,U+1C80-1C8A,U+20B4,U+2DE0-2DFF,U+A640-A69F,U+FE2E-FE2F}
+@font-face{font-family:"Commissioner";src:url(fonts/commissioner-latin.woff2) format("woff2");font-weight:100 900;unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+@font-face{font-family:"Literata";src:url(fonts/literata-cyrillic.woff2) format("woff2");font-weight:200 900;unicode-range:U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116}
+@font-face{font-family:"Literata";src:url(fonts/literata-cyrillic-ext.woff2) format("woff2");font-weight:200 900;unicode-range:U+0460-052F,U+1C80-1C8A,U+20B4,U+2DE0-2DFF,U+A640-A69F,U+FE2E-FE2F}
+@font-face{font-family:"Literata";src:url(fonts/literata-latin.woff2) format("woff2");font-weight:200 900;unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+
+:root{
+  --paper:#F2F0F7; --ink:#1B1828; --mute:#4E4670; --line:#D8D3E6; --lilac:#C8BEEA; --lilac-soft:#E4DEF4; --white:#FFFFFF;
+  --urgent:#CC2539; --on-urgent:#FFFFFF;
+  --ui:"Commissioner",system-ui,sans-serif; --text:"Literata",Georgia,serif;
+}
+*{box-sizing:border-box;margin:0}
+body{background:var(--paper);color:var(--ink);font:400 17px/1.55 var(--text);overflow-x:hidden}
+a{color:inherit}
+svg.i{width:20px;height:20px;flex:none;stroke:currentColor;fill:none;stroke-width:1.75;stroke-linecap:round;stroke-linejoin:round}
+
+.status{display:flex;gap:18px;align-items:center;padding:9px 40px;background:var(--ink);color:var(--lilac);font:500 14px/1.3 var(--ui)}
+.status b{color:var(--white);font-weight:600;font-variant-numeric:tabular-nums}
+.status .sep{opacity:.5}
+header{display:flex;align-items:center;gap:36px;padding:18px 40px;font-family:var(--ui)}
+.logo{font:800 30px/1 var(--ui);letter-spacing:-.03em;text-decoration:none}
+nav{display:flex;gap:24px;font-size:15px}
+nav a{text-decoration:none}
+.h-right{margin-left:auto;display:flex;gap:20px;align-items:center}
+.h-phone{font-weight:700;text-decoration:none}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;min-height:48px;padding:0 22px;border-radius:999px;font:600 16px/1 var(--ui);text-decoration:none}
+.btn-ink{background:var(--ink);color:var(--paper)}
+.btn-urgent{background:var(--urgent);color:var(--on-urgent);min-height:58px;padding:0 28px;font-size:18px}
+
+h1{font:700 clamp(34px,4.4vw,64px)/1.02 var(--ui);letter-spacing:-.035em;padding:20px 40px 30px;max-width:22ch;text-wrap:balance}
+
+.tri{display:grid;grid-template-columns:minmax(0,4fr) minmax(0,4fr) minmax(0,4fr);border-top:1px solid var(--ink)}
+.cell{padding:28px 32px 32px;border-left:1px solid var(--line)}
+.cell:first-child{border-left:0;padding-left:40px}
+.label{font:700 13px/1 var(--ui);letter-spacing:.14em;text-transform:uppercase;display:flex;align-items:center;gap:10px}
+.c-urgent .label{color:var(--urgent)}
+.c-urgent .label::before{content:"";width:10px;height:10px;border-radius:50%;background:var(--urgent)}
+.c-urgent p.note{margin-top:14px;max-width:30ch}
+.phone{display:block;margin-top:18px;font:700 clamp(36px,3.6vw,52px)/1 var(--ui);letter-spacing:-.03em;text-decoration:none;font-variant-numeric:tabular-nums;white-space:nowrap}
+.c-urgent .btn{margin-top:18px}
+.addr{display:flex;gap:10px;margin-top:18px;font:500 16px/1.35 var(--ui)}
+.addr small{display:block;color:var(--mute);font-weight:400;font-size:14px}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px;font-family:var(--ui)}
+.chips a{display:inline-flex;align-items:center;min-height:40px;padding:0 14px;border-radius:999px;background:var(--lilac-soft);text-decoration:none;font-size:15px}
+.c-plan h2{font:600 26px/1.15 var(--ui);letter-spacing:-.02em;margin-top:14px}
+.c-plan .btn{margin-top:18px}
+.club{font:400 14px/1.4 var(--ui);color:var(--mute);margin-top:14px}
+
+.dial{display:flex;flex-direction:column;align-items:flex-start}
+.dial svg{width:100%;max-width:300px;height:auto;margin-top:6px}
+.dial .legend{font:400 14px/1.4 var(--ui);color:var(--mute);margin-top:8px;max-width:30ch}
+.dial .legend i{display:inline-block;width:10px;height:10px;border-radius:50%;background:var(--lilac);margin-right:6px;vertical-align:0}
+
+.band{height:180px;overflow:hidden;border-top:1px solid var(--ink)}
+.band img{width:100%;height:100%;object-fit:cover;object-position:50% 62%;display:block}
+.mbar{display:none}
+
+/* night */
+body.is-night{--paper:#1B1828;--ink:#F2F0F7;--mute:#B4ABD2;--line:#3A3450;--lilac-soft:#2E2842;--urgent:#FF6B7A;--on-urgent:#1B1828}
+body.is-night .status{background:#120F1D}
+body.is-night .band img{filter:brightness(.6) saturate(.6)}
+body.is-night .tri{grid-template-columns:minmax(0,3fr) minmax(0,6fr) minmax(0,3fr)}
+body.is-night .c-urgent{background:#231F35}
+.only-night{display:none}
+body.is-night .only-night{display:revert}
+body.is-night .only-day{display:none}
+
+@media (max-width:900px){
+  nav,.h-phone,.status .hide-m{display:none}
+  .status{padding:7px 16px;font-size:13px;gap:10px}
+  header{padding:12px 16px}
+  h1{font-size:30px;padding:4px 16px 16px}
+  .tri,body.is-night .tri{grid-template-columns:1fr}
+  .cell,.cell:first-child{padding:18px 16px 22px;border-left:0;border-top:1px solid var(--line)}
+  .c-urgent{order:-1;border-top:0}
+  .phone{font-size:44px;margin-top:12px}
+  .c-urgent p.note{margin-top:10px;font-size:16px}
+  .btn-urgent{width:100%}
+  .dial svg{max-width:220px}
+  .band{height:160px}
+  .mbar{display:grid;grid-template-columns:1fr 1fr;gap:8px;position:fixed;left:0;right:0;bottom:0;background:var(--paper);border-top:1px solid var(--line);padding:8px 8px calc(8px + env(safe-area-inset-bottom));font-family:var(--ui)}
+  .mbar a{min-height:48px;border-radius:999px;display:flex;align-items:center;justify-content:center;gap:8px;font-weight:700;text-decoration:none}
+  .m-call{background:var(--urgent);color:var(--on-urgent)}
+  .m-book{background:var(--ink);color:var(--paper)}
+  body{padding-bottom:72px}
+}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-phone" viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.8 19.8 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.12 4.18 2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></symbol>
+  <symbol id="i-pin" viewBox="0 0 24 24"><path d="M20 10c0 6-8 12-8 12S4 16 4 10a8 8 0 0 1 16 0z"/><circle cx="12" cy="10" r="3"/></symbol>
+</svg>
+<div class="status"><span class="only-day">Зараз <b>14:20</b> · відчинено, приймаємо планово й терміново</span><span class="only-night">Зараз <b>23:40</b> · ніч, черговий лікар на місці</span><span class="sep hide-m">|</span><span class="hide-m">Операційна працює без світла: генератор + Starlink</span></div>
+<header>
+  <a class="logo" href="#">хвіст</a>
+  <nav aria-label="Головне меню"><a href="#">Невідкладна допомога</a><a href="#">Послуги</a><a href="#">Ціни</a><a href="#">Лікарі</a><a href="#">Клуб турботи</a></nav>
+  <div class="h-right"><a class="h-phone" href="tel:+380570002424">057 000 24 24</a><a class="btn btn-ink" href="#">Записатися</a></div>
+</header>
+<main>
+  <h1><span class="only-day">Котра б не була година — лікар на місці</span><span class="only-night">23:40, а лікар на місці</span></h1>
+  <div class="tri">
+    <section class="cell dial" aria-label="Графік доби">
+      <p class="label">Доба у «Хвості»</p>
+      <svg id="dial" viewBox="-110 -110 220 220" role="img" aria-label="Циферблат 24 години: ніч з 22:00 до 08:00 — черговий лікар, зараз 14:20"></svg>
+      <p class="legend"><i></i>22:00–08:00 — черговий лікар і невідкладні. Удень — ще й планові прийоми.</p>
+    </section>
+    <section class="cell c-urgent" aria-label="Терміново">
+      <p class="label">Терміново</p>
+      <p class="note">Без запису. Подзвоніть дорогою — підготуємо кабінет.</p>
+      <a class="phone" data-check="phone" href="tel:+380570002424">057 000 24 24</a>
+      <a class="btn btn-urgent" data-check="call" href="tel:+380570002424"><svg class="i"><use href="#i-phone"/></svg> Подзвонити</a>
+      <p class="addr" data-check="addr"><svg class="i"><use href="#i-pin"/></svg><span>вул. Ліхтарна, 9<small>4 хв від м. «Пушкінська» · вхід з двору</small></span></p>
+    </section>
+    <section class="cell c-plan" aria-label="Планово">
+      <p class="label" data-check="plan">Планово</p>
+      <h2>Записатися на зручний час</h2>
+      <div class="chips"><a href="#">щеплення</a><a href="#">стерилізацію</a><a href="#">огляд</a><a href="#">кігті й вуха</a><a href="#">УЗД та аналізи</a></div>
+      <a class="btn btn-ink" href="#">Записатися онлайн</a>
+      <p class="club">Клуб турботи: −10 % на щеплення й огляди</p>
+    </section>
+  </div>
+  <div class="band"><img src="img/px-6235114.jpg" alt="Лікар у синій формі оглядає вівчарку на столі в кабінеті"></div>
+</main>
+<div class="mbar"><a class="m-call" href="tel:+380570002424"><svg class="i"><use href="#i-phone"/></svg> Подзвонити</a><a class="m-book" href="#" data-check="plan">Записатися</a></div>
+<script>
+var t=(location.search.match(/[?&]t=(\w+)/)||[])[1];var night=t==='night'||t==='curfew';if(night)document.body.classList.add('is-night');
+(function(){
+  var s=document.getElementById('dial'),R=92,ns='http://www.w3.org/2000/svg',h='';
+  function pt(hr,r){var a=(hr/24)*2*Math.PI-Math.PI/2;return [Math.cos(a)*r,Math.sin(a)*r]}
+  function arc(a,b,r){var p=pt(a,r),q=pt(b,r),large=((b-a+24)%24)>12?1:0;return 'M'+p[0]+' '+p[1]+' A'+r+' '+r+' 0 '+large+' 1 '+q[0]+' '+q[1]}
+  h+='<circle r="'+R+'" fill="none" stroke="var(--line)" stroke-width="14"/>';
+  h+='<path d="'+arc(22,32,R)+'" fill="none" stroke="var(--lilac)" stroke-width="14"/>';
+  for(var i=0;i<24;i++){var a=pt(i,R+11),b=pt(i,R+(i%6?15:19));h+='<line x1="'+a[0]+'" y1="'+a[1]+'" x2="'+b[0]+'" y2="'+b[1]+'" stroke="var(--ink)" stroke-width="'+(i%6?1:2)+'"/>'}
+  [0,6,12,18].forEach(function(n){var p=pt(n,R-26);h+='<text x="'+p[0]+'" y="'+(p[1]+4)+'" text-anchor="middle" font-family="Commissioner" font-size="11" font-weight="600" fill="var(--mute)">'+(n<10?'0':'')+n+'</text>'});
+  var now=night?23+40/60:14+20/60,p=pt(now,R);
+  h+='<circle cx="'+p[0]+'" cy="'+p[1]+'" r="9" fill="var(--urgent)" stroke="var(--paper)" stroke-width="3"/>';
+  h+='<text x="0" y="12" text-anchor="middle" font-family="Commissioner" font-size="12" font-weight="500" fill="var(--mute)" dy="-24">зараз</text><text x="0" y="12" text-anchor="middle" font-family="Commissioner" font-size="26" font-weight="700" fill="var(--ink)" style="font-variant-numeric:tabular-nums">'+(night?'23:40':'14:20')+'</text>';
+  s.innerHTML=h;
+})();
+</script>
+</body>
+</html>

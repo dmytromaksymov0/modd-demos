@@ -1,0 +1,20 @@
+---
+// Text field with a visible label, optional hint and an error shown next to the field (never only at the top).
+import Icon from './Icon.astro';
+interface Props { label: string; name: string; type?: string; required?: boolean; hint?: string; error?: string; placeholder?: string; value?: string; autocomplete?: string; inputmode?: string; textarea?: boolean; optional?: boolean }
+const { label, name, type = 'text', required = false, hint, error, placeholder, value, autocomplete, inputmode, textarea = false, optional = false } = Astro.props;
+const id = `f-${name}`;
+const describedBy = [hint && `${id}-hint`, error && `${id}-err`].filter(Boolean).join(' ') || undefined;
+const field = `w-full rounded-sm border bg-white px-4 text-[1.0625rem] text-ink placeholder:text-stone ${error ? 'border-alert border-2' : 'border-line-strong'}`;
+---
+<div class="field grid content-start gap-1.5">
+  <label for={id} class="text-[0.9375rem] font-semibold text-fg">{label}{optional && <span class="font-normal text-fg-mute"> — за бажанням</span>}</label>
+  {textarea
+    ? <textarea id={id} name={name} rows="3" class={`${field} min-h-24 py-3`} placeholder={placeholder} required={required} aria-invalid={error ? 'true' : undefined} aria-describedby={describedBy}>{value}</textarea>
+    : <input id={id} name={name} type={type} class={`${field} min-h-12`} placeholder={placeholder} value={value} required={required} autocomplete={autocomplete} inputmode={inputmode} aria-invalid={error ? 'true' : undefined} aria-describedby={describedBy} />}
+  {hint && <p id={`${id}-hint`} class="t-caption text-fg-mute">{hint}</p>}
+  {error && <p id={`${id}-err`} class="t-caption flex items-start gap-1.5 font-semibold text-alert"><Icon name="alert" class="mt-px size-4" />{error}</p>}
+</div>
+<style>
+  .field input:focus-visible, .field textarea:focus-visible { border-color: var(--color-ink); }
+</style>

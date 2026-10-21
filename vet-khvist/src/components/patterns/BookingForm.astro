@@ -1,0 +1,40 @@
+---
+// Booking → POST /api/lead (functions/api/lead.ts). JS: fetch + inline errors → /dyakuyemo/. No JS: plain POST;
+// the function answers 303 to /dyakuyemo/ or back here: ?pomylka=1#pomylka (check the phone) or
+// ?pomylka=nadislaty#ne-nadislano (not delivered — call us). Both boxes appear via :target.
+// ?pryvid=… preselects a reason (plan door chips). Honeypot «company» is for bots only.
+import Field from '../ui/Field.astro';
+import Chip from '../ui/Chip.astro';
+import Button from '../ui/Button.astro';
+import Icon from '../ui/Icon.astro';
+import { site, planReasons } from '../../config/site';
+---
+<form action="/api/lead" method="post" class="relative grid gap-5" data-booking-form novalidate>
+  <div id="pomylka" role="alert" tabindex="-1" class="hidden rounded-sm border-2 border-alert bg-alert-50 p-4 font-semibold text-alert target:block" data-form-error>Не вдалося надіслати: перевірте номер телефону (10 цифр, наприклад 067 123 45 67) або подзвоніть нам.</div>
+  <div id="ne-nadislano" role="alert" tabindex="-1" class="hidden rounded-sm border-2 border-alert bg-alert-50 p-4 text-alert target:block" data-send-error>
+    <p class="font-semibold">Не вдалося надіслати заявку. Запишемо вас по телефону — черговий адміністратор на місці цілодобово:</p>
+    <a href={site.phone.href} class="mt-2 inline-flex min-h-11 items-center gap-2 text-[1.25rem] font-bold text-ink"><Icon name="phone" class="size-5" /><span class="num">{site.phone.display}</span></a>
+  </div>
+  <fieldset class="grid gap-2"><legend class="mb-2 text-[0.9375rem] font-semibold">Привід <span class="font-normal text-fg-mute">— можна кілька</span></legend>
+    <div class="flex flex-wrap gap-2">{planReasons.map((r) => <Chip name="pryvid" value={r}>{r}</Chip>)}</div></fieldset>
+  <fieldset class="grid gap-2"><legend class="mb-2 text-[0.9375rem] font-semibold">Хто прийде</legend>
+    <div class="flex flex-wrap gap-2"><Chip type="radio" name="vyd" value="kit">Кіт</Chip><Chip type="radio" name="vyd" value="pes">Собака</Chip><Chip type="radio" name="vyd" value="inshe">Інша тварина</Chip></div></fieldset>
+  <div class="grid gap-5 sm:grid-cols-2">
+    <Field label="Телефон" name="phone" type="tel" required autocomplete="tel" inputmode="tel" placeholder="067 123 45 67" />
+    <Field label="Ваше ім’я" name="name" autocomplete="given-name" optional />
+    <Field label="Кличка" name="klychka" optional />
+    <Field label="Зручний час" name="koly" optional placeholder="Наприклад: завтра після 18:00" />
+  </div>
+  <Field label="Що турбує" name="note" textarea optional placeholder="Наприклад: кошеняті 2 місяці, перше щеплення" />
+  <fieldset class="grid gap-2"><legend class="mb-2 text-[0.9375rem] font-semibold">Як відповісти</legend>
+    <div class="flex flex-wrap gap-2"><Chip type="radio" name="kanal" value="call" checked>Подзвонити</Chip><Chip type="radio" name="kanal" value="telegram">Написати в Telegram</Chip></div></fieldset>
+  <input type="hidden" name="kind" value="zapys" />
+  <input type="hidden" name="triage" value="" data-triage-field />
+  <input type="hidden" name="page" value={Astro.url.pathname} />
+  <p class="hidden rounded-sm border-l-4 border-lamp bg-white p-3 text-[0.9375rem] text-ink" data-triage-summary></p>
+  <div aria-hidden="true" class="absolute -left-[9999px] h-px w-px overflow-hidden"><label>Компанія <input type="text" name="company" tabindex="-1" autocomplete="off" /></label></div>
+  <div class="flex flex-wrap items-center gap-x-5 gap-y-3">
+    <Button type="submit" size="lg" data-submit><span data-submit-label>Записатися</span></Button>
+    <p class="t-small max-w-[40ch] text-fg-mute">Передзвонимо протягом 15 хвилин удень; заявки, надіслані вночі, — о 8:00. Терміново — <a href={site.phone.href} class="num font-semibold">дзвоніть</a>.</p>
+  </div>
+</form>

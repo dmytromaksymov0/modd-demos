@@ -1,0 +1,21 @@
+---
+// Mobile bottom bar «Подзвонити · Записатися». Always visible, also over the hero — a deliberate exception for the
+// night emergency scenario. The hero shows the lit number + address; the red button lives only here on phones,
+// so there are never two big red buttons on one screen.
+import Icon from '../ui/Icon.astro';
+import { site } from '../../config/site';
+interface Props { bookHref?: string }
+const { bookHref = '/zapys/' } = Astro.props;
+---
+<nav class="mbar is-night-surface fixed inset-x-0 bottom-0 z-40 border-t border-rule bg-surface px-2 pt-2 md:hidden" aria-label="Швидкі дії"
+  style="padding-bottom: max(0.5rem, env(safe-area-inset-bottom))">
+  <div class="grid grid-cols-2 gap-2">
+    <a href={site.phone.href} class="m-call inline-flex min-h-13 items-center justify-center gap-2 rounded-sm text-[1.0625rem] font-bold text-white no-underline" data-check="call">
+      <Icon name="phone" class="size-5" />Подзвонити
+    </a>
+    <a href={bookHref} class="inline-flex min-h-13 items-center justify-center rounded-sm bg-lamp text-[1.0625rem] font-bold text-night no-underline">Записатися</a>
+  </div>
+</nav>
+<style>
+  .m-call { background: var(--color-urgent-night); }
+</style>

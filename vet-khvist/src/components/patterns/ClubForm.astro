@@ -1,0 +1,34 @@
+---
+// Club sign-up → POST /api/lead (kind=klub). Same honest fallback as booking: phone box on failure, :target without JS.
+import Field from '../ui/Field.astro';
+import Chip from '../ui/Chip.astro';
+import Button from '../ui/Button.astro';
+import Icon from '../ui/Icon.astro';
+import { site } from '../../config/site';
+import { AGES } from '../../lib/lead';
+---
+<form action="/api/lead" method="post" class="relative grid gap-5" data-booking-form novalidate>
+  <div id="pomylka" role="alert" tabindex="-1" class="hidden rounded-sm border-2 border-alert bg-alert-50 p-4 font-semibold text-alert target:block" data-form-error>Не вдалося надіслати: перевірте номер телефону (10 цифр, наприклад 067 123 45 67).</div>
+  <div id="ne-nadislano" role="alert" tabindex="-1" class="hidden rounded-sm border-2 border-alert bg-alert-50 p-4 text-alert target:block" data-send-error>
+    <p class="font-semibold">Не вдалося надіслати заявку. Запишемо вас у клуб по телефону:</p>
+    <a href={site.phone.href} class="mt-2 inline-flex min-h-11 items-center gap-2 text-[1.25rem] font-bold text-ink"><Icon name="phone" class="size-5" /><span class="num">{site.phone.display}</span></a>
+  </div>
+  <fieldset class="grid gap-2"><legend class="mb-2 text-[0.9375rem] font-semibold">Хто</legend>
+    <div class="flex flex-wrap gap-2"><Chip type="radio" name="vyd" value="kit" checked>Кіт</Chip><Chip type="radio" name="vyd" value="pes">Собака</Chip></div></fieldset>
+  <fieldset class="grid gap-2"><legend class="mb-2 text-[0.9375rem] font-semibold">Вік</legend>
+    <div class="flex flex-wrap gap-2">{AGES.map((a, i) => <Chip type="radio" name="vik" value={a} checked={i === 2}>{a}</Chip>)}</div></fieldset>
+  <div class="grid gap-5 sm:grid-cols-2">
+    <Field label="Телефон для Telegram" name="phone" type="tel" required autocomplete="tel" inputmode="tel" placeholder="067 123 45 67" hint="Бот напише на цей номер у Telegram." />
+    <Field label="Кличка" name="klychka" optional />
+    <Field label="Ваше ім’я" name="name" autocomplete="given-name" optional />
+    <Field label="Останнє щеплення" name="ostannie" optional placeholder="мм.рррр" />
+  </div>
+  <input type="hidden" name="kind" value="klub" />
+  <input type="hidden" name="kanal" value="telegram" />
+  <input type="hidden" name="page" value={Astro.url.pathname} />
+  <div aria-hidden="true" class="absolute -left-[9999px] h-px w-px overflow-hidden"><label>Компанія <input type="text" name="company" tabindex="-1" autocomplete="off" /></label></div>
+  <div class="flex flex-wrap items-center gap-x-5 gap-y-3">
+    <Button type="submit" size="lg" icon="send" data-submit><span data-submit-label>Вступити в клуб</span></Button>
+    <p class="t-small max-w-[40ch] text-fg-mute">Безкоштовно. Вийти — командою /stop у боті. <a href="/pryvatnist/">Як ми використовуємо дані</a>.</p>
+  </div>
+</form>

@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="uk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Хвіст · B «В руках»</title>
+<style>
+@font-face{font-family:"Ysabeau Infant";src:url(fonts/ysabeau-infant-cyrillic.woff2) format("woff2");font-weight:1 1000;unicode-range:U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116}
+@font-face{font-family:"Ysabeau Infant";src:url(fonts/ysabeau-infant-cyrillic-ext.woff2) format("woff2");font-weight:1 1000;unicode-range:U+0460-052F,U+1C80-1C8A,U+20B4,U+2DE0-2DFF,U+A640-A69F,U+FE2E-FE2F}
+@font-face{font-family:"Ysabeau Infant";src:url(fonts/ysabeau-infant-latin.woff2) format("woff2");font-weight:1 1000;unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+@font-face{font-family:"Ysabeau Office";src:url(fonts/ysabeau-office-cyrillic.woff2) format("woff2");font-weight:1 1000;unicode-range:U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116}
+@font-face{font-family:"Ysabeau Office";src:url(fonts/ysabeau-office-cyrillic-ext.woff2) format("woff2");font-weight:1 1000;unicode-range:U+0460-052F,U+1C80-1C8A,U+20B4,U+2DE0-2DFF,U+A640-A69F,U+FE2E-FE2F}
+@font-face{font-family:"Ysabeau Office";src:url(fonts/ysabeau-office-latin.woff2) format("woff2");font-weight:1 1000;unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+
+:root{
+  --paper:#F3F2EF; --ink:#1A1918; --stone:#5E5A55; --line:#D6D3CD; --white:#FFFFFF;
+  --urgent:#C21F2E; --urgent-soft:#F6E3E4;
+  --head:"Ysabeau Infant",system-ui,sans-serif; --text:"Ysabeau Office",system-ui,sans-serif;
+  --r:2px;
+}
+*{box-sizing:border-box;margin:0}
+body{background:var(--paper);color:var(--ink);font:450 17px/1.5 var(--text);overflow-x:hidden}
+a{color:inherit}
+svg.i{width:20px;height:20px;flex:none;stroke:currentColor;fill:none;stroke-width:1.75;stroke-linecap:round;stroke-linejoin:round}
+.wrap{padding:0 40px}
+
+.power{border-bottom:1px solid var(--line);font-size:14px;padding:8px 40px;color:var(--stone);display:flex;gap:8px;align-items:center}
+.power b{color:var(--ink);font-weight:650}
+header{display:flex;align-items:center;gap:36px;padding:20px 40px}
+.logo{font:700 34px/1 var(--head);letter-spacing:-.02em;text-decoration:none}
+nav{display:flex;gap:24px;font-size:16px}
+nav a{text-decoration:none}
+.h-right{margin-left:auto;display:flex;gap:20px;align-items:center}
+.h-phone{font-weight:700;text-decoration:none;font-size:18px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;min-height:48px;padding:0 22px;border-radius:var(--r);font:650 17px/1 var(--text);text-decoration:none}
+.btn-ink{background:var(--ink);color:var(--paper)}
+.btn-urgent{background:var(--urgent);color:var(--white);min-height:58px;padding:0 26px;font-size:19px}
+
+h1{font:600 clamp(36px,5vw,72px)/1 var(--head);letter-spacing:-.025em;padding:18px 40px 26px;text-wrap:balance}
+h1 em{font-style:normal;color:var(--stone)}
+
+.row{display:grid;grid-template-columns:200px 1fr;gap:0 32px;border-top:1px solid var(--ink);padding:22px 40px}
+.row-label{font:700 15px/1.2 var(--text);letter-spacing:.12em;text-transform:uppercase;padding-top:8px}
+.row-urgent .row-label{color:var(--urgent)}
+.row-urgent .row-label::before{content:"";display:inline-block;width:10px;height:10px;border-radius:50%;background:var(--urgent);margin-right:10px;vertical-align:1px}
+.u-body{display:grid;grid-template-columns:auto auto 1fr;align-items:center;gap:12px 32px}
+.u-phone{font:700 clamp(40px,4.6vw,64px)/1 var(--text);letter-spacing:-.02em;text-decoration:none;white-space:nowrap}
+.u-note{grid-column:1/-1;color:var(--stone);font-size:17px}
+.addr{display:flex;gap:10px;font-size:17px;line-height:1.35}
+.addr small{display:block;color:var(--stone);font-size:15px}
+.p-body{display:flex;flex-wrap:wrap;align-items:center;gap:10px}
+.p-body .lead{font:600 22px/1.2 var(--head);margin-right:6px}
+.chip{display:inline-flex;align-items:center;min-height:42px;padding:0 16px;border:1px solid var(--line);background:var(--white);border-radius:var(--r);text-decoration:none;font-size:16px}
+.p-body .btn{margin-left:auto}
+.club{grid-column:2;font-size:15px;color:var(--stone);margin-top:10px}
+
+.strip{display:grid;grid-template-columns:1.35fr 1fr 1fr;gap:4px;border-top:1px solid var(--ink);margin-top:0}
+.strip figure{position:relative}
+.strip img{display:block;width:100%;height:280px;object-fit:cover}
+.strip figcaption{font-size:14px;color:var(--stone);padding:8px 40px 18px 12px}
+.strip figure:first-child figcaption{padding-left:40px}
+
+.mbar{display:none}
+
+/* night */
+body.is-night{--paper:#171615;--ink:#F1EFEB;--stone:#AFA9A2;--line:#3A3734;--white:#211F1D;--urgent:#D63A40}
+body.is-night .btn-ink{background:#F1EFEB;color:#171615}
+body.is-night .strip img{filter:grayscale(1) brightness(.75)}
+.only-night{display:none}
+body.is-night .only-night{display:revert}
+body.is-night .only-day{display:none}
+
+@media (max-width:900px){
+  nav,.h-phone{display:none}
+  .power{padding:6px 16px;font-size:13px}
+  header{padding:12px 16px}
+  .logo{font-size:30px}
+  h1{font-size:32px;padding:6px 16px 14px}
+  .row{grid-template-columns:1fr;padding:16px 16px 20px;gap:8px}
+  .row-label{padding-top:0}
+  .u-body{grid-template-columns:1fr;gap:12px}
+  .u-phone{font-size:44px}
+  .u-note{grid-column:auto;font-size:16px;order:-1}
+  .btn-urgent{width:100%}
+  .p-body .btn{margin-left:0;width:100%;margin-top:6px}
+  .club{grid-column:auto}
+  .strip{grid-template-columns:repeat(3,78%);overflow-x:auto;scroll-snap-type:x mandatory}
+  .strip figure{scroll-snap-align:start}
+  .strip img{height:220px}
+  .strip figcaption,.strip figure:first-child figcaption{padding:8px 16px 16px}
+  .mbar{display:grid;grid-template-columns:1fr 1fr;gap:8px;position:fixed;left:0;right:0;bottom:0;background:var(--paper);border-top:1px solid var(--ink);padding:8px 8px calc(8px + env(safe-area-inset-bottom))}
+  .mbar a{min-height:48px;display:flex;align-items:center;justify-content:center;gap:8px;font-weight:700;text-decoration:none;border-radius:var(--r)}
+  .m-call{background:var(--urgent);color:#fff}
+  .m-book{background:var(--ink);color:var(--paper)}
+  body{padding-bottom:72px}
+}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-phone" viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.8 19.8 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.12 4.18 2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></symbol>
+  <symbol id="i-pin" viewBox="0 0 24 24"><path d="M20 10c0 6-8 12-8 12S4 16 4 10a8 8 0 0 1 16 0z"/><circle cx="12" cy="10" r="3"/></symbol>
+  <symbol id="i-zap" viewBox="0 0 24 24"><path d="M13 2 3 14h9l-1 8 10-12h-9l1-8z"/></symbol>
+</svg>
+<div class="power"><svg class="i" style="width:16px;height:16px"><use href="#i-zap"/></svg><span><b>Операційна працює без світла</b> · генератор + Starlink</span></div>
+<header>
+  <a class="logo" href="#">Хвіст</a>
+  <nav aria-label="Головне меню"><a href="#">Невідкладна допомога</a><a href="#">Послуги</a><a href="#">Ціни</a><a href="#">Лікарі</a><a href="#">Клуб турботи</a></nav>
+  <div class="h-right"><a class="h-phone" href="tel:+380570002424">057 000 24 24</a><a class="btn btn-ink" href="#">Записатися</a></div>
+</header>
+<main>
+  <h1><span class="only-day">Цілодобова ветклініка <em>в&nbsp;центрі Харкова</em></span><span class="only-night">23:40. <em>Черговий лікар на&nbsp;місці</em></span></h1>
+
+  <section class="row row-urgent" aria-label="Терміново">
+    <p class="row-label">Терміново</p>
+    <div class="u-body">
+      <p class="u-note">Без запису, вдень і вночі. Подзвоніть дорогою — підготуємо кабінет.</p>
+      <a class="u-phone" data-check="phone" href="tel:+380570002424">057 000 24 24</a>
+      <a class="btn btn-urgent" data-check="call" href="tel:+380570002424"><svg class="i"><use href="#i-phone"/></svg> Подзвонити</a>
+      <p class="addr" data-check="addr"><svg class="i"><use href="#i-pin"/></svg><span>вул. Ліхтарна, 9<small>4 хв від м. «Пушкінська» · вхід з двору</small></span></p>
+    </div>
+  </section>
+
+  <section class="row row-plan" aria-label="Планово">
+    <p class="row-label" data-check="plan">Планово</p>
+    <div class="p-body">
+      <span class="lead">Записатися на</span>
+      <a class="chip" href="#">щеплення</a><a class="chip" href="#">стерилізацію</a><a class="chip" href="#">огляд</a><a class="chip" href="#">кігті й вуха</a><a class="chip" href="#">УЗД та аналізи</a>
+      <a class="btn btn-ink" href="#">Записатися онлайн</a>
+    </div>
+    <p class="club">Клуб турботи: −10 % на щеплення й огляди, нагадування в Telegram</p>
+  </section>
+
+  <div class="strip">
+    <figure><img src="img/px-6235021.jpg" alt="Руки лікаря в рукавичках тримають лапу вівчарки на оглядовому столі"><figcaption>Лікар тримає лапу вівчарки під час огляду</figcaption></figure>
+    <figure><img src="img/px-6816836.jpg" alt="Рука лікаря відгортає вухо білого з сірим кота" style="object-position:40% 40%"><figcaption>Огляд вуха кота</figcaption></figure>
+    <figure><img src="img/px-33394308.jpg" alt="Кошеня на електронних вагах, поруч шприци й ліки"><figcaption>Кошеня зважують: від ваги залежить доза</figcaption></figure>
+  </div>
+</main>
+<div class="mbar"><a class="m-call" href="tel:+380570002424"><svg class="i"><use href="#i-phone"/></svg> Подзвонити</a><a class="m-book" href="#" data-check="plan">Записатися</a></div>
+<script>var t=(location.search.match(/[?&]t=(\w+)/)||[])[1];if(t==='night'||t==='curfew')document.body.classList.add('is-night')</script>
+</body>
+</html>

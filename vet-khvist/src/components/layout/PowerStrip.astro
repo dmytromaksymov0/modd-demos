@@ -1,0 +1,22 @@
+---
+// 4.5 «Світло є» — one calm line above the header, opens into what works without power. Always a night surface.
+import { power } from '../../config/site';
+import Icon from '../ui/Icon.astro';
+---
+<details class="power is-night-surface bg-surface text-fg-mute">
+  <summary class="wrap flex min-h-11 cursor-pointer list-none items-center gap-2 text-[0.875rem]">
+    <Icon name="zap" class="size-4 text-lamp" />
+    <span><strong class="font-semibold text-lamp">{power.short}</strong><span class="max-sm:hidden"> · {power.detail}</span></span>
+    <span class="ml-auto hidden items-center gap-1 underline underline-offset-4 sm:inline-flex">Що працює під час відключень<Icon name="chevron-down" class="chev size-4" /></span>
+  </summary>
+  <div class="wrap grid gap-4 pb-5 pt-2 text-[0.9375rem] md:grid-cols-[2fr_1fr]">
+    <ul class="grid gap-x-8 gap-y-1.5 sm:grid-cols-2">
+      {power.works.map((w) => <li class="flex items-center gap-2 text-fg"><Icon name="check" class="size-4 text-lamp" />{w}</li>)}
+    </ul>
+    <p class="text-fg-mute">{power.alarm}</p>
+  </div>
+</details>
+<style>
+  .power summary::-webkit-details-marker { display: none; }
+  .power[open] .chev { transform: rotate(180deg); }
+</style>

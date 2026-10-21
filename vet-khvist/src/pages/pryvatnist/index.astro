@@ -1,0 +1,22 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHero from '../../components/page/PageHero.astro';
+import { site } from '../../config/site';
+const blocks = [
+  ['Що ми збираємо', 'Лише те, що ви вписали у форму: телефон (обов’язково), ім’я, кличку й вид тварини, привід, зручний час, текст «що турбує», результат «Чи терміново?», якщо ви ним скористались.'],
+  ['Навіщо', 'Щоб передзвонити або написати в Telegram і записати на прийом. Для Клубу турботи — щоб надсилати нагадування.'],
+  ['Де зберігається', 'Заявка надходить у робочий Telegram-чат адміністраторів клініки. Ми не продаємо й не передаємо дані третім особам.'],
+  ['Скільки зберігаємо', 'Заявки — до 12 місяців. Дані Клубу — поки ви в клубі; після /stop видаляємо протягом 30 днів.'],
+  ['Cookies і аналітика', 'Сайт не використовує рекламні cookies. Аналітика відвідувань у демо вимкнена.'],
+  ['Ваші права', `Написати на ${site.email} або подзвонити ${site.phone.display}: дізнатися, що ми зберігаємо, виправити чи видалити дані.`],
+];
+---
+<BaseLayout title="Приватність — ветклініка «Хвіст»" description="Які дані ми збираємо у формах запису й Клубу турботи, навіщо і як довго зберігаємо." current="/pryvatnist/" crumbs={[{ href: '', label: 'Приватність' }]}>
+  <PageHero kicker="Приватність" title="Як ми використовуємо ваші дані" crumbs={[{ href: '', label: 'Приватність' }]}>
+    Коротко: тільки те, що ви самі вписали, і тільки щоб записати вас на прийом.
+  </PageHero>
+  <section class="is-day-surface bg-surface-2 py-[var(--spacing-section)] text-fg">
+    <dl class="wrap grid max-w-4xl gap-0">{blocks.map(([t, d]) => <div class="grid gap-2 border-t border-ink py-6 md:grid-cols-[14rem_minmax(0,1fr)] md:gap-8"><dt class="t-h3">{t}</dt><dd class="measure text-fg-mute">{d}</dd></div>)}</dl>
+    <p class="wrap mt-8 max-w-4xl text-[0.9375rem] text-fg-mute">Це концепт-сайт вигаданої клініки, створений студією modd. Заявки з демо-форм не використовуються для запису.</p>
+  </section>
+</BaseLayout>

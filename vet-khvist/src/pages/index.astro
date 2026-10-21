@@ -1,0 +1,27 @@
+---
+// Home: 8 sections (phase 0 sitemap) in the «Світло горить» language. Day / night / curfew by Europe/Kyiv time.
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Doors from '../components/patterns/Doors.astro';
+import Triage from '../components/home/Triage.astro';
+import CallAt3 from '../components/home/CallAt3.astro';
+import PowerSection from '../components/home/PowerSection.astro';
+import Services from '../components/home/Services.astro';
+import Doctors from '../components/home/Doctors.astro';
+import CareCalendar from '../components/home/CareCalendar.astro';
+import Closing from '../components/home/Closing.astro';
+import LazyUi from '../components/page/LazyUi.astro';
+import { faq } from '../data/faq';
+---
+<BaseLayout title="Ветклініка «Хвіст» — цілодобово, Харків · невідкладна допомога собакам і котам"
+  description="Цілодобова ветклініка в центрі Харкова: черговий лікар щоночі, операційна працює без світла. Перевірте, чи терміново, ціни «все включено», запис онлайн. 057 000 24 24."
+  bookHref="#zapys" schema faq={faq}>
+  <Doors bookHref="#zapys" />
+  <Triage bookHref="#zapys" />
+  <CallAt3 />
+  <Services />
+  <Doctors />
+  <PowerSection />
+  <CareCalendar />
+  <Closing />
+  <LazyUi />
+</BaseLayout>

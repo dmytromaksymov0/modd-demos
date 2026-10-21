@@ -1,0 +1,35 @@
+---
+// The «Планово» door — always a day surface. Reasons in plain words (One Medical), «Записатися онлайн», club line.
+// Desktop day: photo at the bottom of the door. Night: the photo goes, the nearest planned slot shows instead.
+import Icon from '../ui/Icon.astro';
+import Button from '../ui/Button.astro';
+import Chip from '../ui/Chip.astro';
+import Figure from './Figure.astro';
+import { planReasons, club } from '../../config/site';
+import photo from '../../assets/photos/vet-cat-stethoscope.jpg';
+interface Props { class?: string; photo?: boolean; bookHref?: string }
+const { class: cls = '', photo: withPhoto = true, bookHref = '/zapys/' } = Astro.props;
+const reasonHref = (r: string) => bookHref.startsWith('#') ? `?pryvid=${encodeURIComponent(r)}${bookHref}` : `${bookHref}?pryvid=${encodeURIComponent(r)}`;
+---
+<section class={`door-plan is-day-surface flex flex-col bg-surface text-fg ${cls}`} aria-labelledby="t-plan">
+  <div class="door-plan-body">
+    <p class="t-kicker flex items-center gap-2.5 text-fg-mute"><Icon name="calendar" class="size-4" />Планово</p>
+    <h2 id="t-plan" class="t-h1 mt-4 max-w-[16ch] md:mt-6" data-check="plan">Записатися на зручний день</h2>
+    <ul class="mt-5 flex flex-wrap gap-2">
+      {planReasons.map((r) => <li><Chip href={reasonHref(r)}>{r}</Chip></li>)}
+    </ul>
+    <div class="mt-6 flex flex-wrap items-center gap-x-5 gap-y-3">
+      <Button href={bookHref}>Записатися онлайн</Button>
+      <p class="t-small max-w-[32ch] text-fg-mute"><strong class="font-semibold text-fg">Клуб турботи:</strong> {club.short}</p>
+    </div>
+  </div>
+  {withPhoto && <Figure src={photo} alt="Лікар у рукавичках слухає стетоскопом смугастого кота на оглядовому столі" caption="Огляд кота: лікар слухає серце й легені"
+    position="50% 90%" sizes="(min-width: 64rem) 40vw, 100vw" class="when-day mt-8 hidden min-h-56 flex-1 md:block" />}
+  <p class="when-dark door-plan-body mt-auto border-t border-rule pt-5 text-[0.9375rem] text-fg-mute">Найближчий плановий запис<strong class="t-h3 mt-1 block font-serif font-medium text-fg">завтра, 09:30 — терапевт</strong></p>
+</section>
+<style>
+  .door-plan { padding-block: var(--spacing-door) 0; }
+  .door-plan-body { padding-inline: var(--spacing-door); }
+  @media (min-width: 64rem) { .door-plan-body { padding-right: var(--spacing-bleed); } }
+  .when-dark.door-plan-body { padding-bottom: var(--spacing-door); }
+</style>

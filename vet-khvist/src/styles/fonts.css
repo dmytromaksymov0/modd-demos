@@ -1,0 +1,28 @@
+/* Self-hosted, one file per family (built by design/phase-2/subset_fonts.py from the full variable
+   sources): Latin + Ukrainian Cyrillic + punctuation + ₴ №. Ubuntu Sans has no arrows — use Lucide icons. */
+@font-face {
+  font-family: "Khvist Serif";
+  src: url("/fonts/khvist-serif.woff2") format("woff2");
+  font-weight: 400 600;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Khvist Sans";
+  src: url("/fonts/khvist-sans.woff2") format("woff2");
+  font-weight: 400 700;
+  font-style: normal;
+  font-display: swap;
+}
+/* Metric-matched fallbacks — width ratios measured in Chrome on Ukrainian text (21.10.2026):
+   Piazzolla 500 / Georgia 500 = 0.937, Ubuntu Sans 400 / Arial = 1.000 (700: 0.978). Keeps reflow small on swap. */
+@font-face {
+  font-family: "Khvist Serif Fallback";
+  src: local("Georgia");
+  size-adjust: 93.7%;
+}
+@font-face {
+  font-family: "Khvist Sans Fallback";
+  src: local("Arial"), local("Liberation Sans"), local("Roboto");
+  size-adjust: 99%;
+}

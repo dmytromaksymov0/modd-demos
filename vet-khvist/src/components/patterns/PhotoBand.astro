@@ -1,0 +1,8 @@
+---
+// Mobile only: a narrow photo band right under the «Терміново» door (before «Планово»), so the first phone screen
+// shows an animal with a doctor and never reads as a café. Day only — at night the screen is about the number.
+import Figure from './Figure.astro';
+import photo from '../../assets/photos/paw-in-hands.jpg';
+---
+<Figure src={photo} alt="Руки лікаря в рукавичках тримають лапу вівчарки на оглядовому столі" caption="Лікар тримає лапу вівчарки під час огляду"
+  position="55% 55%" widths={[400, 800, 1200]} sizes="100vw" class="when-day h-44 md:hidden" />

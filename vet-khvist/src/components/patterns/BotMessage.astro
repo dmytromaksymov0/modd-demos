@@ -1,0 +1,16 @@
+---
+// Telegram bot reply (Клуб турботи, moment 4.3). An HTML replica, always marked «приклад повідомлення».
+interface Props { time?: string; buttons?: string[] }
+const { time = '10:00', buttons = [] } = Astro.props;
+---
+<figure class="bot is-day-surface grid max-w-[26rem] gap-2">
+  <figcaption class="t-caption text-fg-mute">Приклад повідомлення · бот «Хвіст» у Telegram</figcaption>
+  <div class="relative rounded-sm rounded-tl-none bg-lamp-soft px-4 pb-2.5 pt-3 text-[0.9375rem] leading-snug text-ink">
+    <p class="mb-1 text-[0.8125rem] font-semibold text-stone">Хвіст · Клуб турботи</p>
+    <slot />
+    <p class="num mt-1 text-right text-[0.8125rem] text-stone">{time}</p>
+  </div>
+  {buttons.length > 0 && <div class="grid gap-1.5" style={`grid-template-columns: repeat(${Math.min(buttons.length, 2)}, minmax(0, 1fr))`}>
+    {buttons.map((b) => <span class="inline-flex min-h-10 items-center justify-center rounded-sm border border-line-strong bg-white px-3 text-[0.875rem] font-semibold text-ink">{b}</span>)}
+  </div>}
+</figure>

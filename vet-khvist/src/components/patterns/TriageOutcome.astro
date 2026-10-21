@@ -1,0 +1,44 @@
+---
+// Result of «Чи терміново?» (moment 4.1). Place + time, never a diagnosis.
+//   now   — «Їдьте зараз»: the night door style, number + address + what to do on the way
+//   today — «Сьогодні»: day surface, lamp border; always a way up («якщо стане гірше — їдьте зараз»)
+//   plan  — «Планово»: day surface; still a way up
+// Every outcome: the phone is visible as text and the disclaimer «Це не діагноз».
+import Icon from '../ui/Icon.astro';
+import Button from '../ui/Button.astro';
+import { site, curfew } from '../../config/site';
+interface Props { kind: 'now' | 'today' | 'plan'; onTheWay?: string[]; watch?: string[]; reasons?: string[]; worse?: string; bookHref?: string; headingLevel?: 'h2' | 'h3' }
+const { kind, onTheWay = [], watch = [], reasons = [], worse, bookHref = '/zapys/', headingLevel = 'h3' } = Astro.props;
+const H = headingLevel;
+const title = { now: 'Їдьте зараз', today: 'Покажіть лікарю сьогодні', plan: 'Можна записатися планово' }[kind];
+const sub = {
+  now: 'Подзвоніть дорогою — лікар підготує кабінет. Без запису.',
+  today: 'Запишіться на сьогодні або приїжджайте без запису.',
+  plan: 'Оберіть зручний день — до візиту спостерігайте за станом.',
+}[kind];
+---
+<article class={`outcome outcome-${kind} ${kind === 'now' ? 'is-night-surface' : 'is-day-surface'} relative grid gap-4 rounded-sm bg-surface p-6 text-fg md:p-8`} aria-live="polite">
+  <p class="t-kicker flex items-center gap-2 text-fg-mute">
+    {kind === 'now' ? <><span class="size-2.5 rounded-full bg-urgent-night" aria-hidden="true"></span>Результат · терміново</> : kind === 'today' ? <>Результат · сьогодні</> : <>Результат · планово</>}
+  </p>
+  <H class="t-h1" tabindex="-1" data-outcome-title>{title}</H>
+  <p class="t-lead text-fg-mute">{kind === 'now' ? <><span class="when-not-curfew">{sub}</span><span class="when-curfew">{curfew.text}</span></> : sub}</p>
+  <div class="flex flex-wrap items-center gap-x-6 gap-y-3">
+    <a href={site.phone.href} class={`num inline-flex items-center gap-2 text-[1.75rem] font-bold no-underline ${kind === 'now' ? 'text-lamp' : 'text-fg'}`}><Icon name="phone" class="size-6" />{site.phone.display}</a>
+    {kind === 'now'
+      ? <Button href={site.phone.href} variant="urgent" icon="phone">Подзвонити</Button>
+      : <Button href={bookHref} data-book-with-triage>{kind === 'today' ? 'Записатися на сьогодні' : 'Записатися'}</Button>}
+  </div>
+  {kind === 'now' && <p class="flex items-start gap-2 text-[0.9375rem]"><Icon name="map-pin" class="mt-0.5 size-5 text-lamp" /><span>{site.address.street} · {site.address.entrance}</span></p>}
+  <div data-reasons-wrap hidden={reasons.length === 0}><p class="font-semibold">{kind === 'now' ? 'Чому терміново' : 'Чому так'}</p><ul class="mt-2 grid gap-1.5 text-[0.9375rem]" data-list="reasons">{reasons.map((x) => <li class="flex gap-2"><Icon name="check" class="mt-0.5 size-4 shrink-0" /><span>{x}</span></li>)}</ul></div>
+  {kind === 'now'
+    ? <div data-way-wrap hidden={onTheWay.length === 0}><p class="font-semibold">Що робити дорогою</p><ul class="mt-2 grid gap-1.5 text-[0.9375rem]" data-list="way">{onTheWay.map((x) => <li class="flex gap-2"><Icon name="check" class="mt-0.5 size-4 shrink-0 text-lamp" /><span>{x}</span></li>)}</ul></div>
+    : <div data-watch-wrap hidden={watch.length === 0}><p class="font-semibold">Що спостерігати до візиту</p><ul class="mt-2 grid gap-1.5 text-[0.9375rem]" data-list="watch">{watch.map((x) => <li class="flex gap-2"><Icon name="check" class="mt-0.5 size-4 shrink-0" /><span>{x}</span></li>)}</ul></div>}
+  {worse && <p class="worse flex items-start gap-2 rounded-sm border-l-4 border-urgent bg-white px-4 py-3 text-[0.9375rem] text-ink"><Icon name="alert" class="mt-0.5 size-5 text-urgent" /><span><strong>Їдьте зараз,</strong> {worse}</span></p>}
+  <p class="flex items-start gap-2 border-t border-rule pt-4 text-[0.875rem] text-fg-mute"><Icon name="info" class="mt-px size-4" />Це не діагноз. Підказка допомагає вирішити, як швидко їхати. Остаточну оцінку дає лікар на огляді. Сумніваєтесь — дзвоніть.</p>
+</article>
+<style>
+  .outcome-today { box-shadow: inset 0 0 0 2px var(--color-lamp); }
+  .outcome-plan { box-shadow: inset 0 0 0 1px var(--color-line-strong); }
+  .outcome-now::before { content: ''; position: absolute; inset: 0 auto 0 0; width: var(--edge-light); background: var(--color-lamp); border-radius: 2px 0 0 2px; }
+</style>

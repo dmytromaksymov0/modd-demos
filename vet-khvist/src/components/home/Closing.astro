@@ -1,0 +1,41 @@
+---
+// Section 8: sample reviews (labelled), FAQ, booking form.
+import SectionHead from '../ui/SectionHead.astro';
+import Icon from '../ui/Icon.astro';
+import BookingForm from '../patterns/BookingForm.astro';
+import { reviews } from '../../data/reviews';
+import { faq } from '../../data/faq';
+---
+<section id="zapys" class="is-day-surface bg-surface-2 py-[var(--spacing-section)] text-fg" aria-labelledby="t-book">
+  <div class="wrap grid gap-16">
+    <div class="grid gap-6">
+      <p class="t-kicker flex items-center gap-2 text-fg-mute"><Icon name="info" class="size-4" />Приклади відгуків — замінимо на реальні відгуки з Google при запуску</p>
+      <ul class="grid gap-8 md:grid-cols-3">
+        {reviews.map((r) => (
+          <li class="grid content-start gap-3 border-t border-ink pt-5">
+            <blockquote class="font-serif text-[1.1875rem] leading-snug">«{r.text}»</blockquote>
+            <p class="text-[0.9375rem] text-fg-mute">{r.who} · {r.pet}</p>
+          </li>))}
+      </ul>
+    </div>
+    <div class="grid grid-cols-1 gap-12 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:gap-16">
+      <div class="grid content-start gap-6">
+        <SectionHead kicker="Запис" title="Записатися планово" id="t-book">Обов’язковий лише телефон. Решту уточнимо, коли передзвонимо.</SectionHead>
+        <div class="grid">
+          <p class="t-h3 mb-2">Часті питання</p>
+          {faq.map((f) => (
+            <details class="faq border-t border-rule">
+              <summary class="flex min-h-12 cursor-pointer list-none items-center justify-between gap-4 py-3 font-semibold">{f.q}<Icon name="chevron-down" class="chev size-5 shrink-0" /></summary>
+              <p class="max-w-[60ch] pb-4 text-fg-mute">{f.a}</p>
+            </details>))}
+        </div>
+      </div>
+      <div class="rounded-sm bg-white p-6 text-ink md:p-8"><BookingForm /></div>
+    </div>
+  </div>
+</section>
+<style>
+  .faq summary::-webkit-details-marker { display: none; }
+  .faq[open] .chev { transform: rotate(180deg); }
+  .faq:last-child { border-bottom: 1px solid var(--color-rule); }
+</style>

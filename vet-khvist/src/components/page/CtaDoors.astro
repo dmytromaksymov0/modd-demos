@@ -1,0 +1,24 @@
+---
+// End-of-page band: the two doors in miniature. Терміново (night, number) · Планово (day, booking).
+import Icon from '../ui/Icon.astro';
+import Button from '../ui/Button.astro';
+import { site } from '../../config/site';
+interface Props { bookHref?: string; bookLabel?: string }
+const { bookHref = '/zapys/', bookLabel = 'Записатися онлайн' } = Astro.props;
+---
+<section class="grid grid-cols-1 md:grid-cols-2" aria-label="Зв’язатися з клінікою">
+  <div class="cta-urgent is-night-surface relative grid content-center gap-3 bg-surface px-[var(--spacing-bleed)] py-10 text-fg md:pr-10">
+    <p class="t-kicker flex items-center gap-2 text-lamp"><Icon name="moon" class="size-4" />Терміново · цілодобово</p>
+    <a href={site.phone.href} class="t-phone inline-flex min-h-14 items-center gap-3 self-start text-lamp no-underline"><Icon name="phone" class="size-8" stroke={2} />{site.phone.display}</a>
+    <p class="text-fg-mute">Без запису, вдень і вночі. {site.address.street}, {site.address.entrance}.</p>
+  </div>
+  <div class="is-day-surface grid content-center gap-3 bg-surface-2 px-[var(--spacing-bleed)] py-10 text-fg md:pl-10">
+    <p class="t-kicker flex items-center gap-2 text-fg-mute"><Icon name="calendar" class="size-4" />Планово</p>
+    <p class="t-h2">Оберіть зручний день — передзвонимо протягом 15 хвилин</p>
+    <span class="self-start"><Button href={bookHref}>{bookLabel}</Button></span>
+  </div>
+</section>
+<style>
+  .cta-urgent::before { content: ''; position: absolute; inset: 0 auto 0 0; width: var(--edge-light); background: var(--color-lamp); }
+  @media (min-width: 48rem) { .cta-urgent { padding-right: 2.5rem; } }
+</style>

@@ -1,0 +1,39 @@
+---
+// Header: logo, nav, Kyiv-time status, phone, «Записатися». Goes dark at night via html[data-time].
+// Mobile: logo + «Меню» (details, works without JS). Calling lives in the always-visible bottom bar.
+import Logo from '../brand/Logo.astro';
+import Button from '../ui/Button.astro';
+import Icon from '../ui/Icon.astro';
+import TimeStatus from './TimeStatus.astro';
+import { site, nav } from '../../config/site';
+interface Props { current?: string; bookHref?: string }
+const { current = '', bookHref = '/zapys/' } = Astro.props;
+---
+<header class="hdr border-b border-rule bg-surface text-fg">
+  <div class="wrap flex min-h-18 items-center gap-6 py-3 lg:gap-8">
+    <a href="/" class="inline-flex min-h-11 shrink-0 items-center" aria-label="Ветклініка «Хвіст» — на головну"><Logo class="h-10 w-auto lg:h-11" /></a>
+    <nav aria-label="Головне меню" class="hidden lg:block">
+      <ul class="flex gap-5 xl:gap-6 text-[0.9375rem]">
+        {nav.map((n) => <li><a href={n.href} class="whitespace-nowrap no-underline hover:underline" aria-current={current === n.href ? 'page' : undefined}>{n.label}</a></li>)}
+      </ul>
+    </nav>
+    <div class="ml-auto hidden items-center gap-5 lg:flex">
+      <span class="hidden xl:inline-flex"><TimeStatus /></span>
+      <a href={site.phone.href} class="num inline-flex min-h-11 items-center text-[1.0625rem] font-bold no-underline">{site.phone.display}</a>
+      <Button href={bookHref}>Записатися</Button>
+    </div>
+    <details class="menu ml-auto lg:hidden">
+      <summary class="inline-flex min-h-11 cursor-pointer list-none items-center gap-2 rounded-sm border border-fg px-4 font-semibold"><Icon name="menu" class="size-5" />Меню</summary>
+      <div class="menu-panel is-day-surface absolute inset-x-0 z-30 mt-3 border-y border-rule bg-surface shadow-[var(--shadow-float)]">
+        <ul class="wrap grid py-2 text-[1.0625rem]">
+          {nav.map((n) => <li><a href={n.href} class="flex min-h-12 items-center border-b border-rule no-underline">{n.label}</a></li>)}
+        </ul>
+        <div class="wrap flex flex-wrap items-center gap-4 pb-5 pt-2"><TimeStatus /></div>
+      </div>
+    </details>
+  </div>
+</header>
+<style>
+  .menu summary::-webkit-details-marker { display: none; }
+  .hdr { position: relative; }
+</style>

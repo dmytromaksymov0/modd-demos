@@ -1,0 +1,119 @@
+---
+// Prices: tabs Коти / Собаки (radio + :has, no JS). Dogs: weight picker; on phones only the chosen weight column shows.
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHero from '../../components/page/PageHero.astro';
+import CtaDoors from '../../components/page/CtaDoors.astro';
+import Icon from '../../components/ui/Icon.astro';
+import Badge from '../../components/ui/Badge.astro';
+import { prices, nightPrice } from '../../config/site';
+import { allIn, allInIncludes, allInExcludes, weights } from '../../data/services';
+type Row = { what: string; note?: string; cat: number | string; dog: (number | string)[] | number | string };
+const same = (n: number) => ({ cat: n, dog: n });
+const groups: { id: string; title: string; allIn?: boolean; rows: Row[] }[] = [
+  { id: 'khirurhiya', title: 'Хірургія', allIn: true, rows: allIn.filter((r) => !r.note).map((r) => ({ what: r.what, cat: r.cat!, dog: [...r.dog!] })) },
+  { id: 'ohliady', title: 'Огляди', rows: [
+    { what: 'Первинний огляд', note: 'до 30 хв', ...same(prices.exam) },
+    { what: 'Повторний огляд', note: 'протягом 14 днів', ...same(350) },
+    { what: 'Вузький спеціаліст', note: 'дерматолог, кардіолог, ортопед, стоматолог', ...same(prices.specialist) },
+    { what: 'Невідкладний огляд', note: 'без запису, цілодобово', ...same(prices.urgentExam) },
+    { what: 'Онлайн-консультація за результатами аналізів', ...same(400) },
+  ] },
+  { id: 'shcheplennia', title: 'Вакцинація', rows: [
+    { what: 'Комплексне щеплення', note: 'вакцина й огляд включені', cat: prices.vaccineCatFrom, dog: [prices.vaccineDogFrom, prices.vaccineDogFrom, 950, 950] },
+    { what: 'Щеплення від сказу', ...same(450) },
+    { what: 'Чіпування', note: 'чіп і внесення в базу', ...same(450) },
+    { what: 'Ветеринарний паспорт', ...same(150) },
+    { what: 'Титр антитіл до сказу', note: 'відбір крові й відправка в лабораторію', ...same(4300) },
+  ] },
+  { id: 'diahnostyka', title: 'Діагностика', rows: [
+    { what: 'Загальний аналіз крові', note: '15 хв', ...same(450) },
+    { what: 'Біохімія крові, 12 показників', note: '30–60 хв', ...same(950) },
+    { what: 'Експрес-тест на вірусні інфекції', ...same(550) },
+    { what: 'УЗД черевної порожнини', ...same(700) },
+    { what: 'ЕХО серця', note: 'кардіолог', ...same(900) },
+    { what: 'Рентген, 1 проєкція', note: 'кожна наступна — 250 грн', ...same(500) },
+    { what: 'Чекап «База»: огляд, аналізи, УЗД', ...same(2400) },
+  ] },
+  { id: 'statsionar', title: 'Стаціонар', rows: [
+    { what: 'Доба в стаціонарі', note: 'бокс, нагляд, крапельниці за призначенням — ліки окремо', cat: 500, dog: [600, 700, 850, 1000] },
+    { what: 'Кисневий бокс, доба', cat: 900, dog: [1000, 1150, 1300, 1500] },
+    { what: 'Денний стаціонар, до 8 годин', cat: 300, dog: [350, 400, 500, 600] },
+  ] },
+];
+const uah = (n: number | string) => typeof n === 'number' ? `${n.toLocaleString('uk-UA').replace(/\s/g, ' ')} грн` : n;
+const dogCells = (d: Row['dog']) => (Array.isArray(d) ? d : [d, d, d, d]);
+---
+<BaseLayout title="Ціни ветклініки «Хвіст» — все включено, коти й собаки за вагою · Харків"
+  description="Огляд 550 грн, стерилізація кішки 3 400 грн все включено, собаки — за вагою. Нічний тариф лише на огляди. Ціни для котів і собак." current="/tsiny/" og="tsiny" crumbs={[{ href: '', label: 'Ціни' }]}>
+  <PageHero compact kicker="Ціни" title="Одна сума до каси — без «без урахування наркозу»" crumbs={[{ href: '', label: 'Ціни' }]}>
+    Ціну плану лікування погоджуємо до процедур. Окремо — лише ліки додому і стаціонар, якщо він знадобиться.
+    <div slot="aside" id="nich" class="is-night-surface grid gap-1.5 rounded-sm bg-surface px-5 py-4 text-fg">
+      <p class="flex items-center gap-2 font-semibold"><Icon name="moon" class="size-5 text-lamp" />Нічний тариф, 22:00–08:00</p>
+      <p class="text-fg-mute">×1.5 тільки на огляди: первинний — <span class="num text-lamp">{nightPrice(prices.exam)} грн</span>, невідкладний — <span class="num text-lamp">{nightPrice(prices.urgentExam)} грн</span>. Операції й аналізи вночі — без націнки.</p>
+    </div>
+  </PageHero>
+
+  <section class="tabs is-day-surface bg-surface-2 pb-[var(--spacing-section)] pt-6 text-fg md:pt-8" aria-labelledby="t-prices">
+    <div class="wrap grid gap-6">
+      <h2 id="t-prices" class="sr-only">Ціни для котів і собак</h2>
+      <div class="flex flex-wrap items-center gap-x-8 gap-y-4">
+        <fieldset class="seg inline-flex rounded-full border border-ink p-1">
+          <legend class="sr-only">Хто</legend>
+          <label class="seg-i"><input type="radio" name="vyd" value="kit" class="sr-only" checked />Коти</label>
+          <label class="seg-i"><input type="radio" name="vyd" value="pes" class="sr-only" />Собаки</label>
+        </fieldset>
+        <fieldset class="weights flex flex-wrap items-center gap-2">
+          <legend class="float-left mr-2 text-[0.9375rem] font-semibold">Вага собаки</legend>
+          {weights.map((w, i) => <label class="seg-w"><input type="radio" name="w" value={String(i)} class="sr-only" checked={i === 0} />{w}</label>)}
+        </fieldset>
+      </div>
+
+      {groups.map((g) => (
+        <div id={g.id} class="grid min-w-0 gap-4 scroll-mt-24">
+          <div class="flex flex-wrap items-center gap-3"><h3 class="t-h2">{g.title}</h3>{g.allIn && <Badge tone="lamp">все включено</Badge>}</div>
+          <div class="pbox min-w-0 rounded-sm bg-white p-4 text-ink sm:p-6">
+            <table class="ptable w-full text-left">
+              <caption class="sr-only">{g.title}</caption>
+              <thead class="text-[0.875rem] text-stone">
+                <tr><th scope="col" class="pb-3 font-normal">Послуга</th>
+                  <th scope="col" class="c-cat pb-3 text-right font-normal">Кіт</th>
+                  {weights.map((w, i) => <th scope="col" class="c-dog pb-3 pl-3 text-right font-normal" data-w={i}>{w}</th>)}</tr>
+              </thead>
+              <tbody>
+                {g.rows.map((r) => (
+                  <tr class="border-t border-line align-top">
+                    <th scope="row" class="py-3 pr-3 font-semibold">{r.what}{r.note && <span class="block text-[0.875rem] font-normal text-stone">{r.note}</span>}</th>
+                    <td class="c-cat num py-3 text-right">{uah(r.cat)}</td>
+                    {dogCells(r.dog).map((v, i) => <td class="c-dog num py-3 pl-3 text-right" data-w={i}>{uah(v)}</td>)}
+                  </tr>))}
+              </tbody>
+            </table>
+            {g.allIn && <div class="mt-5 grid gap-2 border-t border-line pt-4 text-[0.9375rem]"><p class="font-semibold">У ціну входить:</p><ul class="grid gap-1 sm:grid-cols-2">{allInIncludes.map((x) => <li class="flex gap-2"><Icon name="check" class="mt-0.5 size-4 shrink-0" />{x}</li>)}</ul><p class="text-stone">{allInExcludes}</p></div>}
+          </div>
+        </div>))}
+      <p class="max-w-[70ch] text-[0.9375rem] text-fg-mute">Ціни — для звичайного випадку. Якщо лікар бачить, що буде дорожче, — скаже до процедур. Оплата карткою, готівкою або переказом; термінал працює і під час відключень.</p>
+    </div>
+  </section>
+  <CtaDoors />
+</BaseLayout>
+<style>
+  .seg-i { display: inline-flex; align-items: center; min-height: 2.75rem; padding: 0 1.25rem; border-radius: var(--radius-full); cursor: pointer; font-weight: 600; }
+  .seg-i:has(input:checked) { background: var(--color-ink); color: var(--color-day); }
+  .seg-w { display: inline-flex; align-items: center; min-height: 2.75rem; padding: 0 0.9rem; border: 1px solid var(--color-line-strong); border-radius: var(--radius-full); cursor: pointer; font-size: 0.9375rem; background: var(--color-white); color: var(--color-ink); }
+  .seg-w:has(input:checked) { background: var(--color-ink); color: var(--color-day); border-color: var(--color-ink); }
+  .seg-i:has(input:focus-visible), .seg-w:has(input:focus-visible) { outline: 3px solid var(--color-ink); outline-offset: 3px; box-shadow: 0 0 0 7px var(--color-lamp); }
+  .ptable td { white-space: nowrap; }
+  /* Cats: two columns — keep the table at reading width instead of stretching across 1440px. */
+  .tabs:has(input[name='vyd'][value='kit']:checked) .pbox { max-width: 48rem; }
+  /* Cats (default): hide dog columns and the weight picker. Dogs: hide the cat column. */
+  .tabs:has(input[name='vyd'][value='kit']:checked) :is(.c-dog, .weights) { display: none; }
+  .tabs:has(input[name='vyd'][value='pes']:checked) .c-cat { display: none; }
+  /* Phones: dogs show only the chosen weight column; desktop shows all four (the picker hides). */
+  @media (max-width: 47.99rem) {
+    .tabs:has(input[name='w'][value='0']:checked) .c-dog:not([data-w='0']),
+    .tabs:has(input[name='w'][value='1']:checked) .c-dog:not([data-w='1']),
+    .tabs:has(input[name='w'][value='2']:checked) .c-dog:not([data-w='2']),
+    .tabs:has(input[name='w'][value='3']:checked) .c-dog:not([data-w='3']) { display: none; }
+  }
+  @media (min-width: 48rem) { .weights { display: none !important; } }
+</style>

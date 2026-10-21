@@ -1,0 +1,67 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import CtaDoors from '../../components/page/CtaDoors.astro';
+import DoctorCard from '../../components/patterns/DoctorCard.astro';
+import DoctorRow from '../../components/patterns/DoctorRow.astro';
+import Icon from '../../components/ui/Icon.astro';
+import { doctors, areas, roster } from '../../data/doctors';
+const name = (id: string) => doctors.find((d) => d.id === id)!.name;
+const withPhoto = doctors.filter((d) => d.photo);
+const others = doctors.filter((d) => !d.photo);
+---
+<BaseLayout title="Лікарі ветклініки «Хвіст» — 9 лікарів, чергування вдень і вночі · Харків"
+  description="Терапевти, хірурги, анестезіологи, кардіолог, дерматолог, стоматолог. Графік чергувань: хто приймає вдень і хто чергує вночі." current="/likari/" og="likari" crumbs={[{ href: '', label: 'Лікарі' }]}>
+  <section class="is-day-surface bg-surface-2 pb-[var(--spacing-section)] pt-4 text-fg md:pt-6" aria-labelledby="t-docs">
+    <div class="wrap grid gap-6">
+      <nav aria-label="Ви тут"><ol class="flex flex-wrap items-center gap-x-2 text-[0.875rem] text-fg-mute"><li><a href="/" class="inline-flex min-h-11 items-center">Головна</a></li><li class="flex items-center gap-2"><Icon name="arrow-right" class="size-3.5" /><span aria-current="page">Лікарі</span></li></ol></nav>
+      <div class="docs grid gap-6">
+        <div class="flex flex-wrap items-end justify-between gap-x-10 gap-y-4">
+          <h1 id="t-docs" class="t-h1 max-w-[20ch]">9 лікарів, і хтось із них — на місці щоночі</h1>
+          <a href="#cherhovi" class="is-night-surface inline-flex min-h-12 items-center gap-2 rounded-sm bg-surface px-4 text-[0.9375rem] text-fg no-underline"><Icon name="moon" class="size-4 text-lamp" />Хто чергує цього тижня<Icon name="arrow-right" class="size-4" /></a>
+        </div>
+        <fieldset class="flex flex-wrap gap-2">
+          <legend class="sr-only">Показати лікарів за напрямом</legend>
+          <label class="fchip"><input type="radio" name="f" value="all" class="sr-only" checked />Усі</label>
+          {areas.map((a) => <label class="fchip"><input type="radio" name="f" value={a.id} class="sr-only" />{a.label}</label>)}
+        </fieldset>
+        <ul class="grid grid-cols-1 gap-x-8 gap-y-12 sm:grid-cols-2 lg:grid-cols-3">
+          {withPhoto.map((d) => <li data-areas={d.areas.join(' ')}><DoctorCard d={d} headingLevel="h2" /></li>)}
+        </ul>
+        <ul class="others grid border-b border-rule">
+          {others.map((d) => <li data-areas={d.areas.join(' ')}><DoctorRow d={d} headingLevel="h2" /></li>)}
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section id="cherhovi" class="is-night-surface bg-surface py-[var(--spacing-section)] text-fg" aria-labelledby="t-duty">
+    <div class="wrap grid gap-8">
+      <header class="grid gap-3">
+        <p class="t-kicker flex items-center gap-2 text-lamp"><Icon name="moon" class="size-4" />Чергові цього тижня</p>
+        <h2 id="t-duty" class="t-h1 max-w-[22ch]">Хто приймає вдень і хто чергує вночі</h2>
+        <p class="t-lead max-w-[60ch] text-fg-mute">Вночі (20:00–09:00) у клініці завжди черговий лікар і анестезіолог або хірург. Графік оновлюємо щопонеділка.</p>
+      </header>
+      <div class="overflow-x-auto rounded-sm bg-surface-2">
+        <table class="w-full min-w-[40rem] text-left text-[0.9375rem]">
+          <caption class="sr-only">Графік чергувань на тиждень</caption>
+          <thead class="text-fg-mute"><tr><th scope="col" class="px-5 py-3 font-normal">День</th><th scope="col" class="px-5 py-3 font-normal">Удень, 09:00–20:00</th><th scope="col" class="px-5 py-3 font-normal text-lamp">Уночі, 20:00–09:00</th></tr></thead>
+          <tbody>
+            {roster.map((r) => <tr class="border-t border-rule align-top"><th scope="row" class="px-5 py-3 font-semibold">{r.day}</th><td class="px-5 py-3">{r.dayIds.map(name).join(', ')}</td><td class="px-5 py-3 font-semibold text-lamp">{r.nightIds.map(name).join(', ')}</td></tr>)}
+          </tbody>
+        </table>
+      </div>
+      <p class="text-[0.9375rem] text-fg-mute">Записатися до конкретного лікаря — у формі запису напишіть його ім’я, підберемо час у його зміну.</p>
+    </div>
+  </section>
+  <CtaDoors />
+</BaseLayout>
+<style>
+  .docs > ul:first-of-type { margin-top: 0.5rem; }
+  .fchip { display: inline-flex; align-items: center; min-height: 2.75rem; padding: 0 1rem; border: 1px solid var(--color-ink); border-radius: var(--radius-full); cursor: pointer; font-size: 0.9375rem; }
+  .fchip:has(input:checked) { background: var(--color-ink); color: var(--color-day); }
+  .fchip:has(input:focus-visible) { outline: 3px solid var(--color-ink); outline-offset: 3px; box-shadow: 0 0 0 7px var(--color-lamp); }
+  .docs:has(input[value='ter']:checked) li[data-areas]:not([data-areas~='ter']),
+  .docs:has(input[value='khir']:checked) li[data-areas]:not([data-areas~='khir']),
+  .docs:has(input[value='diag']:checked) li[data-areas]:not([data-areas~='diag']),
+  .docs:has(input[value='vuz']:checked) li[data-areas]:not([data-areas~='vuz']) { display: none; }
+</style>

@@ -1,0 +1,73 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Faq from '../../components/page/Faq.astro';
+import LazyUi from '../../components/page/LazyUi.astro';
+import BotMessage from '../../components/patterns/BotMessage.astro';
+import ClubForm from '../../components/patterns/ClubForm.astro';
+import Chip from '../../components/ui/Chip.astro';
+import Icon from '../../components/ui/Icon.astro';
+import { club } from '../../config/site';
+const terms = [
+  ['Знижка 10 %', 'на щеплення, огляди й чекапи — для всіх тварин учасника. Не діє на операції й ліки.'],
+  ['Нагадування', 'за 14 днів до щеплення, за 10 днів — про глисти, щомісяця в сезон — про кліщів. З кнопкою «Записати».'],
+  ['Результати', 'аналізів і рентгену — у Telegram, з поясненням лікаря.'],
+  ['Безкоштовно', 'без абонплати. Вийти — /stop у боті, дані видалимо.'],
+];
+const faq = [
+  { q: 'Що, якщо в мене кілька тварин?', a: 'Додамо всіх: бот веде окремий календар для кожної, знижка діє на всіх.' },
+  { q: 'Бот пише рекламу?', a: 'Ні. Тільки нагадування, результати й відповіді на ваші питання. Акції — не частіше разу на місяць і тільки якщо ви погодитесь.' },
+  { q: 'Можна без Telegram?', a: 'Так, нагадаємо SMS або дзвінком — напишіть про це, коли передзвонимо.' },
+  { q: 'Звідки ви знаєте дати щеплень?', a: 'З ветпаспорта: на першому візиті лікар внесе дати, далі календар оновлюється після кожного щеплення.' },
+];
+---
+<BaseLayout title="Клуб турботи — нагадування про щеплення в Telegram і знижка 10 % · Хвіст"
+  description="Безкоштовний клуб: календар щеплень і обробок, нагадування в Telegram, знижка 10 % на щеплення, огляди й чекапи." current="/klub/" og="klub" faq={faq} crumbs={[{ href: '', label: 'Клуб турботи' }]}>
+  <section class="is-day-surface bg-surface-2 pb-[var(--spacing-section)] pt-4 text-fg md:pt-6" aria-labelledby="t-cal">
+    <div class="wrap">
+      <nav aria-label="Ви тут"><ol class="flex flex-wrap items-center gap-x-2 text-[0.875rem] text-fg-mute"><li><a href="/" class="inline-flex min-h-11 items-center">Головна</a></li><li class="flex items-center gap-2"><Icon name="arrow-right" class="size-3.5" /><span aria-current="page">Клуб турботи</span></li></ol></nav>
+    </div>
+    <div class="wrap mt-4 grid grid-cols-1 gap-10 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:gap-16">
+      <form class="grid min-w-0 grid-cols-1 content-start gap-4" data-care="year" data-lazy onsubmit="return false" aria-label="Календар турботи на рік">
+        <p class="t-kicker text-fg-mute">Клуб турботи · безкоштовно · знижка {club.discount} %</p>
+        <h1 id="t-cal" class="t-h1">Календар турботи на рік — і нагадування в Telegram</h1>
+        <p class="text-fg-mute">Оберіть, хто у вас, — праворуч з’являться дати. Бот напише заздалегідь і запропонує час. <a href="#vstup">Вступити в клуб</a></p>
+        <div role="radiogroup" aria-labelledby="k-sp" class="grid gap-2"><p id="k-sp" class="font-semibold">Хто</p><div class="flex flex-wrap gap-2"><Chip type="radio" name="c-species" value="cat" checked>Кіт</Chip><Chip type="radio" name="c-species" value="dog">Собака</Chip></div></div>
+        <div role="radiogroup" aria-labelledby="k-age" class="grid gap-2"><p id="k-age" class="font-semibold">Вік</p><div class="flex flex-wrap gap-2"><Chip type="radio" name="c-age" value="baby">до 4 міс</Chip><Chip type="radio" name="c-age" value="young">до року</Chip><Chip type="radio" name="c-age" value="adult" checked>дорослий</Chip><Chip type="radio" name="c-age" value="senior">8+ років</Chip></div></div>
+        <label class="grid max-w-xs gap-1.5"><span class="font-semibold">Останнє щеплення <span class="font-normal text-fg-mute">— якщо пам’ятаєте</span></span>
+          <input type="text" name="c-last" inputmode="numeric" autocomplete="off" placeholder="мм.рррр, наприклад 03.2026" aria-describedby="k-last-hint" class="min-h-12 w-full min-w-0 rounded-sm border border-line-strong bg-white px-4 text-ink placeholder:text-stone" />
+          <span id="k-last-hint" class="t-caption text-fg-mute">Місяць і рік з ветпаспорта.</span></label>
+        <p class="flex items-start gap-2 text-[0.875rem] text-fg-mute"><Icon name="info" class="mt-px size-4" />Типовий план нагадувань. Схему щеплень визначає лікар на огляді.</p>
+      </form>
+      <div class="min-w-0" aria-live="polite">
+        <ol class="grid" data-care-list>
+          <li class="grid grid-cols-[7rem_minmax(0,1fr)] gap-4 border-t border-ink py-4"><span class="font-semibold">раз на рік</span><span><strong class="block">Щорічна ревакцинація</strong><span class="text-fg-mute">комплексна вакцина, а також від сказу</span></span></li>
+          <li class="grid grid-cols-[7rem_minmax(0,1fr)] gap-4 border-t border-ink py-4"><span class="font-semibold">раз на 3 міс</span><span><strong class="block">Обробка від глистів</strong><span class="text-fg-mute">і за 10 днів до щеплення</span></span></li>
+          <li class="grid grid-cols-[7rem_minmax(0,1fr)] gap-4 border-y border-ink py-4"><span class="font-semibold">бер.–жовт.</span><span><strong class="block">Обробка від кліщів і бліх</strong><span class="text-fg-mute">щомісяця в сезон</span></span></li>
+        </ol>
+      </div>
+    </div>
+  </section>
+
+  <section class="is-day-surface bg-surface py-[var(--spacing-section)] text-fg" aria-labelledby="t-bot">
+    <div class="wrap grid gap-10">
+      <h2 id="t-bot" class="t-h1 max-w-[24ch]">Що приходить у Telegram</h2>
+      <div class="grid grid-cols-1 gap-8 md:grid-cols-3">
+        <BotMessage time="10:00" buttons={['Записати', 'Інший час']}><p>Барсику через 14 днів щорічна ревакцинація. Для клубу знижка 10 %. Записати на суботу о 10:30?</p></BotMessage>
+        <BotMessage time="16:20"><p>Результати аналізів Луни готові. Лікарка Ада Оконкво: «Нирки в нормі, печінкові показники трохи підвищені — повторимо через місяць, дієта без змін».</p></BotMessage>
+        <BotMessage time="18:40" buttons={['Усе добре', 'Є питання']}><p>Як Сирник після кастрації? Сьогодні третій день: шов сухий, попону не знімаємо. Контрольний огляд — у четвер.</p></BotMessage>
+      </div>
+    </div>
+  </section>
+
+  <section id="vstup" class="is-day-surface bg-surface-2 py-[var(--spacing-section)] text-fg" aria-labelledby="t-join">
+    <div class="wrap grid grid-cols-1 gap-12 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:gap-16">
+      <div class="grid content-start gap-6">
+        <h2 id="t-join" class="t-h1">Умови</h2>
+        <dl class="grid">{terms.map(([t, d]) => <div class="grid gap-1 border-t border-rule py-3"><dt class="font-semibold">{t}</dt><dd class="text-fg-mute">{d}</dd></div>)}</dl>
+        <Faq items={faq} />
+      </div>
+      <div class="rounded-sm bg-white p-6 text-ink md:p-8"><h2 class="t-h2 mb-6">Вступити в клуб</h2><ClubForm /></div>
+    </div>
+  </section>
+  <LazyUi />
+</BaseLayout>

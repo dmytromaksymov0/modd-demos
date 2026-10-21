@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+Disallow: /styleguide/
+Disallow: /dyakuyemo/
+Disallow: /api/
+
+Sitemap: https://vet-khvist.pages.dev/sitemap-index.xml

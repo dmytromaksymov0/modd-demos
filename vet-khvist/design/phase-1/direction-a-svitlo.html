@@ -1,0 +1,183 @@
+<!doctype html>
+<html lang="uk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Хвіст · A «Світло горить»</title>
+<style>
+@font-face{font-family:"Piazzolla";src:url(fonts/piazzolla-cyrillic.woff2) format("woff2");font-weight:100 900;unicode-range:U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116}
+@font-face{font-family:"Piazzolla";src:url(fonts/piazzolla-cyrillic-ext.woff2) format("woff2");font-weight:100 900;unicode-range:U+0460-052F,U+1C80-1C8A,U+20B4,U+2DE0-2DFF,U+A640-A69F,U+FE2E-FE2F}
+@font-face{font-family:"Piazzolla";src:url(fonts/piazzolla-latin.woff2) format("woff2");font-weight:100 900;unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+@font-face{font-family:"Ubuntu Sans";src:url(fonts/ubuntu-sans-cyrillic.woff2) format("woff2");font-weight:100 800;unicode-range:U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116}
+@font-face{font-family:"Ubuntu Sans";src:url(fonts/ubuntu-sans-cyrillic-ext.woff2) format("woff2");font-weight:100 800;unicode-range:U+0460-052F,U+1C80-1C8A,U+20B4,U+2DE0-2DFF,U+A640-A69F,U+FE2E-FE2F}
+@font-face{font-family:"Ubuntu Sans";src:url(fonts/ubuntu-sans-latin.woff2) format("woff2");font-weight:100 800;unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+
+:root{
+  --day:#EEECE9; --ink:#1F1915; --stone:#5F5852; --line:#D3CFCA;
+  --night:#2A211C; --night-2:#352A24; --lamp:#FFC98F; --lamp-dim:#C7AE95;
+  --urgent:#C42B31; --urgent-night:#D63A40; --white:#FFFFFF;
+  --serif:"Piazzolla",Georgia,serif; --sans:"Ubuntu Sans",system-ui,sans-serif;
+  --r:4px;
+}
+*{box-sizing:border-box;margin:0}
+html{-webkit-text-size-adjust:100%}
+body{background:var(--day);color:var(--ink);font:400 16px/1.5 var(--sans);overflow-x:hidden}
+a{color:inherit}
+svg.i{width:20px;height:20px;flex:none;stroke:currentColor;fill:none;stroke-width:1.75;stroke-linecap:round;stroke-linejoin:round}
+
+/* power strip (4.5) */
+.power{background:var(--night);color:var(--lamp-dim);font-size:14px;padding:7px 24px;display:flex;gap:10px;align-items:center;justify-content:space-between}
+.power b{color:var(--lamp);font-weight:600}
+.power a{color:var(--lamp-dim);text-underline-offset:3px}
+
+/* header */
+header{display:flex;align-items:center;gap:32px;padding:18px 24px;border-bottom:1px solid var(--line)}
+.logo{font:600 30px/1 var(--serif);letter-spacing:-.02em;text-decoration:none;display:flex;align-items:baseline;gap:6px}
+.logo small{white-space:nowrap;font:500 12px/1 var(--sans);letter-spacing:.06em;text-transform:uppercase;color:var(--stone)}
+nav{display:flex;gap:22px;font-size:15px}
+nav a{text-decoration:none;white-space:nowrap}
+.h-right{margin-left:auto;display:flex;align-items:center;gap:18px}
+.status{display:flex;align-items:center;gap:8px;font-size:14px;color:var(--stone);white-space:nowrap}
+.dot{width:9px;height:9px;border-radius:50%;background:#2F8A57;box-shadow:0 0 0 3px rgba(47,138,87,.18)}
+.h-phone{font-weight:700;font-size:17px;text-decoration:none;font-variant-numeric:tabular-nums;white-space:nowrap}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;min-height:48px;padding:0 22px;border-radius:var(--r);font:600 16px/1 var(--sans);text-decoration:none;border:0;cursor:pointer}
+.btn-ink{background:var(--ink);color:var(--day)}
+.btn-urgent{background:var(--urgent-night);color:var(--white);font-size:19px;min-height:60px;padding:0 28px}
+
+/* hero: two doors */
+.doors{display:grid;grid-template-columns:7fr 5fr;min-height:calc(100vh - 120px);min-height:calc(100svh - 120px)}
+.door{position:relative;padding:48px 48px 40px;display:flex;flex-direction:column}
+.door-night{background:var(--night);color:var(--lamp);overflow:hidden}
+.door-night::before{content:"";position:absolute;inset:0 auto 0 0;width:6px;background:var(--lamp)}
+.door-night::after{content:"";position:absolute;right:-180px;top:-200px;width:620px;height:620px;border-radius:50%;background:radial-gradient(closest-side,rgba(255,201,143,.16),rgba(255,201,143,0));pointer-events:none}
+.kicker{font:600 13px/1 var(--sans);letter-spacing:.14em;text-transform:uppercase;display:flex;align-items:center;gap:10px}
+.door-night .kicker{color:var(--lamp)}
+.door-night h1{font:500 clamp(34px,4.3vw,58px)/1.04 var(--serif);letter-spacing:-.02em;margin:22px 0 0;max-width:14ch;color:#FFE6C9}
+.door-night .lead{color:var(--lamp-dim);font-size:18px;margin-top:16px;max-width:42ch}
+.big-phone{display:block;margin-top:auto;padding-top:36px;font:700 clamp(44px,6vw,84px)/1 var(--sans);letter-spacing:-.02em;color:var(--lamp);text-decoration:none;font-variant-numeric:tabular-nums}
+.call-row{display:flex;flex-wrap:wrap;align-items:center;gap:14px 24px;margin-top:22px}
+.addr{display:flex;gap:10px;align-items:flex-start;color:#F3DCC2;font-size:16px;line-height:1.35}
+.addr small{display:block;color:var(--lamp-dim);font-size:14px}
+.night-links{display:flex;flex-wrap:wrap;gap:8px 28px;margin-top:28px;padding-top:20px;border-top:1px solid rgba(255,201,143,.22);font-size:15px}
+.night-links a{color:var(--lamp);text-underline-offset:4px;display:inline-flex;gap:8px;align-items:center}
+
+.door-day{background:var(--day);padding:48px 40px 0;display:flex;flex-direction:column}
+.door-day .kicker{color:var(--stone)}
+.door-day h2{font:500 clamp(28px,2.8vw,40px)/1.1 var(--serif);letter-spacing:-.015em;margin-top:22px;max-width:16ch}
+.reasons{display:flex;flex-wrap:wrap;gap:8px;margin-top:20px;padding:0;list-style:none}
+.reasons a{display:inline-flex;align-items:center;min-height:40px;padding:0 14px;border:1px solid var(--ink);border-radius:999px;text-decoration:none;font-size:15px}
+.day-cta{display:flex;align-items:center;gap:18px;margin-top:22px;flex-wrap:wrap}
+.club{font-size:14px;color:var(--stone);max-width:30ch}
+.club b{color:var(--ink)}
+.photo{margin:32px -40px 0;flex:1;min-height:220px;position:relative}
+.photo img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 78%}
+.photo figcaption{position:absolute;left:0;bottom:0;background:var(--day);font-size:13px;color:var(--stone);padding:8px 40px 0 40px}
+
+/* mobile bar */
+.mbar{display:none}
+
+/* night mode (4.2): 22:00–08:00 */
+body.is-night{background:var(--night)}
+body.is-night header{background:var(--night);color:var(--lamp);border-color:#3D3029}
+body.is-night header .logo small,body.is-night .status{color:var(--lamp-dim)}
+body.is-night header .btn-ink{background:var(--lamp);color:var(--night)}
+body.is-night .dot{background:var(--lamp);box-shadow:0 0 0 3px rgba(255,201,143,.25)}
+body.is-night .doors{grid-template-columns:8fr 4fr}
+body.is-night .door-day{background:#E4E1DD}
+body.is-night .photo{display:none}
+.only-night,.only-curfew{display:none}
+body.is-night .only-night{display:revert}
+body.is-night .only-day{display:none}
+body.is-curfew .only-night{display:none}
+body.is-curfew .only-curfew{display:revert}
+.curfew-note{margin-top:18px;max-width:46ch;color:#F3DCC2;font-size:17px;border-left:2px solid var(--lamp);padding-left:14px}
+.morning{margin-top:auto;padding:22px 0 40px;border-top:1px solid var(--line);font-size:15px;color:var(--stone)}
+.morning b{display:block;font:500 22px/1.2 var(--serif);color:var(--ink);margin-top:4px}
+
+@media (max-width:900px){
+  nav,.status,.h-phone{display:none}
+  .power{font-size:13px;padding:6px 16px}
+  .power a{display:none}
+  header{padding:12px 16px;gap:12px}
+  .logo{font-size:26px}
+  .h-right .btn-ink{min-height:44px;padding:0 14px;font-size:15px}
+  .doors,body.is-night .doors{grid-template-columns:1fr;min-height:0}
+  .door{padding:22px 16px 24px}
+  .door-night h1{font-size:30px;margin-top:12px;max-width:none}
+  .door-night .lead{display:none}
+  .big-phone{margin-top:0;padding-top:16px;font-size:44px}
+  .call-row{margin-top:14px;gap:14px}
+  .btn-urgent{width:100%;min-height:56px}
+  .night-links{margin-top:18px;padding-top:14px;font-size:14px;gap:6px 18px}
+  .door-day{padding:28px 16px 0}
+  .photo{margin:24px -16px 0;min-height:260px}
+  .photo figcaption{padding:8px 16px 0}
+  .mbar{display:grid;grid-template-columns:1fr 1fr;position:fixed;left:0;right:0;bottom:0;z-index:5;background:var(--night);border-top:1px solid #3D3029;padding:8px 8px calc(8px + env(safe-area-inset-bottom));gap:8px}
+  .mbar a{min-height:48px;border-radius:var(--r);display:flex;align-items:center;justify-content:center;gap:8px;font-weight:700;text-decoration:none}
+  .mbar .m-call{background:var(--urgent-night);color:#fff}
+  .mbar .m-book{background:var(--lamp);color:var(--night)}
+  body{padding-bottom:72px}
+}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-phone" viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.8 19.8 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.12 4.18 2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></symbol>
+  <symbol id="i-pin" viewBox="0 0 24 24"><path d="M20 10c0 6-8 12-8 12S4 16 4 10a8 8 0 0 1 16 0z"/><circle cx="12" cy="10" r="3"/></symbol>
+  <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></symbol>
+  <symbol id="i-zap" viewBox="0 0 24 24"><path d="M13 2 3 14h9l-1 8 10-12h-9l1-8z"/></symbol>
+  <symbol id="i-moon" viewBox="0 0 24 24"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9z"/></symbol>
+  <symbol id="i-cal" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></symbol>
+</svg>
+
+<div class="power"><span><svg class="i" style="width:16px;height:16px"><use href="#i-zap"/></svg> <b>Операційна працює без світла</b> · генератор + Starlink</span><a href="#">Що працює під час відключень</a></div>
+
+<header>
+  <a class="logo" href="#">Хвіст <small>ветклініка · Харків</small></a>
+  <nav aria-label="Головне меню"><a href="#">Невідкладна допомога</a><a href="#">Послуги</a><a href="#">Ціни</a><a href="#">Лікарі</a><a href="#">Клуб турботи</a></nav>
+  <div class="h-right">
+    <span class="status"><span class="dot"></span><span class="only-day">Цілодобово · зараз 14:20</span><span class="only-night">23:40 · лікар на місці</span><span class="only-curfew">02:47 · комендантська година</span></span>
+    <a class="h-phone" href="tel:+380570002424">057 000 24 24</a>
+    <a class="btn btn-ink" href="#">Записатися</a>
+  </div>
+</header>
+
+<main class="doors">
+  <section class="door door-night" aria-labelledby="t-urgent">
+    <p class="kicker"><svg class="i" style="width:16px;height:16px"><use href="#i-moon"/></svg> Терміново · цілодобово</p>
+    <h1 id="t-urgent"><span class="only-day">Ветклініка, де світло горить цілодобово</span><span class="only-night">23:40. Черговий лікар на місці — приїжджайте</span><span class="only-curfew">02:47. Черговий лікар на телефоні</span></h1>
+    <p class="lead only-day">Приймаємо без запису. Подзвоніть дорогою — лікар підготує кабінет, поки ви їдете.</p><p class="lead only-night">Без запису. Подзвоніть дорогою — підготуємо кабінет і зустрінемо біля входу.</p><p class="curfew-note only-curfew">Зараз комендантська година до 05:00. Подзвоніть: опишіть, що сталося, — лікар скаже, що робити до ранку і чи можна дочекатися 05:00.</p>
+    <a class="big-phone" data-check="phone" href="tel:+380570002424">057 000 24 24</a>
+    <div class="call-row">
+      <a class="btn btn-urgent" data-check="call" href="tel:+380570002424"><svg class="i"><use href="#i-phone"/></svg> Подзвонити</a>
+      <p class="addr" data-check="addr"><svg class="i"><use href="#i-pin"/></svg><span>вул. Ліхтарна, 9<small>4 хв від м. «Пушкінська» · вхід з двору, дзвінок ліворуч</small></span></p>
+    </div>
+    <div class="night-links">
+      <a href="#">Чи терміново? Перевірити за хвилину <svg class="i" style="width:16px;height:16px"><use href="#i-arrow"/></svg></a>
+      <a href="#">Як заїхати вночі</a>
+      <a href="#"><span class="only-day">Невідкладний огляд з 22:00 — 900 грн</span><span class="only-night">Невідкладний огляд уночі — 900 грн</span><span class="only-curfew">Що робити до 05:00</span></a>
+    </div>
+  </section>
+
+  <section class="door door-day" aria-labelledby="t-plan">
+    <p class="kicker"><svg class="i" style="width:16px;height:16px"><use href="#i-cal"/></svg> Планово</p>
+    <h2 id="t-plan" data-check="plan">Записатися на зручний день</h2>
+    <ul class="reasons">
+      <li><a href="#">щеплення</a></li><li><a href="#">стерилізацію</a></li><li><a href="#">огляд</a></li><li><a href="#">кігті й вуха</a></li><li><a href="#">УЗД та аналізи</a></li><li><a href="#">перед поїздкою за кордон</a></li>
+    </ul>
+    <div class="day-cta">
+      <a class="btn btn-ink" href="#">Записатися онлайн</a>
+      <p class="club"><b>Клуб турботи:</b> −10 % на щеплення й огляди, нагадування в Telegram</p>
+    </div>
+    <figure class="photo only-day">
+      <img src="img/px-28644631.jpg" alt="Лікар у рукавичках слухає стетоскопом кота на оглядовому столі">
+      <figcaption>Огляд кота: лікар слухає серце й легені</figcaption>
+    </figure>
+    <p class="morning only-night">Найближчий плановий запис<b>завтра, 09:30 — терапевт</b></p>
+  </section>
+</main>
+
+<div class="mbar"><a class="m-call" href="tel:+380570002424"><svg class="i"><use href="#i-phone"/></svg> Подзвонити</a><a class="m-book" data-check="plan" href="#">Записатися</a></div>
+<script>var t=(location.search.match(/[?&]t=(\w+)/)||[])[1];if(t==='night'||t==='curfew')document.body.classList.add('is-night');if(t==='curfew')document.body.classList.add('is-curfew')</script>
+</body>
+</html>

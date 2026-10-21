@@ -1,0 +1,18 @@
+---
+// Small labels: status (with a dot), «все включено», «приклад повідомлення», «ніч ×1.5».
+interface Props { tone?: 'status' | 'lamp' | 'outline' | 'urgent'; class?: string }
+const { tone = 'outline', class: cls = '' } = Astro.props;
+const tones = {
+  status: 'text-fg-mute',
+  lamp: 'bg-lamp-soft text-ink px-2.5',
+  outline: 'border border-line-strong text-fg px-2.5',
+  urgent: 'bg-urgent text-white px-2.5',
+};
+---
+<span class={`inline-flex min-h-7 items-center gap-2 rounded-sm text-[0.875rem] font-semibold leading-none ${tones[tone]} ${cls}`}>
+  {tone === 'status' && <span class="status-dot size-2.5 rounded-full" aria-hidden="true"></span>}<slot />
+</span>
+<style>
+  .status-dot { background: var(--color-open); box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-open) 18%, transparent); }
+  :global([data-time='night']) .status-dot, :global([data-time='curfew']) .status-dot, :global(.is-night-surface) .status-dot { background: var(--color-lamp); box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-lamp) 22%, transparent); }
+</style>

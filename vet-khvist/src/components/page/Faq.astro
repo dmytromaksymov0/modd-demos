@@ -1,0 +1,18 @@
+---
+import Icon from '../ui/Icon.astro';
+interface Props { items: readonly { q: string; a: string }[]; title?: string; id?: string }
+const { items, title = 'Часті питання', id = 'pytannia' } = Astro.props;
+---
+<div class="grid" id={id}>
+  <h2 class="t-h2 mb-4">{title}</h2>
+  {items.map((f) => (
+    <details class="faq border-t border-rule">
+      <summary class="flex min-h-12 cursor-pointer list-none items-center justify-between gap-4 py-3 font-semibold">{f.q}<Icon name="chevron-down" class="chev size-5 shrink-0" /></summary>
+      <p class="max-w-[62ch] pb-4 text-fg-mute">{f.a}</p>
+    </details>))}
+</div>
+<style>
+  .faq summary::-webkit-details-marker { display: none; }
+  .faq[open] .chev { transform: rotate(180deg); }
+  .faq:last-of-type { border-bottom: 1px solid var(--color-rule); }
+</style>

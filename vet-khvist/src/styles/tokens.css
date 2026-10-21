@@ -1,0 +1,134 @@
+/*
+  Ветклініка «Хвіст» — design tokens (direction A · «Світло горить»).
+  Single source of truth: Tailwind 4 theme variables, so every token is both a CSS custom property
+  (var(--color-night)) and a utility (bg-night, text-lamp, font-serif…).
+  Idea: the clinic is a lit window in the Kharkiv night. The «Терміново» door is always night + lamp light;
+  «Планово» is a calm day. Red is functional only: «Подзвонити» / «Терміново».
+  Components never hard-code colours, fonts, radii, shadows or spacing — use these.
+*/
+@theme {
+  --color-*: initial;
+
+  /* Raw palette ------------------------------------------------------------------------------- */
+  /* Day */
+  --color-day: #EEECE9;           /* page background — warm grey wall, not cream */
+  --color-day-2: #E4E1DD;         /* day panel at night, quiet blocks — ink 13.3:1, stone 5.4:1 */
+  --color-white: #FFFFFF;         /* fields, chips, bot bubbles */
+  --color-ink: #1F1915;           /* text, «Записатися» — 14.7:1 on day, 17:1 on white */
+  --color-stone: #5F5852;         /* secondary text — 5.9:1 on day, 7.0:1 on white */
+  --color-line: #D3CFCA;          /* hairlines (decorative only) */
+  --color-line-strong: #857C75;   /* field & chip borders — 4.1:1 on white, 3.5:1 on day (WCAG 1.4.11) */
+  /* Night */
+  --color-night: #2A211C;         /* urgent door, night theme — warm «coffee» dark, not near-black */
+  --color-night-2: #352A24;       /* raised night surfaces, hover — lamp on it 9.3:1 */
+  --color-night-3: #3D312A;       /* logo door tile on night surfaces */
+  --color-night-line: #4A3B33;    /* hairlines on night (decorative only) */
+  --color-lamp: #FFC98F;          /* lamp light: big phone, night links, night brand accent — 10.5:1 on night */
+  --color-lamp-2: #FFD9AE;        /* lamp hover */
+  --color-lamp-text: #FFE6C9;     /* headlines on night — 13.1:1 */
+  --color-lamp-dim: #C7AE95;      /* secondary text on night — 7.4:1; never below 14px */
+  --color-lamp-soft: #FBE3C6;     /* bot bubbles, «приклад» plates on day — ink on it 14:1 */
+  /* Function */
+  --color-urgent: #C42B31;        /* «Подзвонити»/«Терміново» on light — white text 5.6:1, on day 4.8:1 */
+  --color-urgent-night: #D63A40;  /* same on night surfaces — white text 4.6:1, button vs night 3.4:1 */
+  --color-open: #2E7A4F;          /* status dot only (non-text, 4.4:1 on day) */
+  --color-alert: #A8261F;         /* form errors — 7.1:1 on white (text, with icon) */
+  --color-alert-50: #FBEAE8;
+
+  /* Semantic (switch with html[data-time]) ------------------------------------------------------ */
+  --color-surface: var(--color-day);        /* page & header background */
+  --color-surface-2: var(--color-day-2);
+  --color-fg: var(--color-ink);
+  --color-fg-mute: var(--color-stone);
+  --color-rule: var(--color-line);
+  --color-accent: var(--color-ink);         /* primary «Записатися» fill */
+  --color-on-accent: var(--color-day);
+
+  /* Typography -------------------------------------------------------------------------------- */
+  /* Serif = Piazzolla (opsz 8–30, wght 400–600): headlines only. Sans = Ubuntu Sans (wght 400–700):
+     UI, body, phone, prices — tabular figures by default. */
+  --font-serif: "Khvist Serif", "Khvist Serif Fallback", Georgia, serif;
+  --font-sans: "Khvist Sans", "Khvist Sans Fallback", ui-sans-serif, system-ui, sans-serif;
+
+  /* Type scale — fluid 375 → 1440px. Body 17px, minimum 14px (13px only for uppercase kickers). */
+  --text-display: clamp(2.25rem, 1.65rem + 2.6vw, 4rem);        /* 36 → 64 — hero H1 */
+  --text-display--line-height: 1.04;
+  --text-h1: clamp(2rem, 1.6rem + 1.7vw, 3rem);                 /* 32 → 48 */
+  --text-h1--line-height: 1.08;
+  --text-h2: clamp(1.625rem, 1.4rem + 1vw, 2.25rem);            /* 26 → 36 */
+  --text-h2--line-height: 1.12;
+  --text-h3: clamp(1.25rem, 1.17rem + 0.35vw, 1.5rem);          /* 20 → 24 */
+  --text-h3--line-height: 1.2;
+  --text-phone: clamp(2.25rem, 1.3rem + 4.4vw, 5.25rem);        /* 36 (320) → 40 (375) → 84 — the lit number; fits 320 with its icon */
+  --text-phone--line-height: 1;
+  --text-lead: clamp(1.0625rem, 1rem + 0.3vw, 1.25rem);         /* 17 → 20 */
+  --text-lead--line-height: 1.5;
+  --text-body: 1.0625rem;                                        /* 17 */
+  --text-body--line-height: 1.6;
+  --text-small: 0.9375rem;                                       /* 15 */
+  --text-small--line-height: 1.5;
+  --text-caption: 0.875rem;                                      /* 14 — captions, lamp-dim minimum */
+  --text-caption--line-height: 1.45;
+  --text-kicker: 0.875rem;                                       /* 14 — uppercase kickers (≥ 14 so lamp-dim kickers stay legible), ≥ 600 */
+  --text-kicker--line-height: 1.2;
+
+  /* Spacing: 4px step + rhythm */
+  --spacing: 0.25rem;
+  --spacing-gutter: clamp(1rem, 0.55rem + 1.9vw, 3rem);          /* 16 → 48 */
+  --spacing-door: clamp(1.375rem, 0.9rem + 2vw, 3rem);           /* 22 → 48 — door padding */
+  --spacing-bleed: max(var(--spacing-door), calc((100vw - var(--container-page)) / 2 + var(--spacing-gutter))); /* full-bleed panels: content lines up with .wrap */
+  --spacing-section: clamp(4rem, 2.8rem + 5vw, 8rem);            /* 64 → 128 */
+
+  /* Layout */
+  --container-page: 90rem;        /* 1440 */
+  --container-measure: 65ch;
+
+  /* Shape — calm, almost square. Chips are pills (the only round shape besides status dots). */
+  --radius-sm: 4px;               /* buttons, fields, panels */
+  --radius-full: 9999px;          /* chips, status dots */
+
+  /* The only decoration: the light edge of the night door + one soft glow. */
+  --edge-light: 6px;
+  --glow-lamp: radial-gradient(closest-side, rgb(255 201 143 / 0.16), rgb(255 201 143 / 0));
+  --shadow-float: 0 18px 40px -18px rgb(31 25 21 / 0.45);       /* overlays only: menu, sheet */
+
+  /* Motion */
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --duration-fast: 150ms;
+  --duration-base: 240ms;
+
+  /* Breakpoints (Tailwind defaults kept: sm 40rem, md 48rem, lg 64rem, xl 80rem) */
+}
+
+/* Theme by Kyiv time (set by the inline script in BaseLayout; no JS = day + static «Цілодобово»).
+   night  = 22:00–08:00 — header & page go dark, the urgent door widens.
+   curfew = 00:00–05:00 — night + the approved curfew copy instead of «приїжджайте». */
+[data-time="night"],
+[data-time="curfew"] {
+  --color-surface: var(--color-night);
+  --color-surface-2: var(--color-night-2);
+  --color-fg: var(--color-lamp-text);
+  --color-fg-mute: var(--color-lamp-dim);
+  --color-rule: var(--color-night-line);
+  --color-accent: var(--color-lamp);
+  --color-on-accent: var(--color-night);
+}
+/* Anything that is always night (the urgent door, the mobile bar) or always day (plan door) */
+.is-night-surface {
+  --color-surface: var(--color-night);
+  --color-surface-2: var(--color-night-2);
+  --color-fg: var(--color-lamp-text);
+  --color-fg-mute: var(--color-lamp-dim);
+  --color-rule: var(--color-night-line);
+  --color-accent: var(--color-lamp);
+  --color-on-accent: var(--color-night);
+}
+.is-day-surface {
+  --color-surface: var(--color-day);
+  --color-surface-2: var(--color-day-2);
+  --color-fg: var(--color-ink);
+  --color-fg-mute: var(--color-stone);
+  --color-rule: var(--color-line);
+  --color-accent: var(--color-ink);
+  --color-on-accent: var(--color-day);
+}

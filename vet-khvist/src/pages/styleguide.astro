@@ -1,0 +1,250 @@
+---
+// /styleguide — design system of direction A «Світло горить». noindex, excluded from the sitemap.
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Logo from '../components/brand/Logo.astro';
+import Button from '../components/ui/Button.astro';
+import Chip from '../components/ui/Chip.astro';
+import Field from '../components/ui/Field.astro';
+import Badge from '../components/ui/Badge.astro';
+import Icon from '../components/ui/Icon.astro';
+import TimeStatus from '../components/layout/TimeStatus.astro';
+import TriageOutcome from '../components/patterns/TriageOutcome.astro';
+import BotMessage from '../components/patterns/BotMessage.astro';
+import Figure from '../components/patterns/Figure.astro';
+import PageHero from '../components/page/PageHero.astro';
+import CtaDoors from '../components/page/CtaDoors.astro';
+import DoctorRow from '../components/patterns/DoctorRow.astro';
+import { doctors } from '../data/doctors';
+import { site, prices, nightPrice } from '../config/site';
+
+const photos = import.meta.glob<{ default: ImageMetadata }>('../assets/photos/*.jpg', { eager: true });
+const P = (n: string) => photos[`../assets/photos/${n}.jpg`].default;
+import type { ImageMetadata } from 'astro';
+
+const palette = [
+  { group: 'День', items: [
+    ['day', '#EEECE9', 'Фон дня — тепла сіра стіна, не кремовий'], ['day-2', '#E4E1DD', 'Тихі блоки, денні двері вночі'], ['white', '#FFFFFF', 'Поля, чіпи, бот'],
+    ['ink', '#1F1915', 'Текст, «Записатися» · 14.7:1 на day'], ['stone', '#5F5852', 'Вторинний текст · 5.9:1 на day'], ['line-strong', '#857C75', 'Рамки полів · 4.1:1 на white'] ] },
+  { group: 'Ніч', items: [
+    ['night', '#2A211C', 'Двері «Терміново», нічна тема'], ['night-2', '#352A24', 'Підняті поверхні вночі'], ['lamp', '#FFC98F', 'Світло лампи: номер, посилання · 10.5:1'],
+    ['lamp-text', '#FFE6C9', 'Заголовки на night · 13.1:1'], ['lamp-dim', '#C7AE95', 'Вторинний на night · 7.4:1, ≥ 14 px'], ['lamp-soft', '#FBE3C6', 'Бот, «приклад» · ink 14:1'] ] },
+  { group: 'Функція', items: [
+    ['urgent', '#C42B31', '«Подзвонити» на світлому · білий 5.6:1'], ['urgent-night', '#D63A40', 'На нічних поверхнях · білий 4.6:1, кнопка 3.4:1'],
+    ['open', '#2E7A4F', 'Точка статусу (не текст)'], ['alert', '#A8261F', 'Помилки форм · 7.1:1 на white'] ] },
+];
+const type = [
+  ['t-display', 'Display · Piazzolla 500 · 36→64', 'Ветклініка, де світло горить'],
+  ['t-h1', 'H1 · Piazzolla 500 · 32→48', 'Записатися на зручний день'],
+  ['t-h2', 'H2 · Piazzolla 500 · 26→36', 'Що робити дорогою'],
+  ['t-h3', 'H3 · Ubuntu Sans 650 · 20→24', 'Невідкладний огляд уночі'],
+  ['t-lead', 'Lead · Ubuntu Sans 400 · 17→20', 'Приймаємо без запису. Подзвоніть дорогою — лікар підготує кабінет.'],
+  ['', 'Body · Ubuntu Sans 400 · 17 / 1.6', 'Стерилізація кішки — 3 400 грн «все включено»: огляд і аналізи перед наркозом, наркоз з моніторингом, шви, попона.'],
+  ['t-small', 'Small · 15', 'Клуб турботи: −10 % на щеплення й огляди.'],
+  ['t-caption', 'Caption · 14 — мінімум для lamp-dim', 'Огляд кота: лікар слухає серце й легені'],
+  ['t-kicker', 'Kicker · 14, капітель, ≥ 650', 'Терміново · цілодобово'],
+];
+---
+<BaseLayout title="Стайлгайд · Ветклініка «Хвіст»" description="Дизайн-система напряму «Світло горить»: токени, типографіка, компоненти." noindex fixedTime="day">
+  <div class="wrap py-12 md:py-16">
+    <p class="t-kicker text-fg-mute">Фаза 2 · дизайн-система</p>
+    <h1 class="t-display mt-3 max-w-[18ch]">Стайлгайд «Світло горить»</h1>
+    <p class="t-lead mt-4 max-w-[60ch] text-fg-mute">Клініка — освітлене вікно в харківській ночі. Двері «Терміново» завжди нічні й світяться, «Планово» — спокійний день. Червоний — тільки «Подзвонити». Єдиний декор — світлова кромка і одне м’яке світіння.</p>
+    <nav class="mt-8 flex flex-wrap gap-2" aria-label="Розділи стайлгайда">
+      {['Бренд', 'Колір', 'Типографіка', 'Відступи', 'Кнопки', 'Поля й чіпи', 'Бейджі', 'Перший екран', 'Тріаж', 'Бот', 'Фото', 'Сторінки'].map((s, i) => <Chip href={`#s${i + 1}`}>{s}</Chip>)}
+    </nav>
+  </div>
+
+  <!-- 1 Brand -->
+  <section id="s1" class="wrap grid gap-8 border-t border-rule py-12">
+    <h2 class="t-h2">Бренд</h2>
+    <div class="grid gap-6 md:grid-cols-2">
+      <div class="grid place-items-start gap-3 rounded-sm bg-white p-8"><Logo class="h-16 w-auto" /><p class="t-caption text-stone">На дні — плитка-двері, словесний знак у ink</p></div>
+      <div class="is-night-surface grid place-items-start gap-3 rounded-sm bg-surface p-8 text-fg"><Logo class="h-16 w-auto" /><p class="t-caption text-fg-mute">Уночі плитка на крок світліша (night-3), щоб двері не зникали</p></div>
+    </div>
+    <div class="flex flex-wrap items-end gap-6">
+      <img src="/favicon.svg" alt="Фавікон «Хвіст»" width="64" height="64" />
+      <img src="/favicon.svg" alt="" width="32" height="32" />
+      <img src="/favicon.svg" alt="" width="16" height="16" />
+      <p class="t-small max-w-[56ch] text-fg-mute">Знак — двері з полоскою світла зліва. Це той самий елемент, що й панель «Терміново» на першому екрані: панель — логотип у масштабі. Відкинуті варіанти: «Х» у квадраті (читається як «закрити») і «і» з освітленою крапкою (читається як «інфо» або свічка).</p>
+    </div>
+  </section>
+
+  <!-- 2 Colour -->
+  <section id="s2" class="wrap grid gap-8 border-t border-rule py-12">
+    <h2 class="t-h2">Колір</h2>
+    {palette.map((g) => (
+      <div>
+        <h3 class="t-h3">{g.group}</h3>
+        <ul class="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+          {g.items.map(([n, hex, note]) => (
+            <li class="flex items-center gap-4 rounded-sm bg-white p-3">
+              <span class="size-14 shrink-0 rounded-sm border border-line" style={`background: var(--color-${n})`}></span>
+              <span class="grid"><span class="font-semibold">--color-{n}</span><span class="num text-[0.875rem] text-stone">{hex}</span><span class="text-[0.875rem] text-stone">{note}</span></span>
+            </li>))}
+        </ul>
+      </div>))}
+    <p class="t-small max-w-[70ch] text-fg-mute">Семантичні токени <code>--color-surface / fg / fg-mute / rule / accent / on-accent</code> перемикаються атрибутом <code>html[data-time]</code> (день / ніч 22:00–08:00 / комендантська 00:00–05:00, час Europe/Kyiv) і класами <code>.is-night-surface</code> / <code>.is-day-surface</code> для дверей. Без JS — денна тема зі статичним «Цілодобово».</p>
+  </section>
+
+  <!-- 3 Type -->
+  <section id="s3" class="wrap grid gap-6 border-t border-rule py-12">
+    <h2 class="t-h2">Типографіка</h2>
+    <p class="t-small max-w-[70ch] text-fg-mute"><strong class="text-fg">Piazzolla</strong> (OFL) — тільки заголовки, оптичний розмір 8–30. <strong class="text-fg">Ubuntu Sans</strong> (UFL) — інтерфейс, текст, номер, ціни; цифри табличні за замовчуванням. Обидва шрифти — власні підмножини (латиниця + українська кирилиця + ₴ №), 2 файли на сторінку. У Ubuntu Sans немає стрілок — замість «→» іконки Lucide.</p>
+    <dl class="grid gap-6">
+      {type.map(([cls, label, sample]) => (
+        <div class="grid gap-1 border-b border-rule pb-5 md:grid-cols-[16rem_1fr] md:gap-8">
+          <dt class="t-caption text-fg-mute">{label}</dt>
+          <dd class={cls}>{sample}</dd>
+        </div>))}
+      <div class="is-night-surface grid gap-1 rounded-sm bg-surface p-6 md:grid-cols-[16rem_1fr] md:gap-8">
+        <dt class="t-caption text-fg-mute">Phone · Ubuntu Sans 700 · 44→84, lamp</dt>
+        <dd class="t-phone text-lamp max-sm:text-[2.25rem]">{site.phone.display}</dd>
+      </div>
+    </dl>
+  </section>
+
+  <!-- 4 Spacing, shape, decoration -->
+  <section id="s4" class="wrap grid gap-6 border-t border-rule py-12">
+    <h2 class="t-h2">Відступи, форма, декор</h2>
+    <div class="grid gap-6 md:grid-cols-3">
+      <div class="grid gap-2 rounded-sm bg-white p-5"><p class="font-semibold">Шкала</p><p class="t-small text-stone">Крок 4 px. Gutter 16→48, door 22→48, section 64→128. Ширина тексту ≤ 65ch, сторінка ≤ 1440.</p>
+        <div class="mt-2 flex items-end gap-2">{[1, 2, 3, 4, 6, 8, 12, 16].map((n) => <span class="block bg-ink" style={`width:${n * 4}px;height:${n * 4}px`} title={`${n * 4}px`}></span>)}</div></div>
+      <div class="grid gap-2 rounded-sm bg-white p-5"><p class="font-semibold">Форма</p><p class="t-small text-stone">Кути 4 px — кнопки, поля, панелі. Пігулки — тільки чіпи й точки статусу. Тіні — лише в меню й листах.</p>
+        <div class="mt-2 flex gap-3"><span class="h-12 w-24 rounded-sm bg-ink"></span><span class="inline-flex h-11 items-center rounded-full border border-ink px-4 text-[0.9375rem]">чіп</span></div></div>
+      <div class="grid gap-2 rounded-sm bg-white p-5"><p class="font-semibold">Єдиний декор</p><p class="t-small text-stone">Світлова кромка 6 px на нічних дверях і одне м’яке світіння в кутку. Ніяких текстур, зерна, свічок.</p>
+        <div class="deco-demo is-night-surface relative mt-2 h-24 overflow-hidden rounded-sm bg-surface"></div></div>
+    </div>
+  </section>
+
+  <!-- 5 Buttons -->
+  <section id="s5" class="wrap grid gap-6 border-t border-rule py-12">
+    <h2 class="t-h2">Кнопки</h2>
+    <div class="flex flex-wrap items-center gap-4 rounded-sm bg-white p-6">
+      <Button href="#">Записатися</Button>
+      <Button href="#" variant="outline" iconRight="arrow-right">Усі послуги</Button>
+      <Button href={site.phone.href} variant="urgent" icon="phone">Подзвонити</Button>
+      <Button href={site.phone.href} variant="urgent" size="lg" icon="phone">Подзвонити</Button>
+      <a href="#" class="inline-flex min-h-12 items-center gap-1.5">Текстове посилання<Icon name="arrow-right" class="size-4" /></a>
+    </div>
+    <div class="is-night-surface flex flex-wrap items-center gap-4 rounded-sm bg-surface p-6 text-fg">
+      <Button href="#">Записатися</Button>
+      <Button href="#" variant="lamp">Записатися онлайн</Button>
+      <Button href="#" variant="outline">Як заїхати вночі</Button>
+      <Button href={site.phone.href} variant="urgent" size="lg" icon="phone">Подзвонити</Button>
+      <a href="#" class="inline-flex min-h-12 items-center gap-1.5 text-lamp">Чи терміново?<Icon name="arrow-right" class="size-4" /></a>
+    </div>
+    <p class="t-small max-w-[70ch] text-fg-mute">Висота 48 px, у першому екрані 60 px. Фокус завжди видимий: ink-рамка + ореол лампи на дні, рамка кольору лампи вночі. Червона кнопка — одна на екран: на телефоні вона живе тільки в нижній панелі.</p>
+  </section>
+
+  <!-- 6 Fields & chips -->
+  <section id="s6" class="wrap grid gap-6 border-t border-rule py-12">
+    <h2 class="t-h2">Поля й чіпи</h2>
+    <form class="grid max-w-3xl gap-5 rounded-sm bg-white p-6 md:grid-cols-2" onsubmit="return false" aria-label="Приклад форми запису">
+      <fieldset class="grid gap-2 md:col-span-2">
+        <legend class="mb-2 text-[0.9375rem] font-semibold">Привід</legend>
+        <div class="flex flex-wrap gap-2"><Chip name="pryvid" value="shcheplennia" checked>щеплення</Chip><Chip name="pryvid" value="sterylizatsiia">стерилізація</Chip><Chip name="pryvid" value="ohliad">огляд</Chip><Chip name="pryvid" value="kihti">кігті й вуха</Chip></div>
+      </fieldset>
+      <fieldset class="grid gap-2 md:col-span-2">
+        <legend class="mb-2 text-[0.9375rem] font-semibold">Хто прийде</legend>
+        <div class="flex flex-wrap gap-2"><Chip type="radio" name="vyd" value="kit" checked>Кіт</Chip><Chip type="radio" name="vyd" value="pes">Собака</Chip></div>
+      </fieldset>
+      <Field label="Ваше ім’я" name="name" autocomplete="given-name" optional />
+      <Field label="Телефон" name="phone" type="tel" required autocomplete="tel" inputmode="tel" value="067 12" error="Схоже, номер неповний: потрібно 10 цифр, наприклад 067 123 45 67." />
+      <Field label="Кличка" name="pet" optional hint="Щоб лікар одразу знав, кого чекає." />
+      <Field label="Що турбує" name="note" textarea optional placeholder="Наприклад: кіт чхає третій день" />
+      <div class="md:col-span-2"><Button type="submit">Записатися</Button></div>
+    </form>
+  </section>
+
+  <!-- 7 Badges & status -->
+  <section id="s7" class="wrap grid gap-6 border-t border-rule py-12">
+    <h2 class="t-h2">Бейджі й статус</h2>
+    <div class="flex flex-wrap items-center gap-4 rounded-sm bg-white p-6">
+      <TimeStatus />
+      <Badge tone="lamp">все включено</Badge>
+      <Badge tone="outline">уночі ×1.5 · <span class="num">{nightPrice(prices.exam)} грн</span></Badge>
+      <Badge tone="lamp">приклад повідомлення</Badge>
+      <Badge tone="urgent">терміново</Badge>
+    </div>
+    <p class="t-small max-w-[70ch] text-fg-mute">Статус залежить від часу в Києві: «Цілодобово · зараз 14:20», «23:40 · лікар на місці», «02:47 · комендантська година». Без JS — «Цілодобово, без вихідних» (жодних неправдивих годин). Плашка відключень — нагорі цієї сторінки, відкривається в список «що працює».</p>
+  </section>
+
+  <!-- 8 First screen in three states -->
+  <section id="s8" class="border-t border-rule py-12">
+    <div class="wrap grid gap-3">
+      <h2 class="t-h2">Перший екран: шапка, двері, нижня панель</h2>
+      <p class="t-small max-w-[75ch] text-fg-mute">Справжня сторінка <a href="/styleguide/hero/">/styleguide/hero/</a> у трьох станах через <code>?t=</code>. Удень двері 7:5 і фото в «Планово»; з 22:00 шапка темнішає, «Терміново» ширшає до 8:4, фото зникає; з 00:00 до 05:00 — затверджений текст про комендантську годину замість «приїжджайте». На телефоні під дверима «Терміново» — вузька смуга фото (вдень), червона кнопка — тільки в нижній панелі, вона видима завжди.</p>
+    </div>
+    <div class="wrap mt-8 grid gap-10">
+      {[['day', 'День · 14:20'], ['night', 'Ніч · 23:40'], ['curfew', 'Комендантська година · 02:47']].map(([t, label]) => (
+        <figure class="grid gap-3">
+          <figcaption class="t-h3">{label}</figcaption>
+          <div class="grid items-start gap-6 lg:grid-cols-[minmax(0,1fr)_375px]">
+            <div class="frame-desk hidden overflow-hidden rounded-sm border border-line lg:block" data-w="1280" data-h="800"><iframe src={`/styleguide/hero/?t=${t}`} title={`Перший екран, ${label}, 1280 px`} width="1280" height="800" loading="lazy"></iframe></div>
+            <div class="frame-mob overflow-hidden rounded-sm border border-line"><iframe src={`/styleguide/hero/?t=${t}`} title={`Перший екран, ${label}, 375 px`} width="375" height="760" loading="lazy"></iframe></div>
+          </div>
+        </figure>))}
+    </div>
+  </section>
+
+  <!-- 9 Triage -->
+  <section id="s9" class="wrap grid gap-6 border-t border-rule py-12">
+    <h2 class="t-h2">Тріаж «Чи терміново?»: три результати</h2>
+    <p class="t-small max-w-[75ch] text-fg-mute">Результат — місце й строк, не діагноз. Номер видно текстом у кожному результаті. Найм’якший результат усе одно має шлях угору.</p>
+    <div class="grid items-start gap-6 lg:grid-cols-3">
+      <TriageOutcome kind="now" onTheWay={['Тримайте в теплі, кота — у переносці', 'Не давайте їжу, воду й ліки людини', 'Візьміть упаковку того, що з’їв']} />
+      <TriageOutcome kind="today" watch={['Чи п’є і чи ходить у туалет', 'Чи не частішає блювання']} worse="якщо з’явиться кров, сильна млявість або важке дихання." />
+      <TriageOutcome kind="plan" worse="якщо тварина перестане їсти більше ніж на добу або стане млявою." />
+    </div>
+  </section>
+
+  <!-- 10 Bot -->
+  <section id="s10" class="wrap grid gap-6 border-t border-rule py-12">
+    <h2 class="t-h2">Репліка бота «Клуб турботи»</h2>
+    <div class="flex flex-wrap gap-8">
+      <BotMessage time="10:00" buttons={['Записати на суботу 10:30', 'Інший час']}><p>Барсику через 14 днів ревакцинація від панлейкопенії й сказу. Для клубу знижка 10 %.</p></BotMessage>
+      <BotMessage time="18:40" buttons={['Усе добре', 'Є питання']}><p>Як Луна після стерилізації? Сьогодні третій день: шов сухий, попону не знімаємо. Контрольний огляд — 30 жовтня.</p></BotMessage>
+    </div>
+  </section>
+
+  <!-- 11 Photos -->
+  <section id="s11" class="wrap grid gap-6 border-t border-rule py-12">
+    <h2 class="t-h2">Фото</h2>
+    <p class="t-small max-w-[75ch] text-fg-mute">Реальні тварини з лікарями, Pexels. Підпис — тільки про те, що в кадрі. Автори й ретуш — у CREDITS.md.</p>
+    <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      {[
+        ['vet-cat-stethoscope', 'Лікар слухає стетоскопом кота', '50% 70%'], ['paw-in-hands', 'Лікар тримає лапу вівчарки', '55% 55%'], ['cat-ear-exam', 'Огляд вуха кота', '45% 40%'],
+        ['kitten-bodysuit-syringe', 'Кішка в попоні, поруч шприц', '45% 40%'], ['dog-exam-table', 'Огляд вівчарки на столі', '70% 50%'], ['dog-listening', 'Лікар слухає вівчарку', '50% 40%'],
+        ['ultrasound-pomeranian', 'Лікарка зі шпіцом, поруч апарат УЗД', '35% 60%'], ['xray-pomeranian', 'Шпіц на столі рентгена', '50% 75%'], ['doctor-male-pomeranian', 'Лікар тримає шпіца', '50% 35%'],
+        ['doctor-female-pomeranian', 'Лікарка за столом зі шпіцом', '50% 45%'], ['dog-teeth-check', 'Огляд зубів вівчарки', '50% 50%'],
+      ].map(([n, cap, pos]) => <Figure src={P(n)} alt={cap} position={pos} widths={[400, 700]} sizes="(min-width: 64rem) 25vw, (min-width: 40rem) 50vw, 100vw" class="aspect-[4/5] rounded-sm" />
+        )}
+    </div>
+  </section>
+  <!-- 12 Inner pages -->
+  <section id="s12" class="border-t border-rule py-12">
+    <div class="wrap grid gap-3"><h2 class="t-h2">Внутрішні сторінки: шапка сторінки, лікар без фото, двері внизу</h2>
+      <p class="t-small max-w-[75ch] text-fg-mute">Шапка сторінки — денна або нічна (невідкладна допомога, 404) зі світловою кромкою. Лікар без фото — чесний рядок, а не порожня «рамка для фото». Наприкінці кожної сторінки — двері в мініатюрі.</p></div>
+    <div class="mt-6 grid gap-6">
+      <PageHero kicker="Послуги · Терапія" title="Шапка денної сторінки" crumbs={[{ href: '/poslugy/', label: 'Послуги' }, { href: '', label: 'Терапія' }]}>Лід до 58 знаків у рядку.</PageHero>
+      <PageHero night kicker="Невідкладна допомога · цілодобово" title="Шапка нічної сторінки">Завжди нічна поверхня, як двері «Терміново».</PageHero>
+      <div class="wrap border-b border-rule">{doctors.filter((d) => !d.photo).slice(0, 2).map((d) => <DoctorRow d={d} />)}</div>
+      <CtaDoors />
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .deco-demo::before { content: ''; position: absolute; inset: 0 auto 0 0; width: var(--edge-light); background: var(--color-lamp); }
+  .deco-demo::after { content: ''; position: absolute; right: -6rem; top: -8rem; width: 18rem; height: 18rem; background: var(--glow-lamp); }
+  .frame-desk { position: relative; aspect-ratio: 1280 / 800; }
+  .frame-desk iframe { position: absolute; left: 0; top: 0; transform-origin: 0 0; border: 0; }
+  .frame-mob { width: min(375px, 100%); height: 760px; }
+  .frame-mob iframe { width: 100%; height: 100%; border: 0; }
+</style>
+<script is:inline>
+  (function () {
+    var fit = function () { document.querySelectorAll('.frame-desk').forEach(function (w) { var f = w.querySelector('iframe'); f.style.transform = 'scale(' + w.clientWidth / 1280 + ')'; }); };
+    fit(); addEventListener('resize', fit);
+  })();
+</script>

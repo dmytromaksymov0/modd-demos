@@ -1,0 +1,59 @@
+---
+// «Що буде, коли ви подзвоните о 3:00» (moment 4.2, Thuisarts). A real sequence → numbered steps are honest here.
+// Night surface. Curfew copy is the approved one; it never says «приїжджайте» for 00:00–05:00.
+import Icon from '../ui/Icon.astro';
+import SectionHead from '../ui/SectionHead.astro';
+import { site, curfew, prices, nightPrice, time } from '../../config/site';
+const steps = [
+  { t: 'Відповідає черговий адміністратор', d: 'Питає три речі: хто (кіт чи собака, вік), що сталося і коли. Якщо ситуація небезпечна — одразу з’єднує з лікарем.' },
+  { t: 'Лікар каже, що робити зараз', d: 'Чи їхати негайно, що робити дорогою, чого не давати. Якщо можна дочекатися ранку — скаже, на що дивитися вночі.' },
+  { t: 'Готуємо кабінет до вашого приїзду', d: 'Кисень, крапельниця, рентген — те, що може знадобитися за вашим описом. Хірург і анестезіолог на зв’язку.' },
+  { t: 'Зустрічаємо біля входу', d: `${site.address.street}, ${site.address.entrance}. Дверей шукати не треба — над входом горить ліхтар.` },
+];
+const fmt = (m: number) => `${String(Math.floor(m / 60)).padStart(2, '0')}:00`;
+---
+<section id="dzvinok" class="is-night-surface bg-surface py-[var(--spacing-section)] text-fg" aria-labelledby="t-call">
+  <div class="wrap grid grid-cols-1 gap-12 lg:grid-cols-[minmax(0,7fr)_minmax(0,5fr)] lg:gap-16">
+    <div class="grid content-start gap-10">
+      <SectionHead kicker="Вночі · як це працює" title="Що буде, коли ви подзвоните о 3:00" id="t-call">
+        Ніякої черги з автовідповідачем. Трубку бере людина, яка зараз у клініці.
+      </SectionHead>
+      <ol class="steps grid gap-0">
+        {steps.map((s, i) => (
+          <li class="grid grid-cols-[3rem_minmax(0,1fr)] gap-4 border-t border-rule py-5">
+            <span class="num font-serif text-[2rem] leading-none text-lamp" aria-hidden="true">{i + 1}</span>
+            <div><p class="t-h3 text-fg">{s.t}</p><p class="mt-1.5 max-w-[56ch] text-fg-mute">{s.d}</p></div>
+          </li>))}
+      </ol>
+    </div>
+
+    <aside class="grid content-start gap-5" aria-label="Як доїхати вночі">
+      <div id="yak-dobratysia" class="grid gap-3 rounded-sm bg-surface-2 p-6">
+        <p class="t-h3">Як заїхати вночі</p>
+        <p class="flex gap-2.5"><Icon name="map-pin" class="mt-0.5 size-5 text-lamp" /><span>{site.address.street}, {site.address.city}<span class="block text-[0.9375rem] text-fg-mute">{site.address.walk} від {site.address.metro} · {site.address.entrance}</span></span></p>
+        <p class="flex gap-2.5"><Icon name="car" class="mt-0.5 size-5 text-lamp" /><span>Паркування у дворі, біля входу вночі вільно. Таксі називайте адресу з номером будинку — вхід з двору.</span></p>
+      </div>
+      <div id="komendantska" class="curfew grid gap-2 rounded-sm p-6">
+        <p class="t-h3 flex items-center gap-2"><Icon name="moon" class="size-5 text-lamp" />Комендантська година, {fmt(time.curfewFrom)}–{fmt(time.curfewTo)}</p>
+        <p class="text-fg">{curfew.text.replace('Зараз комендантська година до 05:00. ', '')}</p>
+        <p class="text-[0.9375rem] text-fg-mute">Номер чергового: <a href={site.phone.href} class="num font-bold text-lamp">{site.phone.display}</a></p>
+      </div>
+      <div id="nich" class="grid gap-3 rounded-sm bg-surface-2 p-6">
+        <p class="t-h3">Нічний тариф, 22:00–08:00</p>
+        <table class="w-full text-left text-[0.9375rem]">
+          <caption class="sr-only">Ціни на огляди вдень і вночі</caption>
+          <thead><tr class="text-fg-mute"><th scope="col" class="pb-2 font-normal">Огляд</th><th scope="col" class="pb-2 text-right font-normal">вдень</th><th scope="col" class="pb-2 text-right font-normal">вночі</th></tr></thead>
+          <tbody>
+            <tr class="border-t border-rule"><th scope="row" class="py-2 font-normal">Первинний огляд</th><td class="num py-2 text-right">{prices.exam} грн</td><td class="num py-2 text-right font-bold text-lamp">{nightPrice(prices.exam)} грн</td></tr>
+            <tr class="border-t border-rule"><th scope="row" class="py-2 font-normal">Невідкладний огляд</th><td class="num py-2 text-right">{prices.urgentExam} грн</td><td class="num py-2 text-right font-bold text-lamp">{nightPrice(prices.urgentExam)} грн</td></tr>
+          </tbody>
+        </table>
+        <p class="text-[0.875rem] text-fg-mute">Операції та аналізи вночі — без націнки. Ціну плану лікування погоджуємо до процедур.</p>
+      </div>
+    </aside>
+  </div>
+</section>
+<style>
+  .curfew { box-shadow: inset 0 0 0 1px var(--color-night-line); }
+  :global(html[data-time='curfew']) .curfew { box-shadow: inset 0 0 0 2px var(--color-lamp); background: var(--color-night-2); }
+</style>

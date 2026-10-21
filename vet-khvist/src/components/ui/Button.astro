@@ -1,0 +1,31 @@
+---
+// Buttons. Variants:
+//   accent  — «Записатися»: ink on day, lamp on night (follows --color-accent)
+//   urgent  — «Подзвонити»: the only red; urgent-night on night surfaces
+//   outline — secondary on any surface
+//   lamp    — lamp fill on night surfaces (always)
+// Sizes: md 48px (default), lg 60px (hero call). Renders <a> when href is set.
+import Icon from './Icon.astro';
+interface Props { href?: string; variant?: 'accent' | 'urgent' | 'outline' | 'lamp'; size?: 'md' | 'lg'; icon?: string; iconRight?: string; class?: string; type?: 'button' | 'submit'; [k: string]: unknown }
+const { href, variant = 'accent', size = 'md', icon, iconRight, class: cls = '', type = 'button', ...rest } = Astro.props;
+const base = 'btn inline-flex items-center justify-center gap-2.5 rounded-sm font-sans font-semibold no-underline whitespace-nowrap transition-colors duration-[var(--duration-fast)] cursor-pointer';
+const sizes = { md: 'min-h-12 px-5 text-[1rem]', lg: 'min-h-15 px-7 text-[1.1875rem]' };
+const variants = {
+  accent: 'bg-accent text-on-accent hover:opacity-90',
+  urgent: 'btn-urgent text-white',
+  outline: 'border border-fg text-fg hover:bg-surface-2',
+  lamp: 'bg-lamp text-night hover:bg-lamp-2',
+};
+const Tag = href ? 'a' : 'button';
+---
+<Tag href={href} type={href ? undefined : type} class={`${base} ${sizes[size]} ${variants[variant]} ${cls}`} {...rest}>
+  {icon && <Icon name={icon} class={size === 'lg' ? 'size-6' : 'size-5'} />}
+  <slot />
+  {iconRight && <Icon name={iconRight} class="size-5" />}
+</Tag>
+<style>
+  .btn-urgent { background: var(--color-urgent); }
+  .btn-urgent:hover { background: color-mix(in oklab, var(--color-urgent) 88%, black); }
+  :global([data-time='night']) .btn-urgent, :global([data-time='curfew']) .btn-urgent, :global(.is-night-surface) .btn-urgent { background: var(--color-urgent-night); }
+  :global(.is-day-surface) .btn-urgent { background: var(--color-urgent); }
+</style>

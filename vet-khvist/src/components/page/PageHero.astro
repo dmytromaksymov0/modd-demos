@@ -1,0 +1,27 @@
+---
+// Inner-page hero. Day pages: a calm band with the lamp edge on the left (the door language, small).
+// night=true: an urgent page — always a night surface, like the «Терміново» door.
+// Optional aside slot (e.g. a price or a call box) sits under the text on phones, to the right on desktop.
+import Icon from '../ui/Icon.astro';
+// compact: inner pages whose tool must show on the first screen — smaller padding and an H1 instead of display size.
+interface Props { kicker: string; title: string; night?: boolean; compact?: boolean; crumbs?: { href: string; label: string }[] }
+const { kicker, title, night = false, compact = false, crumbs = [] } = Astro.props;
+---
+<section class={`page-hero ${night ? 'is-night-surface' : 'is-day-surface'} relative bg-surface text-fg`}>
+  <div class={`wrap grid grid-cols-1 lg:grid-cols-[minmax(0,7fr)_minmax(0,5fr)] lg:items-end ${compact ? 'gap-5 py-6 md:py-8 lg:gap-12' : 'gap-8 py-12 md:py-16 lg:gap-16'}`}>
+    <div class={`grid min-w-0 ${compact ? 'gap-2.5' : 'gap-4'}`}>
+      {crumbs.length > 0 && (
+        <nav aria-label="Ви тут"><ol class="flex flex-wrap items-center gap-x-2 text-[0.875rem] text-fg-mute">
+          <li><a href="/" class="inline-flex min-h-11 items-center">Головна</a></li>
+          {crumbs.map((c) => <li class="flex items-center gap-2"><Icon name="arrow-right" class="size-3.5" />{c.href ? <a href={c.href} class="inline-flex min-h-11 items-center">{c.label}</a> : <span aria-current="page">{c.label}</span>}</li>)}
+        </ol></nav>)}
+      <p class={`t-kicker ${night ? 'text-lamp' : 'text-fg-mute'}`}>{kicker}</p>
+      <h1 class={`${compact ? 't-h1 max-w-[26ch]' : 't-display max-w-[20ch]'} ${night ? 'text-lamp-text' : ''}`}>{title}</h1>
+      {Astro.slots.has('default') && <div class={`t-lead ${compact ? 'max-w-[62ch] !text-[1.0625rem]' : 'max-w-[58ch]'} text-fg-mute`}><slot /></div>}
+    </div>
+    {Astro.slots.has('aside') && <div class="min-w-0"><slot name="aside" /></div>}
+  </div>
+</section>
+<style>
+  .page-hero::before { content: ''; position: absolute; inset: 0 auto 0 0; width: var(--edge-light); background: var(--color-lamp); }
+</style>

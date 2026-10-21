@@ -1,0 +1,23 @@
+---
+// 4.5 «Світло є» — calm and specific. No military aesthetics. The photo is captioned for what is in the frame only.
+import Icon from '../ui/Icon.astro';
+import SectionHead from '../ui/SectionHead.astro';
+import Figure from '../patterns/Figure.astro';
+import { power } from '../../config/site';
+import xray from '../../assets/photos/xray-pomeranian.jpg';
+---
+<section id="svitlo" class="is-day-surface bg-surface-2 py-[var(--spacing-section)] text-fg" aria-labelledby="t-power">
+  <div class="wrap grid grid-cols-1 items-start gap-10 lg:grid-cols-[minmax(0,7fr)_minmax(0,5fr)] lg:gap-16">
+    <div class="grid gap-8">
+      <SectionHead kicker="Відключення" title="Коли зникає світло, операційна працює" id="t-power">
+        Генератор вмикається сам за 10 секунд, пального — на 72 години. Зв’язок і Telegram-бот — через Starlink.
+      </SectionHead>
+      <ul class="grid gap-x-10 gap-y-3 sm:grid-cols-2">
+        {power.works.map((w) => <li class="flex items-start gap-3 border-t border-rule pt-3"><Icon name="zap" class="mt-0.5 size-5 shrink-0" /><span>{w}</span></li>)}
+      </ul>
+      <p class="max-w-[60ch] border-l-2 border-ink pl-4 text-fg-mute">{power.alarm}</p>
+    </div>
+    <Figure src={xray} alt="Шпіц на столі рентгена, лікар налаштовує апарат" caption="Рентген: шпіц на столі, лікар налаштовує апарат"
+      position="50% 72%" widths={[400, 700, 1000]} sizes="(min-width: 64rem) 36vw, 100vw" class="aspect-[4/5] rounded-sm lg:aspect-[4/5]" />
+  </div>
+</section>

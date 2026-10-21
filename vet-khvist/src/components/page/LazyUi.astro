@@ -1,0 +1,17 @@
+---
+// Loads src/lib/home-ui.ts on the first interaction with a [data-lazy] widget or a booking form; replays the
+// [data-go] click that arrived before the module (no lost first tap). Loads at once when the URL asks for it.
+---
+<script>
+  let loaded = false;
+  let pending: HTMLElement | null = null;
+  const load = () => { if (loaded) return; loaded = true; import('../../lib/home-ui.ts').then((m) => { m.init(); const p = pending; pending = null; p?.click(); }); };
+  for (const w of document.querySelectorAll('[data-lazy], [data-booking-form]')) {
+    for (const ev of ['pointerdown', 'focusin', 'keydown', 'change']) w.addEventListener(ev, load, { once: true, passive: true });
+    w.addEventListener('click', (e) => { const t = (e.target as HTMLElement).closest<HTMLElement>('[data-go]'); if (t && !document.querySelector('[data-triage][data-ready]')) { pending = t; load(); } });
+  }
+  const q = new URLSearchParams(location.search);
+  const reason = q.get('pryvid');
+  if (reason) document.querySelector<HTMLInputElement>(`[data-booking-form] input[name="pryvid"][value="${CSS.escape(reason)}"]`)?.setAttribute('checked', '');
+  if (q.has('pomylka') || reason || q.has('kind')) load();
+</script>

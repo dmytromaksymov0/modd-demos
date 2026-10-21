@@ -1,0 +1,13 @@
+---
+// A doctor without a photo: an honest text row (name, specialty in plain words, years, shifts) — not a card that
+// imitates a photo frame. Used under the photo cards on /likari/ and on service pages.
+import { shiftsOf, type Doctor } from '../../data/doctors';
+interface Props { d: Doctor; headingLevel?: 'h2' | 'h3' }
+const { d, headingLevel = 'h3' } = Astro.props;
+const H = headingLevel;
+---
+<article class="drow grid gap-1 border-t border-rule py-5 md:grid-cols-[minmax(0,4fr)_minmax(0,5fr)_minmax(0,4fr)] md:items-baseline md:gap-6">
+  <div><H class="t-h3 font-serif font-medium">{d.name}</H><p class="text-[0.9375rem] text-fg-mute">{d.role} · {d.years} років досвіду</p></div>
+  <p>{d.plain}</p>
+  <p class="text-[0.9375rem] text-fg-mute">{shiftsOf(d.id)}</p>
+</article>

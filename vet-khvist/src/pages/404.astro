@@ -1,0 +1,20 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Icon from '../components/ui/Icon.astro';
+import { site } from '../config/site';
+const links = [['/nevidkladna/', 'Невідкладна допомога'], ['/poslugy/', 'Послуги'], ['/tsiny/', 'Ціни'], ['/likari/', 'Лікарі'], ['/zapys/', 'Запис']];
+---
+<BaseLayout title="Сторінку не знайдено — ветклініка «Хвіст»" description="Такої сторінки немає. Терміново — 057 000 24 24." noindex>
+  <section class="is-night-surface relative bg-surface py-[var(--spacing-section)] text-fg">
+    <div class="wrap grid max-w-4xl gap-6">
+      <p class="t-kicker text-lamp">Помилка 404</p>
+      <h1 class="t-display text-lamp-text">Такої сторінки немає, а клініка — є</h1>
+      <p class="t-lead text-fg-mute">Якщо тварині погано — не шукайте далі, дзвоніть:</p>
+      <a href={site.phone.href} class="t-phone inline-flex min-h-14 items-center gap-3 self-start text-lamp no-underline"><Icon name="phone" class="size-8" stroke={2} />{site.phone.display}</a>
+      <ul class="flex flex-wrap gap-x-6 border-t border-rule pt-4">{links.map(([h, l]) => <li><a href={h} class="inline-flex min-h-11 items-center gap-1.5 text-lamp">{l}<Icon name="arrow-right" class="size-4" /></a></li>)}</ul>
+    </div>
+  </section>
+</BaseLayout>
+<style>
+  section::before { content: ''; position: absolute; inset: 0 auto 0 0; width: var(--edge-light); background: var(--color-lamp); }
+</style>

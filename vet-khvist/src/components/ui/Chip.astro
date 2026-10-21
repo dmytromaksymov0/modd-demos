@@ -1,0 +1,20 @@
+---
+// Pill chips — the only round shape besides status dots.
+//   link    — a reason to book («щеплення»), goes to the form with the reason preselected
+//   check   — selectable (checkbox) inside forms and the triage
+interface Props { href?: string; name?: string; value?: string; checked?: boolean; type?: 'checkbox' | 'radio'; class?: string }
+const { href, name, value, checked = false, type = 'checkbox', class: cls = '' } = Astro.props;
+const base = 'chip inline-flex min-h-11 items-center gap-2 rounded-full border px-4 text-[0.9375rem] leading-tight';
+---
+{href
+  ? <a href={href} class={`${base} border-fg text-fg no-underline hover:bg-surface-2 ${cls}`}><slot /></a>
+  : <label class={`${base} chip-check cursor-pointer border-line-strong bg-white text-ink ${cls}`}>
+      <input class="sr-only" type={type} name={name} value={value} checked={checked} />
+      <span class="chip-tick" aria-hidden="true"></span><slot />
+    </label>}
+<style>
+  .chip-check:has(input:checked) { background: var(--color-ink); color: var(--color-day); border-color: var(--color-ink); }
+  .chip-check:has(input:focus-visible) { outline: 3px solid var(--color-ink); outline-offset: 3px; box-shadow: 0 0 0 7px var(--color-lamp); }
+  .chip-tick { display: none; width: 0.55rem; height: 0.9rem; border: solid currentColor; border-width: 0 2px 2px 0; transform: rotate(45deg) translateY(-2px); }
+  .chip-check:has(input:checked) .chip-tick { display: inline-block; }
+</style>

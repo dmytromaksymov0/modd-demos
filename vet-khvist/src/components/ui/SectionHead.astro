@@ -1,0 +1,10 @@
+---
+// Section heading: kicker + H2 + optional lead. Left-aligned, measure-limited.
+interface Props { kicker?: string; title: string; id?: string; class?: string }
+const { kicker, title, id, class: cls = '' } = Astro.props;
+---
+<header class={`grid gap-3 ${cls}`}>
+  {kicker && <p class="t-kicker text-fg-mute">{kicker}</p>}
+  <h2 id={id} class="t-h1 max-w-[22ch]">{title}</h2>
+  {Astro.slots.has('default') && <div class="t-lead max-w-[60ch] text-fg-mute"><slot /></div>}
+</header>

@@ -1,0 +1,118 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHero from '../../components/page/PageHero.astro';
+import CtaDoors from '../../components/page/CtaDoors.astro';
+import Faq from '../../components/page/Faq.astro';
+import Figure from '../../components/patterns/Figure.astro';
+import DoctorCard from '../../components/patterns/DoctorCard.astro';
+import DoctorRow from '../../components/patterns/DoctorRow.astro';
+import Icon from '../../components/ui/Icon.astro';
+import Button from '../../components/ui/Button.astro';
+import Badge from '../../components/ui/Badge.astro';
+import { servicePages, type ServicePage } from '../../data/servicePages';
+import { doctors } from '../../data/doctors';
+import { allIn, weights } from '../../data/services';
+import type { ImageMetadata } from 'astro';
+export function getStaticPaths() { return servicePages.map((p) => ({ params: { slug: p.slug }, props: { p } })); }
+const { p } = Astro.props as { p: ServicePage };
+const photos = import.meta.glob<{ default: ImageMetadata }>('../../assets/photos/*.jpg', { eager: true });
+const nb = (x: string) => x.replace(/(\d)\s(?=\d)/g, '$1\u00A0');
+const uah = (n: number | string | undefined) => n === undefined ? '—' : typeof n === 'number' ? `${nb(n.toLocaleString('uk-UA'))}\u00A0грн` : `${nb(n)}\u00A0грн`;
+const team = p.doctors.map((id) => doctors.find((d) => d.id === id)!).filter(Boolean);
+const reason = { vaktsynatsiya: 'щеплення', khirurhiya: 'стерилізацію', diahnostyka: 'УЗД та аналізи', terapiya: 'огляд' }[p.slug] ?? 'огляд';
+const book = `/zapys/?pryvid=${encodeURIComponent(reason)}`;
+---
+<BaseLayout title={`${p.title} — ветклініка «Хвіст», Харків`} description={p.description} current="/poslugy/" og={p.slug} faq={p.faq} crumbs={[{ href: '/poslugy/', label: 'Послуги' }, { href: '', label: p.title }]}>
+  <PageHero compact kicker={`Послуги · ${p.title}`} title={p.h1} crumbs={[{ href: '/poslugy/', label: 'Послуги' }, { href: '', label: p.title }]}>
+    {p.lead}
+    <div slot="aside" class="grid gap-4">
+      <p class="flex flex-wrap items-baseline gap-x-2"><span class="text-fg-mute">від</span><span class="num text-[2rem] font-bold">{uah(p.from)}</span><span class="text-[0.9375rem] text-fg-mute">{p.fromNote}</span></p>
+      <span class="self-start"><Button href={book} size="lg">Записатися</Button></span>
+    </div>
+  </PageHero>
+
+  <section class="is-day-surface bg-surface-2 pb-[var(--spacing-section)] pt-8 text-fg md:pt-10" aria-labelledby="t-when">
+    <div class="wrap grid grid-cols-1 gap-10 lg:grid-cols-[minmax(0,6fr)_minmax(0,6fr)] lg:gap-16">
+      <div class="grid min-w-0 content-start gap-6">
+        <h2 id="t-when" class="t-h2">Коли до нас</h2>
+        <ul class="grid gap-2">{p.when.map((w) => <li class="flex gap-3 border-t border-rule pt-2"><Icon name="check" class="mt-1 size-5 shrink-0" />{w}</li>)}</ul>
+        <a href="/nevidkladna/#chy-terminovo" class="is-night-surface flex items-start gap-3 rounded-sm bg-surface p-5 text-fg no-underline">
+          <Icon name="alert" class="mt-0.5 size-6 shrink-0 text-lamp" />
+          <span class="grid gap-1"><span class="font-semibold">{p.urgentIf}</span><span class="inline-flex items-center gap-1.5 text-lamp">Чи терміново? Перевірити за хвилину<Icon name="arrow-right" class="size-4" /></span></span>
+        </a>
+      </div>
+      <Figure src={photos[`../../assets/photos/${p.photo}.jpg`].default} alt={p.photoAlt} caption={p.caption} position={p.position}
+        widths={[400, 700, 1000]} sizes="(min-width: 64rem) 45vw, 100vw" class="aspect-[4/3] rounded-sm" />
+    </div>
+  </section>
+
+  <section class="is-day-surface bg-surface py-[var(--spacing-section)] text-fg" aria-labelledby="t-core">
+    <div class="wrap grid gap-10">
+      <h2 id="t-core" class="t-h1 max-w-[24ch]">{p.core.title}</h2>
+      <ol class="grid grid-cols-1 gap-x-10 md:grid-cols-2">
+        {p.core.items.map((it) => <li class="grid gap-2 border-t border-ink py-6"><p class="t-h3">{it.t}</p><p class="max-w-[52ch] text-fg-mute">{it.d}</p></li>)}
+      </ol>
+    </div>
+  </section>
+
+  <section id="tsiny" class="is-day-surface bg-surface-2 py-[var(--spacing-section)] text-fg" aria-labelledby="t-prices">
+    <div class="wrap grid gap-8">
+      <div class="flex flex-wrap items-end justify-between gap-4">
+        <h2 id="t-prices" class="t-h1">Ціни</h2>
+        <a href="/tsiny/" class="inline-flex min-h-11 items-center gap-1.5 font-semibold">Усі ціни<Icon name="arrow-right" class="size-4" /></a>
+      </div>
+      <div class="min-w-0 rounded-sm bg-white p-4 text-ink sm:p-8">
+        <table class="svc-prices w-full text-left">
+          <caption class="sr-only">Ціни: {p.title}</caption>
+          <thead class="text-[0.875rem] text-stone"><tr><th scope="col" class="pb-3 font-normal">Послуга</th><th scope="col" class="pb-3 text-right font-normal">Кіт</th><th scope="col" class="pb-3 pl-2 text-right font-normal sm:pl-3">Собака</th></tr></thead>
+          <tbody>
+            {p.prices.map((r) => <tr class="border-t border-line align-top"><th scope="row" class="py-3 pr-3 font-semibold">{r.what}{r.note && <span class="block text-[0.875rem] font-normal text-stone">{r.note}</span>}</th><td class="num py-3 pl-2 text-right" data-label="Кіт">{uah(r.cat)}</td><td class="num py-3 pl-2 text-right sm:pl-3" data-label="Собака">{uah(r.dog)}</td></tr>)}
+          </tbody>
+        </table>
+        {p.slug === 'khirurhiya' && (
+          <div class="mt-8 grid min-w-0 gap-3 border-t border-line pt-6">
+            <Badge tone="lamp" class="justify-self-start">все включено · собаки за вагою</Badge>
+            <div class="overflow-x-auto"><table class="w-full min-w-[34rem] text-left text-[0.9375rem]">
+              <caption class="sr-only">Хірургія для собак за вагою, все включено</caption>
+              <thead class="text-stone"><tr><th scope="col" class="pb-2 font-normal">Операція</th>{weights.map((w) => <th scope="col" class="pb-2 pl-3 text-right font-normal">{w}</th>)}</tr></thead>
+              <tbody>{allIn.filter((r) => !r.note).map((r) => <tr class="border-t border-line"><th scope="row" class="py-2 font-semibold">{r.what}</th>{r.dog!.map((v) => <td class="num py-2 pl-3 text-right">{uah(v)}</td>)}</tr>)}</tbody>
+            </table></div>
+          </div>)}
+        {p.priceNote && <p class="mt-6 max-w-[70ch] text-[0.9375rem] text-stone">{p.priceNote}</p>}
+      </div>
+    </div>
+  </section>
+
+  <section class="is-day-surface bg-surface py-[var(--spacing-section)] text-fg" aria-labelledby="t-team">
+    <div class="wrap grid gap-10">
+      <div class="flex flex-wrap items-end justify-between gap-4">
+        <h2 id="t-team" class="t-h1">Хто веде</h2>
+        <a href="/likari/" class="inline-flex min-h-11 items-center gap-1.5 font-semibold">Усі 9 лікарів<Icon name="arrow-right" class="size-4" /></a>
+      </div>
+      {team.some((d) => d.photo) && <div class="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">{team.filter((d) => d.photo).map((d) => <DoctorCard d={d} compact />)}</div>}
+      {team.some((d) => !d.photo) && <div class="border-b border-rule">{team.filter((d) => !d.photo).map((d) => <DoctorRow d={d} />)}</div>}
+    </div>
+  </section>
+
+  <section class="is-day-surface bg-surface-2 py-[var(--spacing-section)] text-fg">
+    <div class="wrap grid grid-cols-1 gap-12 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:gap-16">
+      <div class="grid content-start gap-4">
+        <h2 class="t-h2">Як підготуватися</h2>
+        <ul class="grid gap-2">{p.prepare.map((x) => <li class="flex gap-3 border-t border-rule pt-2"><Icon name="check" class="mt-1 size-5 shrink-0" />{x}</li>)}</ul>
+      </div>
+      <Faq items={p.faq} />
+    </div>
+  </section>
+  <CtaDoors bookHref={book} />
+</BaseLayout>
+<style>
+  @media (min-width: 30rem) { .svc-prices td { white-space: nowrap; } }
+  /* Very narrow phones (≤ 384px): each row becomes «name / Кіт · Собака» instead of three squeezed columns. */
+  @media (max-width: 24rem) {
+    .svc-prices thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+    .svc-prices tr { display: grid; grid-template-columns: 1fr 1fr; padding-block: 0.5rem; }
+    .svc-prices th[scope='row'] { grid-column: 1 / -1; padding-bottom: 0.25rem; }
+    .svc-prices td { padding: 0 !important; text-align: left; }
+    .svc-prices td::before { content: attr(data-label) ': '; color: var(--color-stone); font-size: 0.875rem; }
+  }
+</style>

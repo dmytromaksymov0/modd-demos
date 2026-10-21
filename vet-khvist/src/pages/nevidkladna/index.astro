@@ -1,0 +1,62 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHero from '../../components/page/PageHero.astro';
+import CtaDoors from '../../components/page/CtaDoors.astro';
+import LazyUi from '../../components/page/LazyUi.astro';
+import Triage from '../../components/home/Triage.astro';
+import CallAt3 from '../../components/home/CallAt3.astro';
+import PowerSection from '../../components/home/PowerSection.astro';
+import Icon from '../../components/ui/Icon.astro';
+import Button from '../../components/ui/Button.astro';
+import { site, curfew, prices, nightPrice } from '../../config/site';
+import { emergencies } from '../../data/emergency';
+---
+<BaseLayout title="Невідкладна допомога собакам і котам цілодобово — Хвіст, Харків"
+  description="Цілодобова невідкладна ветеринарна допомога в Харкові: тривожні симптоми, що робити дорогою, як доїхати вночі, комендантська година. Черговий лікар: 057 000 24 24."
+  current="/nevidkladna/" schema og="nevidkladna" crumbs={[{ href: '', label: 'Невідкладна допомога' }]}>
+  <PageHero night kicker="Невідкладна допомога · цілодобово" title="Тварині погано зараз? Черговий лікар на місці" crumbs={[{ href: '', label: 'Невідкладна допомога' }]}>
+    <span class="when-not-curfew">Приймаємо без запису, вдень і вночі. Подзвоніть дорогою — лікар підготує кабінет.</span>
+    <span class="when-curfew">{curfew.text}</span>
+    <div slot="aside" class="grid gap-4">
+      <a href={site.phone.href} class="t-phone inline-flex min-h-14 items-center gap-3 self-start text-lamp no-underline lg:text-[clamp(2.5rem,3.4vw,3.5rem)]" data-check="phone"><Icon name="phone" class="size-8" stroke={2} />{site.phone.display}</a>
+      <span class="hidden md:inline-flex"><Button href={site.phone.href} variant="urgent" size="lg" icon="phone">Подзвонити</Button></span>
+      <p class="flex items-start gap-2.5" data-check="addr"><Icon name="map-pin" class="mt-0.5 size-5 text-lamp" /><span>{site.address.street}<span class="block text-[0.875rem] text-fg-mute">{site.address.walk} від {site.address.metro} · {site.address.entrance}</span></span></p>
+      <p class="text-[0.9375rem] text-fg-mute">Невідкладний огляд — <span class="num">{prices.urgentExam} грн</span>, з 22:00 до 08:00 — <span class="num">{nightPrice(prices.urgentExam)} грн</span>.</p>
+    </div>
+  </PageHero>
+
+  <Triage />
+
+  <section id="symptomy" class="is-day-surface bg-surface-2 py-[var(--spacing-section)] text-fg" aria-labelledby="t-signs">
+    <div class="wrap grid gap-10">
+      <header class="grid gap-3">
+        <p class="t-kicker text-fg-mute">Якщо ви вже знаєте, що сталося</p>
+        <h2 id="t-signs" class="t-h1 max-w-[24ch]">Що робити дорогою — і чого не робити</h2>
+        <p class="t-lead max-w-[60ch] text-fg-mute">Перша допомога — тільки до приїзду. Головне в кожному випадку одне: подзвонити й їхати.</p>
+      </header>
+      <ul class="grid grid-cols-1 gap-x-10 md:grid-cols-2">
+        {emergencies.map((e) => (
+          <li id={e.id} class="min-w-0 scroll-mt-24">
+            <details class="em border-t border-ink">
+              <summary class="flex min-h-14 cursor-pointer list-none items-center justify-between gap-4 py-4"><span class="t-h3">{e.title}</span><Icon name="chevron-down" class="chev size-5 shrink-0" /></summary>
+              <div class="grid gap-4 pb-6">
+                <ul class="grid gap-1 text-fg-mute">{e.signs.map((s) => <li class="flex gap-2"><span aria-hidden="true">·</span>{s}</li>)}</ul>
+                <div><p class="font-semibold">Що робити</p><ul class="mt-1.5 grid gap-1.5">{e.doNow.map((s) => <li class="flex gap-2"><Icon name="check" class="mt-0.5 size-4 shrink-0" />{s}</li>)}</ul></div>
+                <div><p class="font-semibold">Чого не робити</p><ul class="mt-1.5 grid gap-1.5">{e.dont.map((s) => <li class="flex gap-2"><Icon name="x" class="mt-0.5 size-4 shrink-0 text-urgent" />{s}</li>)}</ul></div>
+                <p class="rounded-sm border-l-4 border-urgent bg-white p-3 text-[0.9375rem] text-ink"><span class="when-not-curfew"><strong>Їдьте зараз</strong> і подзвоніть дорогою: </span><span class="when-curfew"><strong>Подзвоніть зараз</strong> — лікар скаже, що робити до 05:00: </span><a href={site.phone.href} class="num inline-flex min-h-11 items-center font-bold">{site.phone.display}</a></p>
+              </div>
+            </details>
+          </li>))}
+      </ul>
+    </div>
+  </section>
+
+  <CallAt3 />
+  <PowerSection />
+  <CtaDoors />
+  <LazyUi />
+</BaseLayout>
+<style>
+  .em summary::-webkit-details-marker { display: none; }
+  .em[open] .chev { transform: rotate(180deg); }
+</style>

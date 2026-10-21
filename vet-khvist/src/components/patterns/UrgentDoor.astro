@@ -1,0 +1,48 @@
+---
+// The «Терміново» door — always a night surface with the lamp light edge (= the logo tile, enlarged).
+// Copy switches by html[data-time] (day / night / curfew). In curfew there is no «приїжджайте» / «дзвоніть дорогою».
+// Phones: the lit number is the call link; the red button is hidden (it lives in the bottom bar).
+import Icon from '../ui/Icon.astro';
+import Button from '../ui/Button.astro';
+import { site, curfew, prices, nightPrice } from '../../config/site';
+interface Props { level?: 'h1' | 'h2'; class?: string; id?: string }
+const { level = 'h1', class: cls = '', id = 't-urgent' } = Astro.props;
+const H = level;
+---
+<section class={`door-urgent is-night-surface relative isolate flex flex-col overflow-hidden bg-surface text-fg ${cls}`} aria-labelledby={id}>
+  <p class="t-kicker flex items-center gap-2.5 text-lamp"><Icon name="moon" class="size-4" />Терміново · цілодобово</p>
+  <H id={id} class="t-display mt-4 max-w-[15ch] text-lamp-text md:mt-6">
+    <span class="when-day">Ветклініка, де світло горить цілодобово</span>
+    <span class="when-night"><span data-now class="num">23:40</span>. Черговий лікар на місці — приїжджайте</span>
+    <span class="when-curfew"><span data-now class="num">02:47</span>. {curfew.title}</span>
+  </H>
+  <p class="when-day when-not-curfew t-lead mt-4 max-w-[42ch] text-fg-mute max-md:hidden">Приймаємо без запису. Подзвоніть дорогою — лікар підготує кабінет, поки ви їдете.</p>
+  <p class="when-night t-lead mt-4 max-w-[42ch] text-fg-mute">Без запису. Подзвоніть дорогою — підготуємо кабінет і зустрінемо біля входу.</p>
+  <p class="when-curfew curfew-note t-lead mt-4 max-w-[46ch] border-l-2 border-lamp pl-4 text-fg">{curfew.text}</p>
+
+  <a href={site.phone.href} class="phone mt-5 inline-flex min-h-14 items-center gap-3 self-start text-lamp no-underline md:mt-auto md:pt-10" data-check="phone" aria-label={`Подзвонити: ${site.phone.display}`}>
+    <Icon name="phone" class="size-8 md:hidden" stroke={2} /><span class="t-phone">{site.phone.display}</span>
+  </a>
+  <div class="mt-4 flex flex-wrap items-center gap-x-6 gap-y-4 md:mt-6">
+    <span class="hidden md:inline-flex"><Button href={site.phone.href} variant="urgent" size="lg" icon="phone">Подзвонити</Button></span>
+    <p class="flex items-start gap-2.5 text-[1rem] leading-snug" data-check="addr">
+      <Icon name="map-pin" class="mt-0.5 size-5 text-lamp" />
+      <span>{site.address.street}<span class="mt-0.5 block text-[0.875rem] text-fg-mute">{site.address.walk.replace(' пішки', '')} від {site.address.metro} · {site.address.entrance}</span></span>
+    </p>
+  </div>
+  <ul class="mt-5 flex flex-wrap gap-x-7 border-t border-rule pt-2 text-[0.9375rem] md:mt-7 md:pt-3">
+    <li><a href="/nevidkladna/#chy-terminovo" class="inline-flex min-h-11 items-center gap-1.5 text-lamp">Чи терміново? Перевірити за хвилину<Icon name="arrow-right" class="size-4" /></a></li>
+    <li><a href="/nevidkladna/#yak-dobratysia" class="inline-flex min-h-11 items-center text-lamp">Як заїхати вночі</a></li>
+    <li class="when-day"><a href="/tsiny/#nich" class="inline-flex min-h-11 items-center gap-[0.3em] text-lamp">Невідкладний огляд з 22:00 —<span class="num">{nightPrice(prices.urgentExam)} грн</span></a></li>
+    <li class="when-night"><a href="/tsiny/#nich" class="inline-flex min-h-11 items-center gap-[0.3em] text-lamp">Невідкладний огляд уночі —<span class="num">{nightPrice(prices.urgentExam)} грн</span></a></li>
+    <li class="when-curfew"><a href="/nevidkladna/#komendantska" class="inline-flex min-h-11 items-center text-lamp">Що робити до 05:00</a></li>
+  </ul>
+</section>
+<style>
+  .door-urgent { padding: var(--spacing-door); padding-left: calc(var(--spacing-bleed) + var(--edge-light)); }
+  /* the light edge of the door */
+  .door-urgent::before { content: ''; position: absolute; inset: 0 auto 0 0; width: var(--edge-light); background: var(--color-lamp); }
+  /* the one soft glow */
+  .door-urgent::after { content: ''; position: absolute; z-index: -1; right: -12rem; top: -14rem; width: 40rem; height: 40rem; background: var(--glow-lamp); pointer-events: none; }
+  .phone:hover .t-phone { color: var(--color-lamp-2); }
+</style>

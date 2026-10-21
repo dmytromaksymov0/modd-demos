@@ -1,0 +1,52 @@
+---
+// «Запис» opens as the two doors: a narrow night door «Терміново — не записуйтесь, дзвоніть» and the day door with
+// the booking form itself on the first screen. «Що буде далі» and the address follow.
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import LazyUi from '../../components/page/LazyUi.astro';
+import BookingForm from '../../components/patterns/BookingForm.astro';
+import Icon from '../../components/ui/Icon.astro';
+import { site, curfew } from '../../config/site';
+const next = [
+  ['Передзвонимо', 'Протягом 15 хвилин удень; заявки, надіслані вночі, — о 8:00.'],
+  ['Підберемо час і лікаря', 'За вашим приводом. Якщо треба прийти натщесерце чи щось узяти — скажемо.'],
+  ['Нагадаємо', 'За день до візиту — у Telegram або SMS.'],
+];
+---
+<BaseLayout title="Запис до ветеринара онлайн — ветклініка «Хвіст», Харків" description="Записатися до ветеринара онлайн: обов’язковий лише телефон, передзвонимо протягом 15 хвилин. Терміново — дзвоніть 057 000 24 24." current="/zapys/" bookHref="#zapys-forma" og="zapys" crumbs={[{ href: '', label: 'Запис' }]}>
+  <div class="zdoors grid grid-cols-1 lg:grid-cols-[minmax(0,4fr)_minmax(0,8fr)]">
+    <section class="zurgent is-night-surface relative grid content-start gap-3 bg-surface py-6 pr-[var(--spacing-gutter)] text-fg lg:py-10 lg:pr-10" aria-labelledby="t-z-urgent">
+      <p class="t-kicker flex items-center gap-2 text-lamp"><Icon name="moon" class="size-4" />Терміново</p>
+      <h2 id="t-z-urgent" class="t-h3 text-lamp-text"><span class="when-not-curfew">Не записуйтесь — дзвоніть і їдьте</span><span class="when-curfew">Не записуйтесь — дзвоніть</span></h2>
+      <a href={site.phone.href} class="num inline-flex min-h-12 items-center gap-2.5 self-start text-[2rem] font-bold text-lamp no-underline"><Icon name="phone" class="size-6" stroke={2} />{site.phone.display}</a>
+      <p class="when-not-curfew text-[0.9375rem] text-fg-mute">Черговий лікар на місці цілодобово, без запису. {site.address.street}, {site.address.entrance}.</p>
+      <p class="when-curfew text-[0.9375rem] text-fg-mute">{curfew.text}</p>
+      <a href="/nevidkladna/#chy-terminovo" class="inline-flex min-h-11 items-center gap-1.5 self-start text-[0.9375rem] text-lamp">Не впевнені? Чи терміново<Icon name="arrow-right" class="size-4" /></a>
+    </section>
+
+    <section id="zapys-forma" class="zplan is-day-surface bg-surface-2 py-6 text-fg lg:py-10 lg:pl-12" aria-labelledby="t-z-plan">
+      <nav aria-label="Ви тут"><ol class="flex flex-wrap items-center gap-x-2 text-[0.875rem] text-fg-mute"><li><a href="/" class="inline-flex min-h-11 items-center">Головна</a></li><li class="flex items-center gap-2"><Icon name="arrow-right" class="size-3.5" /><span aria-current="page">Запис</span></li></ol></nav>
+      <p class="t-kicker mt-2 flex items-center gap-2 text-fg-mute"><Icon name="calendar" class="size-4" />Планово</p>
+      <h1 id="t-z-plan" class="t-h1 mt-2">Записатися на зручний день</h1>
+      <p class="mt-2 text-fg-mute">Обов’язковий лише телефон. Решту уточнимо, коли передзвонимо.</p>
+      <div class="mt-6 max-w-3xl rounded-sm bg-white p-5 text-ink md:p-8"><BookingForm /></div>
+    </section>
+  </div>
+
+  <section class="is-day-surface bg-surface py-[var(--spacing-section)] text-fg">
+    <div class="wrap grid grid-cols-1 gap-12 lg:grid-cols-2 lg:gap-16">
+      <div class="grid content-start gap-3"><h2 class="t-h2">Що буде далі</h2>
+        <ol class="grid">{next.map(([t, d], i) => <li class="grid grid-cols-[2.5rem_minmax(0,1fr)] gap-3 border-t border-rule py-3"><span class="font-serif text-[1.5rem] leading-none" aria-hidden="true">{i + 1}</span><span><strong class="block">{t}</strong><span class="text-fg-mute">{d}</span></span></li>)}</ol></div>
+      <div class="grid content-start gap-2"><h2 class="t-h2">Адреса й години</h2>
+        <p class="flex gap-2"><Icon name="map-pin" class="mt-0.5 size-5" /><span>{site.address.street}, {site.address.city}<span class="block text-[0.9375rem] text-fg-mute">{site.address.walk} від {site.address.metro} · {site.address.entrance}</span></span></p>
+        <p class="flex gap-2"><Icon name="clock" class="mt-0.5 size-5" /><span>Планові прийоми 09:00–20:00, невідкладні — цілодобово</span></p>
+        <p class="text-[0.9375rem] text-fg-mute">Оплата карткою, готівкою або переказом.</p></div>
+    </div>
+  </section>
+  <LazyUi />
+</BaseLayout>
+<style>
+  .zurgent { padding-left: calc(var(--spacing-bleed) + var(--edge-light)); }
+  .zurgent::before { content: ''; position: absolute; inset: 0 auto 0 0; width: var(--edge-light); background: var(--color-lamp); }
+  .zplan { padding-inline: var(--spacing-gutter); }
+  @media (min-width: 64rem) { .zplan { padding-left: 3rem; padding-right: var(--spacing-bleed); } }
+</style>

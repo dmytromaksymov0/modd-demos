@@ -1,0 +1,34 @@
+{
+  "name": "vet-khvist",
+  "type": "module",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro",
+    "fonts": "python3 design/phase-2/subset_fonts.py",
+    "qa": "node scripts/qa.cjs http://localhost:4321 / /nevidkladna/ /poslugy/ /poslugy/terapiya/ /poslugy/khirurhiya/ /poslugy/vaktsynatsiya/ /poslugy/diahnostyka/ /tsiny/ /likari/ /klub/ /zapys/ /pryvatnist/ /404 /dyakuyemo/",
+    "test": "node --test tests/*.test.ts",
+    "test:home": "node scripts/test-home.cjs http://localhost:4321",
+    "e2e": "node scripts/e2e-lead.cjs",
+    "links": "node scripts/check-links.cjs http://localhost:4321",
+    "qa:fonts": "node scripts/font-swap-check.cjs http://localhost:4321",
+    "og": "node scripts/make-og.cjs",
+    "logo": "python3 design/phase-2/make_logo.py",
+    "photos": "python3 design/phase-2/process_photos.py"
+  },
+  "dependencies": {
+    "@astrojs/sitemap": "^3.7.4",
+    "@tailwindcss/vite": "^4.3.3",
+    "astro": "^7.4.1",
+    "tailwindcss": "^4.3.3"
+  },
+  "devDependencies": {
+    "wrangler": "^4.151.3"
+  },
+  "engines": {
+    "node": ">=22.22.0"
+  }
+}

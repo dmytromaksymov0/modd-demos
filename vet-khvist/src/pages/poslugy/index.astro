@@ -1,0 +1,33 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHero from '../../components/page/PageHero.astro';
+import CtaDoors from '../../components/page/CtaDoors.astro';
+import Services from '../../components/home/Services.astro';
+import Icon from '../../components/ui/Icon.astro';
+const reasons = [
+  { r: 'не їсть, блює, млявий', href: '/poslugy/terapiya/' }, { r: 'чухається, вуха, шкіра', href: '/poslugy/terapiya/' },
+  { r: 'кашляє або чхає', href: '/poslugy/terapiya/' }, { r: 'треба щеплення', href: '/poslugy/vaktsynatsiya/' },
+  { r: 'поїздка за кордон', href: '/poslugy/vaktsynatsiya/' }, { r: 'стерилізація, кастрація', href: '/poslugy/khirurhiya/' },
+  { r: 'зубний камінь, неприємний запах', href: '/poslugy/khirurhiya/' }, { r: 'кульгає', href: '/poslugy/khirurhiya/' },
+  { r: 'аналізи або УЗД за направленням', href: '/poslugy/diahnostyka/' }, { r: 'чекап після 8 років', href: '/poslugy/diahnostyka/' },
+];
+---
+<BaseLayout title="Послуги ветклініки «Хвіст» — терапія, хірургія, вакцинація, діагностика · Харків"
+  description="Чотири напрями: терапія, хірургія, вакцинація, діагностика. Ціни «все включено», 9 лікарів, коти й собаки окремо. Цілодобово, Харків." current="/poslugy/" og="poslugy" crumbs={[{ href: '', label: 'Послуги' }]}>
+  <PageHero compact kicker="Послуги" title="З чим ви прийшли? Почніть зі свого приводу" crumbs={[{ href: '', label: 'Послуги' }]}>
+    Не знаєте, як називається послуга, — оберіть, що бачите. Терміново — <a href="/nevidkladna/">невідкладна допомога</a>.
+  </PageHero>
+  <section class="is-day-surface bg-surface-2 py-6 text-fg md:py-8" aria-label="Привід">
+    <ul class="wrap flex flex-wrap gap-2">
+      {reasons.map((x) => <li><a href={x.href} class="inline-flex min-h-11 items-center gap-2 rounded-full border border-ink bg-white px-4 text-[0.9375rem] text-ink no-underline hover:bg-day">{x.r}<Icon name="arrow-right" class="size-4" /></a></li>)}
+    </ul>
+  </section>
+  <Services />
+  <section class="is-day-surface bg-surface-2 py-12 text-fg">
+    <div class="wrap grid gap-3">
+      <h2 class="t-h3">Інше: стоматологія, офтальмологія, дерматологія, кардіологія</h2>
+      <p class="max-w-[64ch] text-fg-mute">Приймають вузькі спеціалісти — <a href="/likari/">дивіться графік лікарів</a>. Не знайшли свого приводу — подзвоніть, підкажемо, до кого записатися.</p>
+    </div>
+  </section>
+  <CtaDoors />
+</BaseLayout>

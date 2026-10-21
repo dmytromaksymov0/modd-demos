@@ -1,0 +1,20 @@
+---
+// First screen: two doors. Desktop 7:5 by day, 8:4 at night (the urgent door widens). Phones: urgent door,
+// a narrow photo band (day), then the plan door; the bottom bar carries «Подзвонити».
+import UrgentDoor from './UrgentDoor.astro';
+import PlanDoor from './PlanDoor.astro';
+import PhotoBand from './PhotoBand.astro';
+interface Props { bookHref?: string }
+const { bookHref = '/zapys/' } = Astro.props;
+---
+<div class="doors grid grid-cols-1 lg:min-h-[min(calc(100svh-8rem),46rem)]">
+  <UrgentDoor />
+  <PhotoBand />
+  <PlanDoor bookHref={bookHref} />
+</div>
+<style>
+  @media (min-width: 64rem) {
+    .doors { grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); }
+    :global(html[data-time='night']) .doors, :global(html[data-time='curfew']) .doors { grid-template-columns: minmax(0, 8fr) minmax(0, 4fr); }
+  }
+</style>

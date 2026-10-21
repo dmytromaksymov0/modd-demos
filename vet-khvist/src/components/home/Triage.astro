@@ -1,0 +1,90 @@
+---
+// «Чи терміново?» (moment 4.1). Red flags first (NHS 111): any one → «Їдьте зараз», no more questions.
+// Then species, age, symptoms by area, course → place + time. Logic: src/lib/triage.ts (tested).
+// No JS: the red-flag list is still a complete answer («є хоч одне — їдьте зараз і дзвоніть дорогою»).
+// JS (src/lib/home-ui.ts) loads on the first interaction with the widget.
+import Icon from '../ui/Icon.astro';
+import Button from '../ui/Button.astro';
+import Chip from '../ui/Chip.astro';
+import SectionHead from '../ui/SectionHead.astro';
+import TriageOutcome from '../patterns/TriageOutcome.astro';
+import { RED_FLAGS, SYMPTOMS, AREAS, GO_NOW_IF } from '../../lib/triage';
+import { site } from '../../config/site';
+interface Props { bookHref?: string; headingLevel?: 'h1' | 'h2' }
+const { bookHref = '/zapys/' } = Astro.props;
+---
+<section id="chy-terminovo" class="is-day-surface bg-surface py-[var(--spacing-section)] text-fg" aria-labelledby="t-triage">
+  <div class="wrap grid grid-cols-1 gap-10 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:gap-16">
+    <div class="grid content-start gap-6 lg:sticky lg:top-6">
+      <SectionHead kicker="Чи терміново? · за хвилину" title="Їхати зараз чи можна записатися?" id="t-triage">
+        Підкажемо, як швидко їхати. Це не діагноз — остаточну оцінку дає лікар на огляді.
+      </SectionHead>
+      <a href={site.phone.href} class="doubt is-night-surface flex items-center gap-4 rounded-sm bg-surface p-5 text-fg no-underline">
+        <Icon name="phone" class="size-7 text-lamp" stroke={2} />
+        <span class="grid"><span class="text-[1.0625rem] font-semibold">Сумніваєтесь — дзвоніть</span><span class="num text-[1.75rem] font-bold text-lamp">{site.phone.display}</span><span class="text-[0.875rem] text-fg-mute">черговий лікар відповідає цілодобово</span></span>
+      </a>
+    </div>
+
+    <div class="triage relative min-w-0" data-triage data-lazy>
+      <form class="grid gap-6" data-triage-form onsubmit="return false" aria-label="Чи терміново?">
+        <fieldset class="step grid gap-4" data-step="1">
+          <legend class="contents">
+            <span class="t-kicker block text-fg-mute"><span class="when-js">Крок 1 / 2 · </span>спершу головне</span>
+            <span class="t-h2 mt-2 block">Є хоч одне з цього?</span>
+          </legend>
+          <ul class="grid gap-2">
+            {RED_FLAGS.map((f) => (
+              <li>
+                <label class="flag flex cursor-pointer items-start gap-3 rounded-sm border border-line-strong bg-white p-4 text-ink">
+                  <input type="checkbox" name="flag" value={f.id} class="mt-1 size-5 shrink-0 accent-[var(--color-urgent)]" />
+                  <span class="grid gap-0.5"><span class="font-semibold leading-snug">{f.label}</span>{f.hint && <span class="text-[0.9375rem] text-stone">{f.hint}</span>}</span>
+                </label>
+              </li>))}
+          </ul>
+          <p class="when-nojs rounded-sm border-l-4 border-urgent bg-white p-4 text-ink"><strong>Є хоч одне — їдьте зараз</strong> і подзвоніть дорогою: <a href={site.phone.href} class="num font-bold">{site.phone.display}</a>. Немає — запишіться або подзвоніть, підкажемо.</p>
+          <div class="when-js flex flex-wrap gap-3">
+            <Button variant="urgent" data-go="flags" icon="alert">Так, є — що робити</Button>
+            <Button variant="outline" data-go="step2" iconRight="arrow-right">Нічого з цього немає</Button>
+          </div>
+        </fieldset>
+
+        <fieldset class="step grid gap-6" data-step="2" hidden>
+          <legend class="contents">
+            <span class="t-kicker block text-fg-mute">Крок 2 / 2 · що турбує</span>
+            <span class="t-h2 mt-2 block">Розкажіть трохи більше</span>
+          </legend>
+          <div class="grid gap-5 sm:grid-cols-2">
+            <div role="radiogroup" aria-labelledby="tr-species" class="grid gap-2"><p id="tr-species" class="font-semibold">Хто</p><div class="flex flex-wrap gap-2"><Chip type="radio" name="species" value="cat" checked>Кіт</Chip><Chip type="radio" name="species" value="dog">Собака</Chip></div></div>
+            <div role="radiogroup" aria-labelledby="tr-age" class="grid gap-2"><p id="tr-age" class="font-semibold">Вік</p><div class="flex flex-wrap gap-2"><Chip type="radio" name="age" value="young">до 6 міс</Chip><Chip type="radio" name="age" value="adult" checked>дорослий</Chip><Chip type="radio" name="age" value="senior">8+ років</Chip></div></div>
+          </div>
+          <div class="grid gap-4">
+            <p class="font-semibold">Що помітили <span class="font-normal text-fg-mute">— можна кілька</span></p>
+            {AREAS.map((area) => (
+              <div class="grid gap-2 sm:grid-cols-[10rem_minmax(0,1fr)] sm:items-start">
+                <p class="pt-2.5 text-[0.9375rem] text-fg-mute">{area}</p>
+                <div class="flex flex-wrap gap-2">{SYMPTOMS.filter((s) => s.area === area).map((s) => <Chip name="symptom" value={s.id}>{s.label}</Chip>)}</div>
+              </div>))}
+          </div>
+          <div role="radiogroup" aria-labelledby="tr-course" class="grid gap-2"><p id="tr-course" class="font-semibold">Як змінюється</p><div class="flex flex-wrap gap-2"><Chip type="radio" name="course" value="new" checked>щойно почалось</Chip><Chip type="radio" name="course" value="days">кілька днів, без змін</Chip><Chip type="radio" name="course" value="worse">стає гірше</Chip></div></div>
+          <p class="hidden rounded-sm border-l-4 border-alert bg-white p-3 font-semibold text-alert" role="alert" data-empty>Оберіть хоча б один симптом — або просто подзвоніть, підкажемо.</p>
+          <div class="flex flex-wrap gap-3">
+            <Button data-go="result" iconRight="arrow-right">Показати результат</Button>
+            <Button variant="outline" data-go="step1">Назад</Button>
+          </div>
+        </fieldset>
+      </form>
+
+      <div class="mt-6 grid gap-4" data-result hidden>
+        <div data-outcome="now" hidden><TriageOutcome kind="now" onTheWay={['Подзвоніть дорогою — лікар підготує кабінет']} bookHref={bookHref} /></div>
+        <div data-outcome="today" hidden><TriageOutcome kind="today" worse={GO_NOW_IF} bookHref={bookHref} /></div>
+        <div data-outcome="plan" hidden><TriageOutcome kind="plan" worse={GO_NOW_IF} bookHref={bookHref} /></div>
+        <button type="button" class="inline-flex min-h-11 items-center gap-2 self-start underline underline-offset-4" data-go="restart">Пройти ще раз</button>
+      </div>
+    </div>
+  </div>
+</section>
+<style>
+  .flag:has(input:checked) { border-color: var(--color-urgent); box-shadow: inset 4px 0 0 var(--color-urgent); }
+  .flag:has(input:focus-visible) { outline: 3px solid var(--color-ink); outline-offset: 3px; box-shadow: 0 0 0 7px var(--color-lamp); }
+  .doubt:hover .num { color: var(--color-lamp-2); }
+</style>

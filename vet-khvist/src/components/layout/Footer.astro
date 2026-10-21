@@ -1,0 +1,28 @@
+---
+import Logo from '../brand/Logo.astro';
+import Icon from '../ui/Icon.astro';
+import { site, nav, power } from '../../config/site';
+---
+<footer class="is-night-surface bg-surface text-fg pb-24 md:pb-0">
+  <div class="wrap grid gap-10 py-14 md:grid-cols-[1.2fr_1fr_1fr]">
+    <div class="grid content-start gap-4">
+      <Logo class="h-11 w-auto" />
+      <p class="t-small max-w-[34ch] text-fg-mute">Цілодобова ветклініка для собак і котів. {site.doctors} лікарів, черговий лікар на місці щоночі.</p>
+    </div>
+    <div class="grid content-start gap-3 text-[0.9375rem]">
+      <a href={site.phone.href} class="num inline-flex min-h-11 items-center self-start text-[1.5rem] font-bold text-lamp no-underline">{site.phone.display}</a>
+      <p class="flex gap-2"><Icon name="map-pin" class="mt-0.5 size-5 text-lamp" /><span>{site.address.street}, {site.address.city}<br /><span class="text-fg-mute">{site.address.walk} від {site.address.metro} · {site.address.entrance}</span></span></p>
+      <p class="flex gap-2"><Icon name="clock" class="mt-0.5 size-5 text-lamp" /><span>Цілодобово, без вихідних і свят</span></p>
+      <p class="flex gap-2"><Icon name="zap" class="mt-0.5 size-5 text-lamp" /><span>{power.short}: {power.detail}</span></p>
+    </div>
+    <nav aria-label="Розділи сайту">
+      <ul class="grid gap-2 text-[0.9375rem]">
+        {nav.map((n) => <li><a href={n.href} class="no-underline hover:underline">{n.label}</a></li>)}
+        <li><a href="/zapys/" class="no-underline hover:underline">Запис</a></li>
+      </ul>
+    </nav>
+  </div>
+  <div class="border-t border-rule">
+    <p class="wrap py-5 text-[0.875rem] text-fg-mute">Concept site · fictional company · designed &amp; built by modd.</p>
+  </div>
+</footer>

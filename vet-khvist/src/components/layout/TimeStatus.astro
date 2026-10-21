@@ -1,0 +1,8 @@
+---
+// «Цілодобово» status. No JS: static «Цілодобово». With JS (BaseLayout script) the Kyiv time is filled into [data-now].
+import Badge from '../ui/Badge.astro';
+---
+<Badge tone="status">
+  <span class="when-nojs">Цілодобово, без вихідних</span>
+  <span class="when-js"><span class="when-day">Цілодобово · зараз <span data-now class="num">14:20</span></span><span class="when-night"><span data-now class="num">23:40</span> · лікар на місці</span><span class="when-curfew"><span data-now class="num">02:47</span> · комендантська година</span></span>
+</Badge>

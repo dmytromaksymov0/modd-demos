@@ -1,0 +1,42 @@
+---
+// Thanks page. ?kanal=telegram|call and &klub=1 switch the «що далі» copy (tiny inline script; no JS = generic copy).
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Icon from '../components/ui/Icon.astro';
+import { site } from '../config/site';
+---
+<BaseLayout title="Дякуємо — заявку отримано · Хвіст" description="Заявку отримано. Передзвонимо протягом 15 хвилин удень." noindex>
+  <section class="is-day-surface bg-surface-2 py-[var(--spacing-section)] text-fg">
+    <div class="wrap grid max-w-4xl gap-8">
+      <div class="grid gap-3">
+        <p class="t-kicker flex items-center gap-2 text-fg-mute"><Icon name="check" class="size-4" /><span data-kind>Заявку отримано</span></p>
+        <h1 class="t-display" data-title>Дякуємо! Скоро зв’яжемося</h1>
+      </div>
+      <ol class="grid">
+        <li class="grid grid-cols-[2.5rem_minmax(0,1fr)] gap-3 border-t border-ink py-4"><span class="font-serif text-[1.5rem] leading-none" aria-hidden="true">1</span>
+          <span><strong class="block" data-channel>Зв’яжемося з вами</strong><span class="text-fg-mute"><span class="when-nojs">Протягом 15 хвилин удень; заявки, надіслані вночі, — о 8:00.</span><span class="when-day">Протягом 15 хвилин.</span><span class="when-dark">Зараз ніч — адміністратор обробить заявку о 8:00.</span></span></span></li>
+        <li class="grid grid-cols-[2.5rem_minmax(0,1fr)] gap-3 border-t border-ink py-4"><span class="font-serif text-[1.5rem] leading-none" aria-hidden="true">2</span>
+          <span><strong class="block" data-step2>Підберемо час і лікаря</strong><span class="text-fg-mute" data-step2-text>Якщо перед візитом треба не годувати чи щось узяти — скажемо.</span></span></li>
+        <li class="grid grid-cols-[2.5rem_minmax(0,1fr)] gap-3 border-y border-ink py-4"><span class="font-serif text-[1.5rem] leading-none" aria-hidden="true">3</span>
+          <span><strong class="block">Нагадаємо за день</strong><span class="text-fg-mute">У Telegram або SMS — як вам зручніше.</span></span></li>
+      </ol>
+      <a href={site.phone.href} class="is-night-surface grid gap-1 self-start rounded-sm bg-surface p-6 text-fg no-underline">
+        <span class="font-semibold">Стан тварини погіршився — не чекайте дзвінка</span>
+        <span class="num inline-flex items-center gap-2 text-[1.75rem] font-bold text-lamp"><Icon name="phone" class="size-6" />{site.phone.display}</span>
+      </a>
+      <a href="/" class="inline-flex min-h-11 items-center gap-2 self-start">На головну<Icon name="arrow-right" class="size-4" /></a>
+    </div>
+  </section>
+</BaseLayout>
+<script is:inline>
+  (function () {
+    var q = new URLSearchParams(location.search), $ = function (s) { return document.querySelector(s); };
+    if (q.get('kanal') === 'telegram') $('[data-channel]').textContent = 'Напишемо вам у Telegram';
+    if (q.get('kanal') === 'call') $('[data-channel]').textContent = 'Передзвонимо';
+    if (q.get('klub') === '1') {
+      $('[data-kind]').textContent = 'Заявку в Клуб турботи отримано';
+      $('[data-title]').textContent = 'Ласкаво просимо в клуб';
+      $('[data-step2]').textContent = 'Бот надішле календар';
+      $('[data-step2-text]').textContent = 'Дати щеплень і обробок на рік — і знижку 10 % на щеплення, огляди й чекапи.';
+    }
+  })();
+</script>
