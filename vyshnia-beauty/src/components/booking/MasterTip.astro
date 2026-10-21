@@ -1,0 +1,26 @@
+---
+// Master card (step 2 of the booking and the «Майстри» page): photo at work in the tip, name, category,
+// years, style, nearest free slot. Top master = +20 % — shown as a fact, not as a medal.
+import TipPhoto from './TipPhoto.astro';
+import Badge from '../ui/Badge.astro';
+import type { Master } from '../../data/masters';
+interface Props { master: Master; selectable?: boolean; checked?: boolean; name?: string; ratio?: string }
+const { master: m, selectable = false, checked = false, name = 'maister', ratio = '4 / 5' } = Astro.props;
+const Tag = selectable ? 'label' : 'article';
+const years = (n: number) => `${n} ${n % 10 === 1 && n % 100 !== 11 ? 'рік' : [2, 3, 4].includes(n % 10) && ![12, 13, 14].includes(n % 100) ? 'роки' : 'років'}`;
+---
+<Tag class={`master-tip group relative flex min-w-0 flex-col gap-3 ${selectable ? 'cursor-pointer' : ''}`}>
+  {selectable && <input class="sr-only" type="radio" name={name} value={m.id} checked={checked} />}
+  <span class="relative block rounded-[999px_999px_18px_18px] outline-offset-4 group-has-checked:outline-3 group-has-checked:outline-cherry group-has-focus-visible:outline-3 group-has-focus-visible:outline-ink">
+    <TipPhoto src={m.photo} alt={m.photoAlt} ratio={ratio} sizes="(min-width: 64rem) 16vw, 44vw" />
+  </span>
+  <span class="grid gap-1">
+    <span class="flex flex-wrap items-center gap-2"><span class="font-display text-h3 font-medium tracking-[-0.01em]">{m.name}</span></span>
+    <span class="text-caption text-graphite">{m.role} · {years(m.years)}</span>
+    <span class="text-small text-ink">{m.style}</span>
+  </span>
+  <span class="flex flex-wrap items-center gap-2">
+    {m.top ? <Badge tone="soft">Топ-майстер · +20 %</Badge> : <Badge tone="outline">Майстер</Badge>}
+    <span class="text-caption text-graphite">вільно: <strong class="font-semibold text-ink">{m.next}</strong></span>
+  </span>
+</Tag>

@@ -1,0 +1,55 @@
+---
+// Sample reviews (marked as samples — replaced with real Google reviews at launch), the Instagram block (static on the
+// demo, the live feed on production) and the gift certificate strip.
+import SectionHead from './SectionHead.astro';
+import Badge from '../ui/Badge.astro';
+import Button from '../ui/Button.astro';
+import Icon from '../ui/Icon.astro';
+import { Picture } from 'astro:assets';
+import { photo } from '../../lib/photos';
+import { site } from '../../config/site';
+const reviews = [
+  { text: 'Записалась увечері за хвилину, без жодного «напишіть у директ». Покриття тримається третій тиждень, а на руках — ні подряпинки.', who: 'Анна', what: 'манікюр з покриттям · Олена' },
+  { text: 'Вперше бачила, як набір відкривають з пакета при мені. Для мене це головне — після одного салону лікувала палець місяць.', who: 'Вікторія', what: 'педикюр · Марта' },
+  { text: 'Принесла фото з Instagram — Ірина зробила брови точно такі, але під моє обличчя. Тепер тільки сюди.', who: 'Олександра', what: 'ламінування брів · Ірина' },
+];
+// Different frames from «Хочу так само» above — the studio, the swatches, the sterile kit — so the feed isn't a copy.
+const insta = ['tips-fan', 'interior-table', 'sterile-kraft', 'tips-orange-stick', 'interior-pedi', 'sterile-file'];
+const igHandle = '@' + site.instagram.split('instagram.com/')[1].replace(/\/$/, '');
+---
+<section class="wrap pt-(--spacing-section)" aria-labelledby="reviews-title" id="vidguky">
+  <SectionHead id="reviews-title" title="Що кажуть клієнтки" />
+  <p class="mt-3"><Badge tone="note" class="!whitespace-normal !rounded-[14px] py-1.5">Приклади відгуків — замінимо на реальні відгуки з Google при запуску</Badge></p>
+  <ul class="mt-8 grid gap-4 md:grid-cols-3">
+    {reviews.map((r) => (
+      <li class="grid content-between gap-6 rounded-card bg-white p-6">
+        <blockquote class="t-lead">«{r.text}»</blockquote>
+        <p class="t-caption text-graphite"><strong class="font-semibold text-ink">{r.who}</strong> · {r.what}</p>
+      </li>
+    ))}
+  </ul>
+
+  <div class="mt-(--spacing-section) grid gap-8 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:items-center">
+    <div class="grid content-start gap-4">
+      <h2 class="t-h2">Нові роботи — щодня в Instagram</h2>
+      <p class="t-lead text-graphite">Там ми показуємо свіжі дизайни, відтінки сезону й вільні вікна на тиждень.</p>
+      <p class="t-caption text-graphite">Демо: статичні фото. На сайті студії тут автоматично підтягується стрічка Instagram.</p>
+      <p><Button href={site.instagram} variant="secondary" icon="instagram">{igHandle}</Button></p>
+    </div>
+    <ul class="grid grid-cols-3 gap-2 sm:gap-3" aria-label="Останні пости (демо)">
+      {insta.map((p) => (
+        <li class="aspect-square overflow-hidden rounded-field bg-nude">
+          <Picture src={photo(p)} alt="" widths={[200, 400]} sizes="(min-width: 64rem) 18vw, 31vw" formats={['avif', 'webp']} quality={55} class="size-full object-cover" pictureAttributes={{ class: 'contents' }} />
+        </li>
+      ))}
+    </ul>
+  </div>
+
+  <div class="mt-(--spacing-section) grid gap-6 rounded-card bg-cherry p-6 text-white sm:p-8 md:grid-cols-[minmax(0,1fr)_auto] md:items-center lg:p-10" id="sertyfikat">
+    <div class="grid gap-2">
+      <h2 class="t-h2 text-white">Подарунковий сертифікат</h2>
+      <p class="t-lead text-white/90">500, 1000, 1500, 2000 ₴ або конкретна послуга. Діє 6 місяців, приходить у Telegram або в крафт-конверті.</p>
+    </div>
+    <Button href="/sertyfikaty/" variant="light" size="lg" icon="gift">Обрати сертифікат</Button>
+  </div>
+</section>

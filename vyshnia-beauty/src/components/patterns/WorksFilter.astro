@@ -1,0 +1,27 @@
+---
+// Filter for «Роботи»: service chips, master chips and the same shade tips as in the booking.
+import Chip from '../ui/Chip.astro';
+import { masters } from '../../data/masters';
+import { shades } from '../../data/shades';
+---
+<form class="works-filter grid gap-3" aria-label="Фільтр робіт">
+  <fieldset class="flex min-w-0 flex-wrap gap-2"><legend class="sr-only">Послуга</legend>
+    <Chip name="posluga" value="" checked>Усі</Chip><Chip name="posluga" value="manicure">Манікюр</Chip><Chip name="posluga" value="pedicure">Педикюр</Chip><Chip name="posluga" value="brows">Брови</Chip><Chip name="posluga" value="lashes">Вії</Chip>
+  </fieldset>
+  <div class="flex min-w-0 flex-wrap items-center gap-x-5 gap-y-3">
+    <fieldset class="flex min-w-0 items-center gap-1.5"><legend class="float-left mr-2 text-caption text-graphite">Колір</legend>
+      {shades.map((s) => (
+        <label class="group relative cursor-pointer" title={s.name}>
+          <input class="sr-only" type="checkbox" name="kolir" value={s.id} />
+          <span class="tip-sm block h-9 w-6 shadow-[inset_0_0_0_1px_rgb(34_27_30/0.14)] outline-offset-2 group-has-checked:outline-2 group-has-checked:outline-ink group-has-focus-visible:outline-3 group-has-focus-visible:outline-cherry" style={`background:var(${s.token})`}></span>
+          <span class="sr-only">{s.name}</span>
+        </label>
+      ))}
+    </fieldset>
+    <label class="flex items-center gap-2 text-caption text-graphite">Майстриня
+      <select name="maister" class="min-h-11 rounded-full border-[1.5px] border-line-strong bg-white px-4 text-small font-semibold text-ink">
+        <option value="">усі</option>{masters.map((m) => <option value={m.id}>{m.name}</option>)}
+      </select>
+    </label>
+  </div>
+</form>

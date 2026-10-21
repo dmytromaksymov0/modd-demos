@@ -1,0 +1,56 @@
+---
+import '../styles/global.css';
+import Header from '../components/layout/Header.astro';
+import Footer from '../components/layout/Footer.astro';
+import MobileBar from '../components/layout/MobileBar.astro';
+import { site } from '../config/site';
+import { breadcrumbs } from '../lib/schema';
+// og: image slug in public/og (default «home»). crumb: this page's label → BreadcrumbList JSON-LD (Головна → page).
+interface Props { title: string; description: string; noindex?: boolean; current?: string; chrome?: boolean; mobileBar?: boolean; bookHref?: string; jsonld?: object[]; og?: string; crumb?: string }
+const { title, description, noindex = false, current = '', chrome = true, mobileBar = true, bookHref = '/zapys/', jsonld = [], og = 'home', crumb } = Astro.props;
+const canonical = new URL(Astro.url.pathname, Astro.site);
+const ogImage = new URL(`/og/${og}.jpg`, Astro.site);
+const ld = crumb ? [...jsonld, breadcrumbs(Astro.site!, [{ href: Astro.url.pathname, label: crumb }])] : jsonld;
+---
+<!doctype html>
+<html lang="uk">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script is:inline>document.documentElement.classList.add('js')</script>
+    <link rel="preload" href="/fonts/vyshnia-text.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/fonts/vyshnia-display.woff2" as="font" type="font/woff2" crossorigin />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    {noindex && <meta name="robots" content="noindex, nofollow" />}
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href="/favicon-32.png" sizes="32x32" type="image/png" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+    <meta name="theme-color" content="#F3F3F1" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={site.name} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:locale" content="uk_UA" />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content={title} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
+    {ld.map((j) => <script type="application/ld+json" set:html={JSON.stringify(j)} />)}
+  </head>
+  <body class="flex min-h-dvh flex-col">
+    {chrome && <a href="#main" class="sr-only-focusable fixed top-3 left-3 z-50 inline-flex min-h-12 items-center rounded-full bg-cherry px-5 font-semibold text-white">До змісту</a>}
+    {chrome && <Header current={current} bookHref={bookHref} />}
+    <main id="main" class="flex-1"><slot /></main>
+    {chrome && <Footer />}
+    {chrome && mobileBar && <MobileBar bookHref={bookHref} />}
+  </body>
+</html>

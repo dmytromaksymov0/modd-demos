@@ -1,0 +1,29 @@
+---
+import Logo from '../brand/Logo.astro';
+import Icon from '../ui/Icon.astro';
+import { nav, site } from '../../config/site';
+const year = 2026;
+---
+<footer class="site-footer mt-(--spacing-section) bg-ink pb-28 text-white lg:pb-0">
+  <div class="wrap grid gap-10 py-14 md:grid-cols-[1.3fr_1fr_1fr] lg:py-16">
+    <div class="grid content-start gap-4">
+      <Logo class="h-9 w-auto" tone="white" />
+      <p class="max-w-xs t-small text-nude">Манікюр, педикюр, брови й вії в центрі Харкова. Гарантія на покриття {site.guaranteeDays} день.</p>
+    </div>
+    <div class="grid content-start gap-2 t-small">
+      <p class="font-semibold">Як знайти</p>
+      <p class="flex gap-2 text-nude"><Icon name="map-pin" size={18} class="mt-0.5 shrink-0" /><span>{site.address}<br />{site.addressNote}</span></p>
+      <p class="flex gap-2 text-nude"><Icon name="clock" size={18} class="mt-0.5 shrink-0" />{site.hours}</p>
+      <p class="flex gap-2 text-nude"><Icon name="zap" size={18} class="mt-0.5 shrink-0" />Світло є: генератор, лампи працюють при відключеннях</p>
+      <a href={site.phoneHref} class="mt-2 font-display text-h3 font-medium no-underline num">{site.phone}</a>
+      <p class="flex gap-4"><a href={site.telegram} class="text-nude hover:text-white">Telegram</a><a href={site.viber} class="text-nude hover:text-white">Viber</a><a href={site.instagram} class="text-nude hover:text-white">Instagram</a></p>
+    </div>
+    <nav class="grid content-start gap-2 t-small" aria-label="Розділи у футері">
+      <p class="font-semibold">Розділи</p>
+      {nav.map((n) => <a href={n.href} class="text-nude no-underline hover:text-white hover:underline">{n.label}</a>)}
+    </nav>
+  </div>
+  <div class="border-t border-white/15">
+    <p class="wrap flex flex-wrap justify-between gap-2 py-5 t-caption text-nude"><span>© {year} Вишня, студія краси · <a href="/pryvatnist/" class="text-nude hover:text-white">Конфіденційність</a></span><span>Concept site · fictional company · designed &amp; built by <a href="https://modd.studio" class="text-white">modd.</a></span></p>
+  </div>
+</footer>

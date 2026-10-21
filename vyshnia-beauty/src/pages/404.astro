@@ -1,0 +1,16 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Button from '../components/ui/Button.astro';
+import TipPhoto from '../components/booking/TipPhoto.astro';
+---
+<BaseLayout title="Сторінку не знайдено · Вишня" description="Такої сторінки немає. Запис, послуги й контакти — тут." noindex>
+  <section class="wrap grid gap-8 pt-8 lg:grid-cols-[minmax(0,7fr)_minmax(0,5fr)] lg:items-center lg:gap-12 lg:pt-12">
+    <div class="grid content-start gap-5">
+      <p class="font-display text-micro font-semibold text-cherry">Помилка 404</p>
+      <h1 class="t-h1">Такої сторінки немає — а вільне вікно, можливо, є</h1>
+      <p class="t-lead measure text-graphite">Посилання застаріло або в адресі помилка. Ось куди найчастіше йдуть далі:</p>
+      <div class="flex flex-wrap gap-3"><Button href="/zapys/" iconAfter="arrow-right">Записатися</Button><Button href="/poslugy/" variant="secondary">Послуги та ціни</Button><Button href="/kontakty/" variant="secondary">Контакти</Button></div>
+    </div>
+    <div class="mx-auto w-full max-w-[16rem] lg:max-w-xs"><TipPhoto src="tips-fan" alt="Віяло типс з відтінками біля апарата" ratio="3 / 4" sizes="(min-width: 64rem) 24vw, 60vw" priority /></div>
+  </section>
+</BaseLayout>

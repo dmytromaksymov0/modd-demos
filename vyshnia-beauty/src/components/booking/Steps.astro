@@ -1,0 +1,35 @@
+---
+// Progress of the 4-step booking. Desktop: four pills (done steps are buttons — go back). Mobile: «Крок 1 з 4 · Послуга»,
+// the next step named, 4 dashes. Lowercase «з» everywhere (a capital «З» reads as «3»).
+// booking-ui.ts updates [data-step-pill] / [data-steps-*]; `current` is the server-rendered state.
+interface Props { current?: number; class?: string; live?: boolean }
+const { current = 1, class: cls = '', live = false } = Astro.props;
+const steps = ['Послуга', 'Майстер', 'День і час', 'Контакти'];
+---
+<div class={`steps ${cls}`} data-check="steps" data-steps={live ? '' : undefined}>
+  <ol class="hidden flex-wrap gap-1.5 md:flex" aria-label="Запис за 4 кроки">
+    {steps.map((s, i) => {
+      const n = i + 1, state = n === current ? 'current' : n < current ? 'done' : 'todo';
+      return (
+        <li data-step-pill={n} data-state={state} aria-current={state === 'current' ? 'step' : undefined}>
+          <button type="button" data-goto={n} disabled={state !== 'done'} class="step-pill flex min-h-11 items-center gap-2 rounded-full border bg-white py-1.5 pr-3.5 pl-1.5 text-caption">
+            <span class="step-num grid size-6 place-items-center rounded-full text-micro font-semibold" aria-hidden="true">{n}</span>{s}<span class="sr-only step-sr">{state === 'done' ? ' — пройдено, змінити' : state === 'current' ? ' — поточний крок' : ''}</span>
+          </button>
+        </li>
+      );
+    })}
+  </ol>
+  <div class="md:hidden" aria-live={live ? 'polite' : undefined}>
+    <p class="flex items-baseline justify-between gap-3 text-small"><span><strong class="font-semibold">Крок <span data-steps-n>{current}</span> з 4</strong> · <span data-steps-name>{steps[current - 1]}</span></span><span class="text-caption text-graphite" data-steps-next>{current < 4 ? `далі: ${steps[current].toLowerCase()}` : ''}</span></p>
+    <span class="mt-2 grid grid-cols-4 gap-1" aria-hidden="true">{steps.map((_, i) => <span data-step-dash={i + 1} class={`h-1 rounded-full ${i + 1 <= current ? 'bg-cherry' : 'bg-line'}`} />)}</span>
+  </div>
+</div>
+<style>
+  .step-pill { border-color: var(--color-line); color: var(--color-graphite); }
+  .step-num { background: var(--color-porcelain); color: var(--color-ink); }
+  [data-state='current'] .step-pill { border-color: var(--color-ink); color: var(--color-ink); }
+  [data-state='current'] .step-num, [data-state='done'] .step-num { background: var(--color-cherry); color: var(--color-white); }
+  [data-state='done'] .step-pill { color: var(--color-ink); cursor: pointer; }
+  [data-state='done'] .step-pill:hover { border-color: var(--color-ink); }
+  .step-pill:disabled { cursor: default; }
+</style>

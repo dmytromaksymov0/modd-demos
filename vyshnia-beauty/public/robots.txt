@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+Disallow: /styleguide/
+Disallow: /zapysano/
+Disallow: /api/
+
+Sitemap: https://vyshnia-beauty.pages.dev/sitemap-index.xml

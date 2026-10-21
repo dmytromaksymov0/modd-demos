@@ -1,0 +1,72 @@
+---
+// Роботи: the full feed as the first screen — filter by service, colour and master; every work opens /zapys/ with the
+// same service, master and shade. Filtering is a tiny inline script; without JS everything shows.
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHead from '../../components/page/PageHead.astro';
+import WorkCard from '../../components/patterns/WorkCard.astro';
+import Chip from '../../components/ui/Chip.astro';
+import Button from '../../components/ui/Button.astro';
+import { works, galleryOrder } from '../../data/works';
+import { shades } from '../../data/shades';
+import { masters } from '../../data/masters';
+import { site } from '../../config/site';
+const list = galleryOrder.map((id) => works.find((w) => w.id === id)!);
+const used = shades.filter((s) => list.some((w) => w.shade === s.id));
+---
+<BaseLayout title="Роботи майстринь · манікюр, педикюр, брови, вії · Вишня, Харків" description="Стрічка робіт студії «Вишня» з фільтром за послугою, кольором і майстринею. Побачили — тисніть «Хочу так само», і запис відкриється з тією ж майстринею й відтінком." current="/roboty/" og="roboty" crumb="Роботи">
+  <PageHead title="Роботи" crumb="Роботи" lead="Як у стрічці Instagram, тільки з фільтром. Тисніть «Хочу так само» — запис відкриється з тією ж послугою, майстринею й кольором." />
+  <section class="wrap mt-6 lg:mt-8" aria-label="Стрічка робіт">
+    <form class="works-filter grid gap-3" aria-label="Фільтр робіт" data-g-filter>
+      <fieldset class="flex min-w-0 flex-wrap gap-2"><legend class="sr-only">Послуга</legend>
+        <Chip name="g" value="" checked>Усі</Chip><Chip name="g" value="manicure">Манікюр</Chip><Chip name="g" value="pedicure">Педикюр</Chip><Chip name="g" value="brows">Брови</Chip><Chip name="g" value="lashes">Вії</Chip>
+      </fieldset>
+      <div class="flex min-w-0 flex-wrap items-center gap-x-6 gap-y-3">
+        <fieldset class="flex min-w-0 items-center gap-1.5"><legend class="float-left mr-2 text-caption text-graphite">Колір</legend>
+          <label class="relative grid h-9 cursor-pointer place-items-center rounded-full border-[1.5px] border-line-strong bg-white px-3 text-micro font-semibold has-checked:border-ink has-checked:bg-ink has-checked:text-white has-focus-visible:outline-3 has-focus-visible:outline-cherry"><input class="sr-only" type="radio" name="c" value="" checked />будь-який</label>
+          {used.map((s) => (
+            <label class="group relative cursor-pointer" title={s.name}>
+              <input class="sr-only" type="radio" name="c" value={s.id} />
+              <span class="tip-sm block h-9 w-6 shadow-[inset_0_0_0_1px_rgb(34_27_30/0.14)] outline-offset-2 group-has-checked:outline-2 group-has-checked:outline-ink group-has-focus-visible:outline-3 group-has-focus-visible:outline-cherry" style={`background:var(${s.token})`}></span>
+              <span class="sr-only">{s.name}</span>
+            </label>
+          ))}
+        </fieldset>
+        <label class="flex items-center gap-2 text-caption text-graphite">Майстриня
+          <select name="m" class="min-h-11 rounded-full border-[1.5px] border-line-strong bg-white px-4 text-small font-semibold text-ink">
+            <option value="">усі</option>{masters.map((m) => <option value={m.id}>{m.name}</option>)}
+          </select>
+        </label>
+        <p class="text-caption text-graphite" aria-live="polite" data-g-count>{list.length} робіт</p>
+      </div>
+    </form>
+    <h2 class="sr-only">Стрічка робіт</h2>
+    <div class="mt-8 grid grid-cols-2 gap-x-4 gap-y-9 md:grid-cols-3 lg:grid-cols-4 lg:gap-x-6" data-g-grid>
+      {list.map((w, i) => <div data-group={w.group} data-shade={w.shade ?? ''} data-master={w.master} class="g-item"><WorkCard work={w} /></div>)}
+    </div>
+    <p class="t-small mt-6 hidden text-graphite" data-g-empty>Таких робіт поки немає в стрічці — напишіть у <a href={site.telegram}>Telegram</a>, покажемо більше.</p>
+  </section>
+  <section class="wrap pt-(--spacing-section)" aria-labelledby="own-title">
+    <div class="grid gap-6 rounded-card bg-white p-6 sm:p-8 md:grid-cols-[minmax(0,1fr)_auto] md:items-center lg:p-10">
+      <div class="grid gap-2">
+        <h2 id="own-title" class="t-h2">Не знайшли своє? Принесіть фото</h2>
+        <p class="t-lead measure text-graphite">Скриншот з Instagram чи Pinterest — майстриня підлаштує форму й відтінок під ваші нігті. Додайте фото в коментар до запису або надішліть у Telegram.</p>
+      </div>
+      <Button href="/zapys/" size="lg" iconAfter="arrow-right">Записатися</Button>
+    </div>
+    <p class="t-caption mt-4 text-graphite">Демо: у стрічці 12 робіт. На сайті студії стрічку можна підтягувати з Instagram автоматично.</p>
+  </section>
+</BaseLayout>
+<script>
+  const f = document.querySelector<HTMLFormElement>('[data-g-filter]');
+  const items = [...document.querySelectorAll<HTMLElement>('[data-g-grid] .g-item')];
+  const count = document.querySelector('[data-g-count]'), empty = document.querySelector('[data-g-empty]');
+  const word = (n: number) => (n % 10 === 1 && n % 100 !== 11 ? 'робота' : [2, 3, 4].includes(n % 10) && ![12, 13, 14].includes(n % 100) ? 'роботи' : 'робіт');
+  f?.addEventListener('change', () => {
+    const v = (k: string) => (f.elements.namedItem(k) as RadioNodeList | HTMLSelectElement).value;
+    let n = 0;
+    for (const it of items) { const show = (!v('g') || it.dataset.group === v('g')) && (!v('c') || it.dataset.shade === v('c')) && (!v('m') || it.dataset.master === v('m')); it.hidden = !show; if (show) n++; }
+    if (count) count.textContent = `${n} ${word(n)}`;
+    empty?.classList.toggle('hidden', n > 0);
+  });
+</script>
+<style is:global>.g-item[hidden] { display: none !important; }</style>

@@ -1,0 +1,172 @@
+<!doctype html>
+<html lang="uk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Вишня · B «Стрічка»</title>
+<link rel="stylesheet" href="fonts/fontsource-variable-cormorant-garamond/index.css">
+<link rel="stylesheet" href="fonts/fontsource-variable-cormorant-garamond/wght-italic.css">
+<link rel="stylesheet" href="fonts/fontsource-variable-mulish/index.css">
+<style>
+:root{
+  --c-bg:#FFFFFF;
+  --c-feed:#F1EFEF;       /* шов між плитками стрічки */
+  --c-ink:#141214;
+  --c-muted:#6E6A6C;
+  --c-line:#E6E3E3;
+  --c-cherry:#8A1538;
+  --c-cherry-soft:#F5E9EC;
+  --f-display:'Cormorant Garamond Variable', Georgia, serif;
+  --f-text:'Mulish Variable', system-ui, sans-serif;
+  --s-gutter:clamp(16px,3vw,40px);
+}
+*{box-sizing:border-box;margin:0}
+body{background:var(--c-bg);color:var(--c-ink);font:400 16px/1.5 var(--f-text);-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+ol,ul{padding:0;list-style:none}
+header *{white-space:nowrap}
+.wrap{padding:0 var(--s-gutter)}
+
+header{display:flex;align-items:center;gap:28px;height:60px;border-bottom:1px solid var(--c-line)}
+.logo{font:italic 600 30px/1 var(--f-display);letter-spacing:-.01em;color:var(--c-cherry)}
+nav{display:flex;gap:22px;font-size:15px;margin-left:auto}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:44px;padding:0 20px;border-radius:10px;border:0;font:700 15px/1 var(--f-text);cursor:pointer}
+.btn-cherry{background:var(--c-cherry);color:#fff}
+.btn-line{background:#fff;border:1.5px solid var(--c-line);color:var(--c-ink)}
+.burger{display:none}
+
+/* профіль */
+.profile{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:24px 40px;align-items:end;padding-block:26px 18px}
+h1{font:500 clamp(36px,4.3vw,60px)/1 var(--f-display);letter-spacing:-.015em;max-width:22ch}
+h1 em{color:var(--c-cherry)}
+.stats{display:flex;gap:30px;margin-top:14px;font-size:15px;color:var(--c-muted)}
+.stats strong{color:var(--c-ink);font-weight:800;font-variant-numeric:tabular-nums;margin-right:4px}
+.p-actions{display:flex;gap:10px}
+
+/* хайлайти = крок 1 */
+.book{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:28px;align-items:center;padding-block:14px 18px;border-top:1px solid var(--c-line)}
+.book-lbl{font-size:13px;line-height:1.3;color:var(--c-muted)}
+.book-lbl b{display:block;font:italic 600 22px/1 var(--f-display);color:var(--c-ink);margin-bottom:4px}
+.hl{display:flex;gap:22px}
+.hl button{display:flex;flex-direction:column;align-items:center;gap:8px;background:none;border:0;padding:0;font:600 13px/1.2 var(--f-text);color:var(--c-ink);cursor:pointer;min-width:76px}
+.ring{width:78px;height:78px;border-radius:50%;padding:3px;border:2px solid var(--c-line);display:block}
+.ring img{width:100%;height:100%;border-radius:50%;object-fit:cover;display:block}
+.hl .on .ring{border-color:var(--c-cherry);border-width:3px}
+.hl small{font-weight:400;color:var(--c-muted);font-size:12.5px}
+.hl .gift .ring{display:grid;place-items:center;background:var(--c-cherry-soft);font:italic 600 26px/1 var(--f-display);color:var(--c-cherry)}
+.next{display:flex;align-items:center;gap:16px;background:var(--c-cherry-soft);padding:10px 10px 10px 18px;border-radius:14px}
+.next .sel{font-size:13px;color:var(--c-muted);line-height:1.35}
+.next .sel strong{display:block;color:var(--c-ink);font-size:15px}
+.next .sel em{font-style:normal}
+.next .pr{font:700 22px/1 var(--f-text);font-variant-numeric:tabular-nums}
+.dots{display:flex;gap:6px;margin-top:6px}
+.dots i{width:22px;height:4px;border-radius:2px;background:#D9CCD0}
+.dots i.on{background:var(--c-cherry)}
+
+/* фільтри + стрічка */
+.filters{display:flex;gap:8px;align-items:center;padding-block:0 12px;font-size:14px;flex-wrap:wrap}
+.chip{display:inline-flex;align-items:center;gap:8px;min-height:36px;padding:0 14px;border-radius:999px;border:1px solid var(--c-line);background:#fff;font:600 14px/1 var(--f-text);color:var(--c-ink)}
+.chip.on{background:var(--c-ink);color:#fff;border-color:var(--c-ink)}
+.chip i{width:14px;height:14px;border-radius:50%;box-shadow:inset 0 0 0 1px rgba(0,0,0,.12)}
+.sep{width:1px;height:22px;background:var(--c-line);margin:0 6px}
+.feed{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:3px;background:var(--c-feed)}
+.post{position:relative;aspect-ratio:1;overflow:hidden;background:var(--c-feed)}
+.post img{width:100%;height:100%;object-fit:cover;display:block}
+.post .ov{position:absolute;inset:auto 0 0 0;padding:40px 14px 12px;background:linear-gradient(transparent,rgba(20,18,20,.78));color:#fff;font-size:13px;line-height:1.35}
+.post .ov strong{display:block;font:italic 600 20px/1.1 var(--f-display)}
+.post .want{display:inline-flex;margin-top:8px;background:#fff;color:var(--c-ink);font:700 13px/1 var(--f-text);padding:9px 12px;border-radius:8px}
+.post .tag{position:absolute;top:10px;left:10px;background:rgba(255,255,255,.92);color:var(--c-ink);font:700 12px/1 var(--f-text);padding:6px 8px;border-radius:6px}
+
+a:focus-visible,button:focus-visible{outline:3px solid var(--c-cherry);outline-offset:3px}
+
+@media (max-width:1180px){nav{display:none}.book{grid-template-columns:1fr}.book-lbl{display:none}}
+@media (max-width:640px){
+  .wrap{padding:0 16px}
+  header{height:54px;gap:10px}
+  header .btn-cherry{display:none}
+  .burger{display:inline-flex;margin-left:auto;width:44px;padding:0}
+  .profile{grid-template-columns:1fr;padding-block:16px 10px;gap:12px}
+  h1{font-size:33px}
+  .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;margin-top:12px;text-align:left;font-size:12.5px;line-height:1.25}
+  .stats strong{display:block;font-size:19px;margin:0 0 2px}
+  .p-actions{display:none}
+  .book{padding-block:10px 12px;gap:10px}
+  .hl{gap:12px;overflow-x:auto;margin:0 -16px;padding:2px 16px}
+  .hl button{min-width:66px;font-size:12.5px}
+  .ring{width:66px;height:66px}
+  .next{position:fixed;left:8px;right:8px;bottom:8px;z-index:5;box-shadow:0 10px 30px rgba(20,18,20,.2);background:#fff}
+  .next .sel strong{font-size:14px}
+  .next .sel em{display:none}
+  .next{gap:12px;padding:10px 10px 10px 14px}
+  .next .pr{font-size:19px;white-space:nowrap}
+  .next .btn{padding:0 14px}
+  .filters{display:none}
+  .feed{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .post .ov,.post .tag{display:none}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+<header class="wrap">
+  <a class="logo" href="#">Вишня</a>
+  <nav><a href="#">Послуги та ціни</a><a href="#">Майстри</a><a href="#">Роботи</a><a href="#">Стерильність</a><a href="#">Сертифікати</a><a href="#">Контакти</a><a href="tel:+380570002121">057 000 21 21</a></nav>
+  <a class="btn btn-cherry" href="#zapys">Записатися</a>
+  <button class="btn btn-line burger" aria-label="Меню">≡</button>
+</header>
+
+<main id="zapys">
+  <section class="wrap profile">
+    <div>
+      <h1>Нігті, брови й вії в&nbsp;центрі Харкова. <em>Побачили — записались.</em></h1>
+      <ul class="stats">
+        <li><strong>21</strong> день гарантії на покриття</li>
+        <li><strong>6</strong> майстрів</li>
+        <li><strong>4 хв</strong> від м. Бекетова</li>
+      </ul>
+    </div>
+    <div class="p-actions"><a class="btn btn-line" href="#">Telegram</a><a class="btn btn-line" href="#">Роботи майстрів</a></div>
+  </section>
+
+  <section class="wrap book" aria-label="Запис за 4 кроки">
+    <div class="book-lbl"><b>1 · Що робимо?</b>далі майстер, час,<br>контакти</div>
+    <div class="hl" data-check="step1">
+      <button class="on"><span class="ring"><img src="img/nails-cherry.jpg" alt=""></span>Манікюр<small>від 750 ₴</small></button>
+      <button><span class="ring"><img src="img/pedi.jpg" alt=""></span>Педикюр<small>від 950 ₴</small></button>
+      <button><span class="ring"><img src="img/brows.jpg" alt=""></span>Брови<small>від 450 ₴</small></button>
+      <button><span class="ring"><img src="img/lashes.jpg" alt=""></span>Вії<small>від 800 ₴</small></button>
+      <button class="gift"><span class="ring">₴</span>Сертифікат<small>від 500 ₴</small></button>
+    </div>
+    <div class="next" data-check="summary">
+      <div class="sel">Крок 1 з 4<strong>Манікюр з покриттям<em> · 1 год 45 хв</em></strong><span class="dots"><i class="on"></i><i></i><i></i><i></i></span></div>
+      <span class="pr">750 ₴</span>
+      <a class="btn btn-cherry" href="#">Майстер →</a>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap filters" aria-label="Фільтр робіт">
+      <span class="chip on">Усі роботи</span><span class="chip">Манікюр</span><span class="chip">Педикюр</span><span class="chip">Брови й вії</span>
+      <span class="sep"></span>
+      <span class="chip"><i style="background:#8A1538"></i>Вишня</span><span class="chip"><i style="background:#E9D3CB"></i>Нюд</span><span class="chip"><i style="background:#F6F1EE"></i>Френч</span><span class="chip"><i style="background:#C3242F"></i>Червоний</span>
+      <span class="sep"></span><span class="chip">Майстер: усі</span>
+    </div>
+    <div class="feed">
+      <a class="post" href="#"><img src="img/nails-cherry.jpg" alt="Вишневий гель-лак з втиркою на одному нігті"><span class="tag">Олена · топ</span>
+        <span class="ov"><strong>Вишня з втиркою</strong>2 год · від 900 ₴<br><span class="want">Хочу так само</span></span></a>
+      <a class="post" href="#"><img src="img/nails-nude-almond.jpg" alt="Нюдовий мигдаль на світлому тлі"></a>
+      <a class="post" href="#"><img src="img/lashes-2.jpg" alt="Нарощування вій пінцетом, крупний план"></a>
+      <a class="post" href="#"><img src="img/nails-burgundy-dots.jpg" alt="Бордові нігті з крапками"></a>
+      <a class="post" href="#"><img src="img/nails-french.jpg" alt="Френч на мигдалевих нігтях"></a>
+      <a class="post" href="#"><img src="img/nails-red-salon.jpg" alt="Червоний гель-лак у салоні"></a>
+      <a class="post" href="#"><img src="img/brows.jpg" alt="Оформлення брів"></a>
+      <a class="post" href="#"><img src="img/nails-nude-hands.jpg" alt="Нюдові нігті на білій тканині"></a>
+      <a class="post" href="#"><img src="img/mani-polish.jpg" alt="Майстер наносить гель-лак"></a>
+      <a class="post" href="#"><img src="img/nails-french-red.jpg" alt="Френч на червоному тлі"></a>
+      <a class="post" href="#"><img src="img/pedi.jpg" alt="Педикюр з рожевим покриттям"></a>
+      <a class="post" href="#"><img src="img/tips-fan.jpg" alt="Віяло типс з відтінками"></a>
+    </div>
+  </section>
+</main>
+</body>
+</html>

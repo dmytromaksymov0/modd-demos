@@ -1,0 +1,10 @@
+---
+// A photo in the tip mask: almond arch on top, straight edge below. `ratio` = width / height.
+import { Picture } from 'astro:assets';
+import { photo } from '../../lib/photos';
+interface Props { src: string; alt: string; ratio?: string; sizes?: string; widths?: number[]; class?: string; position?: string; loading?: 'lazy' | 'eager'; priority?: boolean }
+const { src, alt, ratio = '3 / 4', sizes = '(min-width: 64rem) 22vw, 42vw', widths = [240, 360, 480, 640], class: cls = '', position = '50% 50%', loading = 'lazy', priority = false } = Astro.props;
+---
+<span class={`tip relative block ${cls}`} style={`aspect-ratio:${ratio}`}>
+  <Picture src={photo(src)} alt={alt} widths={widths} sizes={sizes} formats={['avif', 'webp']} quality={60} loading={priority ? 'eager' : loading} fetchpriority={priority ? 'high' : undefined} class="absolute inset-0 size-full" pictureAttributes={{ class: 'contents' }} style={`object-fit:cover;object-position:${position};width:100%;height:100%;position:absolute;inset:0`} />
+</span>

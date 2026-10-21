@@ -1,0 +1,39 @@
+---
+// Step 3: a 7-day strip + slots grouped «Ранок / День / Вечір». Busy slots stay visible (struck through,
+// disabled) so the day's shape is honest. On desktop the strip and the slots sit side by side.
+interface Day { iso: string; wd: string; d: number; off?: boolean }
+interface Props { days: Day[]; day: string; groups: { label: string; slots: { t: string; busy?: boolean }[] }[]; checked?: string }
+const { days, day, groups, checked } = Astro.props;
+---
+<div class="slot-picker grid gap-4 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.2fr)] lg:gap-6">
+  <fieldset class="min-w-0">
+    <legend class="mb-2 text-caption font-semibold">День</legend>
+    <div class="no-scrollbar flex gap-1 overflow-x-auto sm:grid sm:grid-cols-7">
+      {days.map((x) => (
+        <label class={`group relative grid min-w-12 shrink-0 cursor-pointer place-items-center rounded-field py-2 text-caption leading-tight ${x.off ? 'pointer-events-none opacity-40' : ''} bg-white has-checked:bg-ink has-checked:text-white has-focus-visible:outline-3 has-focus-visible:outline-cherry`}>
+          <input class="sr-only" type="radio" name="den" value={x.iso} checked={x.iso === day} disabled={x.off} />
+          <span class="text-graphite group-has-checked:text-white">{x.wd}</span>
+          <span class="font-display text-[1.0625rem] font-medium">{x.d}</span>
+          {x.off && <span class="sr-only">вихідний</span>}
+        </label>
+      ))}
+    </div>
+  </fieldset>
+  <fieldset class="min-w-0">
+    <legend class="mb-2 text-caption font-semibold">Час</legend>
+    <div class="grid gap-3">
+      {groups.map((g) => (
+        <div>
+          <p class="mb-1.5 text-caption text-graphite">{g.label}</p>
+          <div class="grid grid-cols-4 gap-1.5">
+            {g.slots.map((s) => (
+              <label class={`relative grid min-h-11 place-items-center rounded-field border-[1.5px] text-small font-semibold num ${s.busy ? 'border-dashed border-line text-graphite line-through' : 'cursor-pointer border-line-strong bg-white hover:border-ink has-checked:border-cherry has-checked:bg-cherry has-checked:text-white has-focus-visible:outline-3 has-focus-visible:outline-cherry'}`}>
+                <input class="sr-only" type="radio" name="chas" value={s.t} disabled={s.busy} checked={s.t === checked} />{s.t}{s.busy && <span class="sr-only"> — зайнято</span>}
+              </label>
+            ))}
+          </div>
+        </div>
+      ))}
+    </div>
+  </fieldset>
+</div>

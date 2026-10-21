@@ -1,0 +1,31 @@
+---
+// «21 день» — the brief's guarantee as a promise with a date and plain terms (phase-0 decision §8.4).
+import Icon from '../ui/Icon.astro';
+import { site } from '../../config/site';
+---
+<section class="wrap pt-(--spacing-section)" aria-labelledby="guar-title" id="harantiya">
+  <div class="grid gap-8 rounded-card bg-white p-6 sm:p-8 lg:grid-cols-[minmax(0,4fr)_minmax(0,8fr)] lg:gap-12 lg:p-12">
+    <div class="grid content-start gap-5">
+      <div class="flex items-end gap-4">
+        <span class="tip grid h-36 w-24 shrink-0 place-items-end bg-cherry pb-4 text-center sm:h-44 sm:w-28" aria-hidden="true"><span class="font-display text-[2.75rem] leading-none font-semibold text-white" style="font-variation-settings:'SHRP' 100">21</span></span>
+        <h2 id="guar-title" class="t-h2">Гарантія на покриття <span class="sharp whitespace-nowrap">21 день</span></h2>
+      </div>
+      <p class="t-lead text-ink">Покриття тримається три тижні — і ми за це відповідаємо. Дату кінця гарантії видно ще в записі: візит 22 жовтня → гарантія до 12 листопада.</p>
+      <p class="t-caption text-graphite">Звична гарантія в студіях Харкова — 5–15 днів.</p>
+    </div>
+    <ul class="grid gap-6 md:grid-cols-3 md:gap-8">
+      <li class="grid content-start gap-2 border-t-2 border-cherry pt-4">
+        <p class="flex items-center gap-2 font-display text-h3 font-medium"><Icon name="check" size={20} class="text-cherry" />Покриває</p>
+        <p class="t-small">Сколи, відшарування й тріщини гель-лаку та гелю — після манікюру, педикюру, зміцнення чи нарощування.</p>
+      </li>
+      <li class="grid content-start gap-2 border-t-2 border-line-strong pt-4">
+        <p class="flex items-center gap-2 font-display text-h3 font-medium"><Icon name="x" size={20} class="text-graphite" />Не покриває</p>
+        <p class="t-small">Звичайний лак, механічні пошкодження (дверцята, ключі, спорт) і алергію — тоді знімемо покриття й порадимо, що робити.</p>
+      </li>
+      <li class="grid content-start gap-2 border-t-2 border-ink pt-4">
+        <p class="flex items-center gap-2 font-display text-h3 font-medium"><Icon name="send" size={20} />Як звернутися</p>
+        <p class="t-small">Надішліть фото в <a href={site.telegram} class="font-semibold">Telegram</a> — запишемо й виправимо безкоштовно протягом 3 днів.</p>
+      </li>
+    </ul>
+  </div>
+</section>

@@ -1,0 +1,74 @@
+---
+// Контакти: first screen = everything to get here — open-now status (Kyiv time, static hours without JS), phone,
+// messengers, address, and the static route scheme from the metro. Then the three steps, payment, power, FAQ.
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import RouteScheme from '../../components/page/RouteScheme.astro';
+import TipPhoto from '../../components/booking/TipPhoto.astro';
+import Button from '../../components/ui/Button.astro';
+import Icon from '../../components/ui/Icon.astro';
+import { site } from '../../config/site';
+import { faq } from '../../data/faq';
+import { beautySalon, faqPage } from '../../lib/schema';
+const maps = 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent('Харків, станція метро Архітектора Бекетова');
+---
+<BaseLayout title="Контакти · вул. Фарфорова, 7 · 4 хв від м. Архітектора Бекетова · Вишня" description="Як дістатися до студії «Вишня» в центрі Харкова: 4 хвилини від метро «Архітектора Бекетова», щодня 9:00–21:00, телефон 057 000 21 21, Telegram і Viber." current="/kontakty/" og="kontakty" crumb="Контакти" jsonld={[beautySalon(Astro.site!), faqPage(faq.slice(0, 3))]}>
+  <section class="wrap grid gap-8 pt-5 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:gap-12 lg:pt-7" aria-labelledby="k-title">
+    <div class="grid content-start gap-5">
+      <nav aria-label="Навігаційний ланцюжок" class="text-caption text-graphite"><ol class="flex gap-1.5"><li><a href="/" class="inline-flex min-h-11 items-center">Головна</a></li><li aria-hidden="true" class="flex items-center">/</li><li class="flex items-center" aria-current="page">Контакти</li></ol></nav>
+      <h1 id="k-title" class="t-h1">Як нас знайти</h1>
+      <p class="flex items-center gap-2 text-small" data-open><span class="size-2 rounded-full bg-open" aria-hidden="true"></span><span data-open-text>{site.hours}</span></p>
+      <div class="grid gap-1">
+        <p class="font-display text-h2 font-medium">{site.address}</p>
+        <p class="t-small text-graphite">{site.addressNote}</p>
+      </div>
+      <a href={site.phoneHref} class="inline-flex min-h-12 w-fit items-center font-display text-[2.25rem] leading-none font-medium no-underline num">{site.phone}</a>
+      <div class="flex flex-wrap gap-2">
+        <Button href={site.telegram} icon="send">Telegram</Button>
+        <Button href={site.viber} variant="secondary" icon="message-circle">Viber</Button>
+        <Button href={maps} variant="secondary" icon="map-pin">Google Maps</Button>
+      </div>
+      <p class="t-caption text-graphite">Записатися без дзвінка — <a href="/zapys/" class="font-semibold text-ink">онлайн за 4 кроки</a>.</p>
+    </div>
+    <RouteScheme />
+  </section>
+
+  <section class="wrap pt-(--spacing-section)" aria-labelledby="steps-title">
+    <h2 id="steps-title" class="t-h2">Три кроки від метро</h2>
+    <div class="mt-8 grid gap-8 lg:grid-cols-[minmax(0,7fr)_minmax(0,5fr)] lg:gap-12">
+      <ol class="grid content-start gap-4">
+        {[['Вихід до вулиці', 'З метро «Архітектора Бекетова» — вихід до вулиці, далі 4 хвилини прямо, повз кавʼярню на розі.'], ['Арка між № 5 і № 7', 'Заходьте в арку — у дворі праворуч двері з табличкою «Вишня». Вхід без сходинок до ліфта.'], ['2 поверх', 'Дзвінок праворуч від дверей. Вас зустріне адміністраторка, верхній одяг — у шафу біля входу.']].map(([t, d], i) => (
+          <li class="grid grid-cols-[2.5rem_minmax(0,1fr)] gap-4 rounded-card bg-white p-5">
+            <span class="grid size-10 place-items-center rounded-full bg-ink font-display font-semibold text-white">{i + 1}</span>
+            <div class="grid gap-1"><h3 class="font-display text-h3 font-medium">{t}</h3><p class="t-small text-graphite">{d}</p></div>
+          </li>
+        ))}
+      </ol>
+      <div class="grid grid-cols-2 gap-4">
+        <TipPhoto src="interior-table" alt="Світлий манікюрний стіл з квітами й склянкою пензлів" ratio="3 / 4" sizes="(min-width: 64rem) 20vw, 45vw" />
+        <TipPhoto src="interior-pedi" alt="Педикюрна зона: крісла, ванночки, деревʼяний подіум" ratio="3 / 4" sizes="(min-width: 64rem) 20vw, 45vw" />
+      </div>
+    </div>
+  </section>
+
+  <section class="wrap pt-(--spacing-section)" aria-labelledby="info-title">
+    <h2 id="info-title" class="sr-only">Корисне</h2>
+    <dl class="grid gap-4 md:grid-cols-3">
+      <div class="rounded-card bg-white p-6"><dt class="flex items-center gap-2 font-display text-h3 font-medium"><Icon name="shield-check" size={20} class="text-cherry" />Оплата</dt><dd class="t-small mt-2 text-graphite">Картка, Apple Pay, Google Pay або готівка. Передоплати немає.</dd></div>
+      <div class="rounded-card bg-white p-6"><dt class="flex items-center gap-2 font-display text-h3 font-medium"><Icon name="zap" size={20} class="text-cherry" />Світло є</dt><dd class="t-small mt-2 text-graphite">Генератор і зарядна станція: лампи й сухожар працюють при відключеннях.</dd></div>
+      <div class="rounded-card bg-white p-6"><dt class="flex items-center gap-2 font-display text-h3 font-medium"><Icon name="map-pin" size={20} class="text-cherry" />Паркування</dt><dd class="t-small mt-2 text-graphite">Міська платна парковка на вулиці біля арки; у двір заїзду немає.</dd></div>
+    </dl>
+    <div class="mt-10 grid max-w-3xl">
+      {faq.slice(0, 3).map((f) => (
+        <details class="group border-b border-line py-1"><summary class="flex min-h-14 cursor-pointer list-none items-center justify-between gap-4 py-3 font-display text-h3 font-medium [&::-webkit-details-marker]:hidden">{f.q}<span class="shrink-0 transition-transform group-open:rotate-180"><Icon name="chevron-down" size={22} /></span></summary><p class="measure pb-5">{f.a}</p></details>
+      ))}
+    </div>
+  </section>
+</BaseLayout>
+<script>
+  import { kyivNow, OPEN, CLOSE, hhmm } from '../../lib/booking';
+  const el = document.querySelector('[data-open-text]'); const dot = document.querySelector('[data-open] span');
+  const { nowMin } = kyivNow(new Date());
+  const open = nowMin >= OPEN && nowMin < CLOSE;
+  if (el) el.textContent = open ? `Відчинено зараз · до ${hhmm(CLOSE)}` : `Зачинено · відчинимося о ${hhmm(OPEN)}`;
+  if (dot && !open) dot.classList.replace('bg-open', 'bg-line-strong');
+</script>

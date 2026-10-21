@@ -1,0 +1,192 @@
+---
+// The first screen = the booking (direction A «Віяло»): послуга → майстер → день/час → контакти, with the summary
+// (price, colour, guarantee date) next to it on desktop and pinned to the bottom on phones.
+// Without JS this is one plain form (all four blocks stacked, a date field and «ранок / день / вечір») that posts to
+// /api/lead. With JS (html.js) it becomes a 4-step wizard; the logic (booking-ui.ts) loads on the first interaction.
+import Steps from './Steps.astro';
+import ServiceTip from './ServiceTip.astro';
+import ShadePicker from './ShadePicker.astro';
+import Summary from './Summary.astro';
+import TipPhoto from './TipPhoto.astro';
+import Field from '../ui/Field.astro';
+import Chip from '../ui/Chip.astro';
+import Button from '../ui/Button.astro';
+import Icon from '../ui/Icon.astro';
+import { groups, services, uah, topPrice } from '../../data/services';
+import { masters } from '../../data/masters';
+import { site } from '../../config/site';
+
+const alts: Record<string, string> = {
+  manicure: 'Короткі нігті, вишневий гель-лак, на одному нігті втирка з блиском',
+  pedicure: 'Ступня на бежевому пледі, молочне покриття на нігтях ніг',
+  brows: 'Майстриня розчісує брову щіточкою',
+  lashes: 'Нарощування вій пінцетом, патч під оком',
+};
+const positions: Record<string, string> = { manicure: '50% 40%', pedicure: '58% 40%', brows: '62% 45%', lashes: '42% 50%' };
+const ratios = ['3 / 4', '3 / 4.3', '3 / 4.15', '3 / 3.9'];
+const years = (n: number) => `${n} ${n % 10 === 1 && n % 100 !== 11 ? 'рік' : [2, 3, 4].includes(n % 10) && ![12, 13, 14].includes(n % 100) ? 'роки' : 'років'}`;
+interface Props { page?: string; heading?: 'display' | 'h1'; id?: string }
+const { page = '/', heading = 'display', id = 'zapys' } = Astro.props;
+const stepHead = 'font-display text-h3 font-medium tracking-[-0.01em] outline-none';
+const tipCol = 'w-[calc((100%-2*0.75rem)/2.3)] shrink-0 snap-start sm:w-[calc((100%-3*0.75rem)/3.3)] lg:w-auto';
+---
+<section class="hero-booking wrap pt-5 pb-8 lg:pt-6 lg:pb-10" id={id} aria-labelledby="hero-title">
+  <slot name="heading">
+    <h1 id="hero-title" class={heading === 'display' ? 't-display max-w-[19ch] lg:max-w-[27ch]' : 't-h1 max-w-[24ch]'}>Оберіть колір. Ми відповідаємо за нього <span class="sharp">21&nbsp;день</span>.</h1>
+  </slot>
+
+  <form class="booking mt-4 grid grid-cols-1 gap-6 lg:mt-6 lg:grid-cols-[minmax(0,1fr)_21rem] lg:items-start lg:gap-8" action="/api/lead" method="post" data-booking>
+    <input type="hidden" name="page" value={page} />
+    <div class="hp" aria-hidden="true"><label>Компанія <input type="text" name="company" tabindex="-1" autocomplete="off" /></label></div>
+
+    <div class="grid min-w-0 grid-cols-1 gap-4">
+      <Steps current={1} live class="when-js" />
+
+      <!-- no-JS / server errors (303 back here with #pomylka / #ne-nadislano) -->
+      <p id="pomylka" class="target-box rounded-field border-[1.5px] border-alert bg-alert-50 p-4 text-small text-alert"><strong>Перевірте форму:</strong> телефон, послугу й згоду на обробку даних — і надішліть ще раз.</p>
+      <div id="ne-nadislano" class="target-box rounded-field border-[1.5px] border-alert bg-alert-50 p-4 text-small text-ink">
+        <p class="font-semibold text-alert">Не вдалося надіслати запис.</p>
+        <p class="mt-1">Зателефонуйте <a href={site.phoneHref} class="font-semibold num">{site.phone}</a> або напишіть у <a href={site.telegram} class="font-semibold">Telegram</a> — запишемо на той самий час.</p>
+      </div>
+
+      <!-- Step 1 · Послуга -->
+      <fieldset class="bk-step min-w-0" data-step="1" data-active>
+        <legend class="sr-only">Крок 1 з 4. Послуга</legend>
+        <h2 class={`${stepHead} when-nojs mb-3`}>1. Послуга</h2>
+        <div class="rack no-scrollbar -mx-(--spacing-gutter) flex snap-x snap-mandatory gap-3 overflow-x-auto scroll-px-(--spacing-gutter) px-(--spacing-gutter) pb-1 lg:mx-0 lg:grid lg:grid-cols-4 lg:items-end lg:gap-4 lg:overflow-visible lg:px-0" data-check="step1">
+          {groups.map((g, i) => (
+            <div class={tipCol}>
+              <ServiceTip name="grupa" value={g.id} title={g.name} photo={g.photo} alt={alts[g.id]} minutes={g.minutes} from={g.from} checked={i === 0} priority={i < 2} position={positions[g.id]} ratio={ratios[i]} />
+            </div>
+          ))}
+        </div>
+        <fieldset class="variants mt-4 min-w-0" data-variants-box>
+          <legend class="mb-2 text-caption"><span class="font-semibold">Що саме</span> <span class="text-graphite">· ціна у майстрині; у топ-майстрині +20 %</span></legend>
+          <div class="flex flex-wrap gap-2">
+            {services.map((s, i) => (
+              <Chip name="posluga" value={s.id} checked={i === 0} data-group={s.group} data-hide-js={s.group !== 'manicure' ? '' : undefined}>{s.short}<span class="font-normal opacity-80 num">· {uah(s.price)}</span></Chip>
+            ))}
+          </div>
+        </fieldset>
+        <ShadePicker checked="vyshnia" legend="Колір покриття" class="mt-4 lg:hidden" data-shade="main" />
+      </fieldset>
+
+      <!-- Step 2 · Майстер -->
+      <fieldset class="bk-step min-w-0" data-step="2">
+        <legend class="sr-only">Крок 2 з 4. Майстер</legend>
+        <h2 class={`${stepHead} mb-3`} tabindex="-1" data-step-head>2. До кого записатися</h2>
+        <div class="no-scrollbar -mx-(--spacing-gutter) flex snap-x snap-mandatory gap-3 overflow-x-auto px-(--spacing-gutter) pb-1 lg:mx-0 lg:grid lg:grid-cols-5 lg:items-start lg:gap-4 lg:overflow-visible lg:px-0">
+          <label class={`group relative flex cursor-pointer flex-col gap-2 ${tipCol}`} data-master="any">
+            <input class="sr-only" type="radio" name="maister" value="any" checked />
+            <span class="tip grid place-items-center outline-offset-4 group-has-checked:outline-3 group-has-checked:outline-cherry group-has-focus-visible:outline-3 group-has-focus-visible:outline-ink" style="aspect-ratio:3/4"><span class="px-3 text-center font-display text-h3 font-medium text-cherry">Будь-яка вільна</span></span>
+            <span class="grid gap-0.5"><span class="font-display text-[1.0625rem] font-medium leading-tight">Перше вільне вікно</span><span class="text-caption text-graphite">ціна майстрині · <strong class="font-semibold text-ink num" data-price>{uah(750)}</strong></span><span class="text-caption text-graphite" data-next>студія призначить вільну</span></span>
+          </label>
+          {masters.map((m) => (
+            <label class={`group relative flex cursor-pointer flex-col gap-2 ${tipCol}`} data-master={m.id} data-groups={m.groups.join(' ')}>
+              <input class="sr-only" type="radio" name="maister" value={m.id} />
+              <span class="block rounded-[999px_999px_18px_18px] outline-offset-4 group-has-checked:outline-3 group-has-checked:outline-cherry group-has-focus-visible:outline-3 group-has-focus-visible:outline-ink">
+                <TipPhoto src={m.photo} alt={m.photoAlt} ratio="3 / 4" sizes="(min-width: 64rem) 12vw, 40vw" />
+              </span>
+              <span class="grid gap-0.5">
+                <span class="font-display text-[1.0625rem] font-medium leading-tight">{m.name.split(' ')[0]}</span>
+                {m.top && <span class="text-micro font-semibold text-cherry">топ-майстриня · +20 %</span>}
+                <span class="text-caption text-graphite">{m.role} · {years(m.years)}</span>
+                <span class="text-caption text-graphite"><strong class="font-semibold text-ink num" data-price>{uah(m.top ? topPrice(750) : 750)}</strong> · <span data-next>{m.style}</span></span>
+              </span>
+            </label>
+          ))}
+        </div>
+      </fieldset>
+
+      <!-- Step 3 · День і час -->
+      <fieldset class="bk-step min-w-0" data-step="3">
+        <legend class="sr-only">Крок 3 з 4. День і час</legend>
+        <h2 class={`${stepHead} mb-3`} tabindex="-1" data-step-head>3. Коли зручно</h2>
+        <div class="when-js grid gap-4 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.25fr)] lg:gap-6">
+          <div class="min-w-0">
+            <p class="mb-2 text-caption font-semibold" id="bk-days-label">День <span class="font-normal text-graphite" data-month></span></p>
+            <div class="no-scrollbar flex gap-1 overflow-x-auto sm:grid sm:grid-cols-7" data-days></div>
+          </div>
+          <div class="min-w-0">
+            <p class="mb-2 text-caption font-semibold" id="bk-slots-label">Час <span class="font-normal text-graphite" data-slots-note></span></p>
+            <div class="grid gap-3" data-slots></div>
+          </div>
+        </div>
+        <div class="when-nojs grid gap-4 sm:grid-cols-2">
+          <Field id="bk-date" name="data" type="date" label="Бажаний день" />
+          <label class="grid content-start gap-1.5 text-small font-semibold">Коли зручніше
+            <select name="chastyna" class="min-h-12 rounded-field border-[1.5px] border-line-strong bg-white px-4 text-body font-normal">
+              <option value="ranok">ранок (9–12)</option><option value="den" selected>день (12–17)</option><option value="vechir">вечір (17–21)</option>
+            </select>
+          </label>
+          <p class="t-caption text-graphite sm:col-span-2">Адміністраторка підтвердить точний час у месенджері або дзвінком.</p>
+        </div>
+      </fieldset>
+
+      <!-- Step 4 · Контакти -->
+      <fieldset class="bk-step min-w-0" data-step="4">
+        <legend class="sr-only">Крок 4 з 4. Контакти</legend>
+        <h2 class={`${stepHead} mb-3`} tabindex="-1" data-step-head>4. Як з вами звʼязатися</h2>
+        <div class="grid gap-4 sm:grid-cols-2">
+          <Field id="bk-name" name="name" label="Імʼя" autocomplete="given-name" />
+          <Field id="bk-phone" name="phone" type="tel" label="Телефон" autocomplete="tel" inputmode="tel" required placeholder="067 123 45 67" />
+          <fieldset class="flex flex-wrap items-center gap-2 sm:col-span-2"><legend class="mb-2 text-small font-semibold">Куди нагадати про запис</legend>
+            <Chip name="kanal" value="telegram" checked>Telegram</Chip><Chip name="kanal" value="viber">Viber</Chip><Chip name="kanal" value="call">Дзвінок</Chip>
+          </fieldset>
+          <Field id="bk-note" name="note" label="Коментар для майстрині" textarea hint="Наприклад: «знімати чуже покриття» або «хочу як на фото»" class="sm:col-span-2" />
+          <label class="flex items-start gap-3 text-small sm:col-span-2" id="bk-consent"><input type="checkbox" name="zgoda" required class="mt-0.5 size-5 shrink-0 accent-cherry" aria-describedby="bk-consent-err" /><span>Погоджуюсь на <a href="/pryvatnist/">обробку імені й телефону</a> для запису. Без передоплати, перенести можна безкоштовно за 12 годин.</span></label>
+          <p id="bk-consent-err" class="t-caption hidden font-semibold text-alert sm:col-span-2" data-err="zgoda"></p>
+        </div>
+        <div class="mt-4 hidden rounded-field border-[1.5px] border-alert bg-alert-50 p-4 text-small" role="alert" data-form-error></div>
+        <div class="when-nojs mt-5"><Button type="submit" size="lg" iconAfter="arrow-right">Записатися</Button></div>
+      </fieldset>
+    </div>
+
+    <Summary
+      step={1}
+      rows={[
+        { label: 'Послуга', value: 'Манікюр з покриттям' },
+        { label: 'Майстер', value: 'будь-яка вільна', empty: true },
+        { label: 'Коли', value: 'оберіть на кроці 3', empty: true },
+      ]}
+      total={750}
+      totalNote="Разом · майстриня"
+      guarantee="21 день від візиту"
+      ctaShort="Далі"
+      cta="Далі: майстер"
+      live
+    >
+      <ShadePicker slot="extra" name="kolir-panel" checked="vyshnia" compact legend="Колір: Вишня" data-shade="panel" />
+    </Summary>
+  </form>
+
+  <ul class="mt-6 hidden flex-wrap gap-x-8 gap-y-2 text-caption text-graphite md:flex">
+    <li class="flex items-center gap-2"><Icon name="thermometer" size={18} class="text-cherry" /><span><strong class="font-semibold text-ink">Сухожар 180 °C</strong> · пакет відкривають при вас</span></li>
+    <li class="flex items-center gap-2"><Icon name="shield-check" size={18} class="text-cherry" /><span><strong class="font-semibold text-ink">Без передоплати</strong> · перенести безкоштовно за 12 год</span></li>
+    <li class="flex items-center gap-2"><Icon name="map-pin" size={18} class="text-cherry" /><span><strong class="font-semibold text-ink">4 хв</strong> від м. Архітектора Бекетова</span></li>
+  </ul>
+</section>
+
+<script>
+  // Lazy island: the booking logic loads on the first interaction with the form (or at once when the URL already
+  // carries a choice — «Хочу так само»). A Next/Back/step click that arrives before the module is replayed after init.
+  type Api = { prefill: (p: URLSearchParams, scroll?: boolean) => void };
+  const form = document.querySelector<HTMLFormElement>('[data-booking]');
+  let ready: Promise<Api> | undefined;
+  const load = () => (ready ??= import('../../lib/booking-ui').then((m) => m.init(form!)));
+  if (form) {
+    for (const t of ['pointerdown', 'focusin', 'keydown', 'change']) form.addEventListener(t, () => { load(); }, { once: true, passive: true });
+    form.addEventListener('click', (e) => {
+      const b = (e.target as Element).closest<HTMLElement>('[data-next],[data-back],[data-goto]');
+      if (b && !form.dataset.ready) { e.preventDefault(); e.stopImmediatePropagation(); load().then(() => b.click()); }
+    }, true);
+    if (/[?&](posluga|grupa|maister|kolir)=/.test(location.search)) load();
+    document.addEventListener('click', (e) => {
+      const a = (e.target as Element).closest<HTMLAnchorElement>('a[data-prefill]');
+      if (!a) return;
+      e.preventDefault();
+      const q = new URL(a.href).searchParams;
+      load().then((api) => api.prefill(q, true));
+    });
+  }
+</script>

@@ -1,0 +1,44 @@
+---
+// Header: wordmark, six sections, open status (static «щодня 9:00–21:00» without JS), phone as text, «Записатися».
+// Mobile: wordmark + phone icon + menu (<details>, works without JS).
+import Logo from '../brand/Logo.astro';
+import Button from '../ui/Button.astro';
+import Icon from '../ui/Icon.astro';
+import { nav, site } from '../../config/site';
+interface Props { current?: string; bookHref?: string; sticky?: boolean }
+const { current = '', bookHref = '/zapys/', sticky = true } = Astro.props;
+---
+<header class={`site-header z-30 bg-porcelain/95 backdrop-blur-sm ${sticky ? 'sticky top-0' : ''}`}>
+  <div class="wrap flex h-16 items-center gap-6 lg:h-[4.5rem]">
+    <a href="/" class="flex h-11 shrink-0 items-center rounded-sm" aria-label="Вишня, студія краси — на головну"><Logo class="h-8 w-auto lg:h-9" title="Вишня, студія краси" /></a>
+    <nav class="hidden xl:block" aria-label="Розділи">
+      <ul class="flex gap-5 text-small">
+        {nav.map((n) => <li><a href={n.href} aria-current={current === n.href ? 'page' : undefined} class="inline-flex min-h-11 items-center rounded-sm no-underline hover:underline aria-[current=page]:font-semibold aria-[current=page]:underline">{n.label}</a></li>)}
+      </ul>
+    </nav>
+    <div class="ml-auto flex items-center gap-2 sm:gap-4">
+      <span class="hidden items-center gap-2 text-caption text-graphite 2xl:flex"><span class="size-1.5 rounded-full bg-open" aria-hidden="true"></span>{site.hours}</span>
+      <a href={site.phoneHref} class="hidden min-h-11 items-center font-semibold whitespace-nowrap no-underline hover:underline md:inline-flex num">{site.phone}</a>
+      <span class="hidden sm:block"><Button href={bookHref} size="sm">Записатися</Button></span>
+      <a href={site.phoneHref} class="grid size-11 place-items-center rounded-full border-[1.5px] border-line-strong md:hidden" aria-label={`Подзвонити ${site.phone}`}><Icon name="phone" size={18} /></a>
+      <details class="mobile-menu xl:hidden">
+        <summary class="grid size-11 cursor-pointer list-none place-items-center rounded-full border-[1.5px] border-ink [&::-webkit-details-marker]:hidden" aria-label="Меню"><span class="menu-open"><Icon name="menu" size={20} /></span><span class="menu-close"><Icon name="x" size={20} /></span></summary>
+        <div class="menu-panel absolute inset-x-0 top-full border-t border-line bg-porcelain shadow-(--shadow-float)">
+          <nav class="wrap grid gap-1 py-4" aria-label="Розділи">
+            {nav.map((n) => <a href={n.href} class="flex min-h-12 items-center border-b border-line font-display text-h3 no-underline">{n.label}</a>)}
+            <div class="mt-4 grid gap-2 text-small text-graphite">
+              <a href={site.phoneHref} class="font-semibold text-ink num">{site.phone}</a>
+              <span>{site.address} · {site.hours}</span>
+            </div>
+          </nav>
+        </div>
+      </details>
+    </div>
+  </div>
+</header>
+<style>
+  .mobile-menu:not([open]) .menu-panel { display: none; }
+  .mobile-menu .menu-close { display: none; }
+  .mobile-menu[open] .menu-close { display: block; }
+  .mobile-menu[open] .menu-open { display: none; }
+</style>

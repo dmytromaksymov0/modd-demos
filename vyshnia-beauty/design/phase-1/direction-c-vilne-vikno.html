@@ -1,0 +1,188 @@
+<!doctype html>
+<html lang="uk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Вишня · C «Вільне вікно»</title>
+<link rel="stylesheet" href="fonts/fontsource-variable-unbounded/index.css">
+<link rel="stylesheet" href="fonts/fontsource-variable-ysabeau-office/index.css">
+<style>
+:root{
+  --c-bg:#F4F6F6;        /* холодне молоко, стерильний стіл */
+  --c-surface:#FFFFFF;
+  --c-steel:#E4E9EA;
+  --c-ink:#16191B;
+  --c-muted:#5C6467;
+  --c-line:#D6DCDD;
+  --c-cherry:#6B1027;
+  --c-cherry-tint:#F3E7EA;
+  --f-display:'Unbounded Variable', system-ui, sans-serif;
+  --f-text:'Ysabeau Office Variable', system-ui, sans-serif;
+  --s-gutter:clamp(16px,3vw,40px);
+}
+*{box-sizing:border-box;margin:0}
+body{background:var(--c-bg);color:var(--c-ink);font:450 17px/1.45 var(--f-text);-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+ol,ul{padding:0;list-style:none}
+header *{white-space:nowrap}
+.wrap{padding-inline:var(--s-gutter)}
+
+header{display:flex;align-items:center;gap:26px;height:64px}
+.logo{font:600 20px/1 var(--f-display);letter-spacing:.02em;text-transform:lowercase}
+.logo span{color:var(--c-cherry)}
+nav{display:flex;gap:22px;font-size:16px;font-weight:550}
+.h-r{margin-left:auto;display:flex;gap:16px;align-items:center;font-weight:600}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:46px;padding:0 22px;border-radius:6px;border:0;font:600 14px/1 var(--f-display);letter-spacing:.01em;cursor:pointer}
+.btn-cherry{background:var(--c-cherry);color:#fff}
+.btn-line{border:1.5px solid var(--c-ink);background:transparent;color:var(--c-ink)}
+.burger{display:none}
+
+.head{display:flex;align-items:flex-end;justify-content:space-between;gap:30px;padding-block:18px 18px}
+h1{font:500 clamp(28px,3.3vw,46px)/1.05 var(--f-display);letter-spacing:-.02em}
+h1 span{color:var(--c-cherry)}
+.lead{max-width:34ch;font-size:16px;color:var(--c-muted)}
+.lead strong{color:var(--c-ink)}
+
+.strip{display:grid;grid-template-columns:1.3fr 1fr 1fr 1.6fr;grid-template-rows:minmax(0,1fr);gap:4px;height:clamp(120px,24vh,210px);margin-inline:var(--s-gutter);border-radius:8px;overflow:hidden}
+.strip img{width:100%;height:100%;object-fit:cover;display:block}
+
+/* дошка: всі чотири кроки відкриті */
+.board{position:relative;display:grid;grid-template-columns:1fr 1fr 1.15fr 1fr;gap:0;background:var(--c-surface);margin-top:16px;margin-inline:var(--s-gutter);border-radius:8px;box-shadow:0 1px 0 var(--c-line),0 18px 40px rgba(22,25,27,.08)}
+.board::before{content:"";position:absolute;left:0;right:0;top:0;height:4px;border-radius:8px 8px 0 0;background:linear-gradient(90deg,var(--c-cherry) 0 62%,var(--c-steel) 62%)}
+.col{position:relative;padding:20px 20px 18px;border-right:1px solid var(--c-line);min-width:0}
+.col:last-child{border-right:0;background:var(--c-cherry-tint);border-radius:0 8px 8px 0}
+.col h2{position:relative;display:flex;align-items:center;gap:10px;font:600 13px/1 var(--f-display);letter-spacing:.02em;margin-bottom:16px;background:inherit}
+.col h2 b{display:grid;place-items:center;width:22px;height:22px;border-radius:50%;background:var(--c-cherry);color:#fff;font-size:12px}
+.col.todo h2 b{background:var(--c-surface);color:var(--c-muted);border:1.5px solid var(--c-line)}
+.col h2 em{font:500 14px/1 var(--f-text);font-style:normal;color:var(--c-muted);margin-left:auto}
+.col h2 em.m{display:none}
+
+.opt{display:flex;align-items:center;gap:12px;padding:8px 10px;border-radius:6px;border:1.5px solid transparent;width:100%;background:none;font:inherit;text-align:left;color:inherit;cursor:pointer;min-height:48px}
+.opt+.opt{margin-top:4px}
+.opt img{width:40px;height:40px;border-radius:50%;object-fit:cover;flex:none}
+.opt .t{display:flex;flex-direction:column;line-height:1.2;min-width:0}
+.opt .t strong{font-weight:650;font-size:16px}
+.opt .t small{font-size:14px;color:var(--c-muted)}
+.opt .p{margin-left:auto;font:500 13px/1 var(--f-display);font-variant-numeric:tabular-nums;white-space:nowrap}
+.opt.on{border-color:var(--c-cherry);background:var(--c-cherry-tint)}
+.tag{margin-left:auto;font:600 12px/1 var(--f-text);color:var(--c-cherry);white-space:nowrap}
+
+.days{display:grid;grid-template-columns:repeat(5,1fr);gap:4px;margin-bottom:12px}
+.day{display:flex;flex-direction:column;align-items:center;padding:7px 0;border-radius:6px;background:var(--c-bg);font-size:13px;color:var(--c-muted);line-height:1.15}
+.day strong{font:500 15px/1.2 var(--f-display);color:var(--c-ink)}
+.day.on{background:var(--c-ink);color:#fff}.day.on strong{color:#fff}
+.day.off{opacity:.45}
+.part{font-size:13px;color:var(--c-muted);margin:8px 0 6px}
+.slots{display:grid;grid-template-columns:repeat(4,1fr);gap:4px}
+.slot{display:grid;place-items:center;min-height:38px;border-radius:6px;border:1.5px solid var(--c-line);font:500 13px/1 var(--f-display);font-variant-numeric:tabular-nums;background:var(--c-surface)}
+.slot.busy{border-style:dashed;color:#9AA2A4;background:transparent;text-decoration:line-through}
+
+.sum{display:flex;flex-direction:column;gap:9px;font-size:15px}
+.sum .r{display:flex;justify-content:space-between;gap:10px;border-bottom:1px solid #E6D2D7;padding-bottom:8px}
+.sum .r span{color:var(--c-muted)}
+.sum .r strong{text-align:right;font-weight:650}
+.total{display:flex;justify-content:space-between;align-items:baseline;margin-top:2px}
+.total strong{font:600 30px/1 var(--f-display);font-variant-numeric:tabular-nums;letter-spacing:-.02em}
+.total small{display:block;font-size:13px;color:var(--c-muted)}
+.guar{font-size:14px;line-height:1.35}
+.guar strong{color:var(--c-cherry)}
+.sum .btn{margin-top:4px}
+
+a:focus-visible,button:focus-visible{outline:3px solid var(--c-cherry);outline-offset:3px}
+
+@media (max-width:1180px){nav{display:none}.board{grid-template-columns:1fr 1fr}.col:nth-child(2){border-right:0}.board::before{display:none}.col:last-child{border-radius:0 0 8px 0}}
+@media (max-width:640px){
+  header{height:56px}
+  .h-r .phone,.h-r .btn-cherry{display:none}
+  .burger{display:inline-flex;width:46px;padding:0}
+  .head{flex-direction:column;align-items:flex-start;gap:8px;padding-block:8px 14px}
+  h1{font-size:25px}
+  .lead{display:none}
+  .strip{display:none}
+  .board{grid-template-columns:1fr;margin:0 8px;margin-top:0}
+  .col{border-right:0;border-bottom:1px solid var(--c-line);padding:16px 14px}
+  .col.mob-todo{padding-block:14px}
+  .col.mob-todo h2{margin:0}
+  .col.mob-todo .body{display:none}
+  .col.mob-todo h2 em{display:none}
+  .col.mob-todo h2 em.m{display:block;color:var(--c-ink);font-weight:650}
+  main{padding-bottom:90px}
+  .col:last-child{position:fixed;left:8px;right:8px;bottom:8px;z-index:5;border-radius:10px;padding:10px 10px 10px 16px;box-shadow:0 10px 30px rgba(22,25,27,.2)}
+  .col:last-child h2,.col:last-child .r,.col:last-child .guar{display:none}
+  .sum{flex-direction:row;align-items:center;justify-content:space-between}
+  .total{flex-direction:column;align-items:flex-start;margin:0}
+  .total strong{font-size:22px}
+  .sum .btn{margin:0}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+<header class="wrap">
+  <a class="logo" href="#">вишня<span>.</span></a>
+  <nav><a href="#">Послуги та ціни</a><a href="#">Майстри</a><a href="#">Роботи</a><a href="#">Стерильність</a><a href="#">Сертифікати</a><a href="#">Контакти</a></nav>
+  <div class="h-r"><a class="phone" href="tel:+380570002121">057 000 21 21</a><a class="btn btn-cherry" href="#zapys">Записатися</a><button class="btn btn-line burger" aria-label="Меню">≡</button></div>
+</header>
+
+<main id="zapys">
+  <div class="wrap head">
+    <h1>Вільне вікно — <span>за&nbsp;хвилину,</span><br>без переписки в директі</h1>
+    <p class="lead">Нігті, брови й вії в центрі Харкова. Ціна видна до підтвердження, <strong>гарантія на покриття 21 день.</strong></p>
+  </div>
+
+  <div class="strip" aria-hidden="true">
+    <img src="img/nails-nude-almond.jpg" alt="">
+    <img src="img/nails-cherry.jpg" alt="">
+    <img src="img/lashes-2.jpg" alt="">
+    <img src="img/nails-french-red.jpg" alt="" style="object-position:50% 30%">
+  </div>
+
+  <section class="board" aria-label="Запис за 4 кроки">
+    <div class="col" data-check="step1">
+      <h2><b>1</b>Послуга</h2>
+      <div class="body">
+        <button class="opt on"><span class="t"><strong>Манікюр з покриттям</strong><small>1 год 45 хв</small></span><span class="p">750 ₴</span></button>
+        <button class="opt"><span class="t"><strong>Педикюр з покриттям</strong><small>2 год</small></span><span class="p">950 ₴</span></button>
+        <button class="opt"><span class="t"><strong>Брови: форма й колір</strong><small>45 хв</small></span><span class="p">450 ₴</span></button>
+        <button class="opt"><span class="t"><strong>Вії: ламінування</strong><small>1 год 15 хв</small></span><span class="p">800 ₴</span></button>
+      </div>
+    </div>
+    <div class="col mob-todo">
+      <h2><b>2</b>Майстер <em>4 вільні</em><em class="m">Олена · топ</em></h2>
+      <div class="body">
+        <button class="opt on"><img src="img/master-nails-red-hair.jpg" alt=""><span class="t"><strong>Олена · топ</strong><small>9 років · нюд, архітектура</small></span><span class="tag">17:30</span></button>
+        <button class="opt"><img src="img/master-nails-shield.jpg" alt=""><span class="t"><strong>Дарина · топ</strong><small>7 років · френч</small></span><span class="tag">завтра</span></button>
+        <button class="opt"><img src="img/mani-polish.jpg" alt=""><span class="t"><strong>Софія</strong><small>3 роки · колір, втирка</small></span><span class="tag">19:00</span></button>
+      </div>
+    </div>
+    <div class="col mob-todo">
+      <h2><b>3</b>День і час<em class="m">чт 22 · оберіть час</em></h2>
+      <div class="body">
+        <div class="days">
+          <span class="day"><span>ср</span><strong>21</strong></span>
+          <span class="day on"><span>чт</span><strong>22</strong></span>
+          <span class="day"><span>пт</span><strong>23</strong></span>
+          <span class="day"><span>сб</span><strong>24</strong></span>
+          <span class="day off"><span>нд</span><strong>25</strong></span>
+        </div>
+        <p class="part">День</p>
+        <div class="slots"><span class="slot busy">11:00</span><span class="slot">12:30</span><span class="slot busy">14:00</span><span class="slot">15:30</span></div>
+        <p class="part">Вечір</p>
+        <div class="slots"><span class="slot">17:30</span><span class="slot busy">18:30</span><span class="slot">19:00</span><span class="slot busy">20:00</span></div>
+      </div>
+    </div>
+    <div class="col todo">
+      <h2><b>4</b>Підсумок</h2>
+      <div class="sum">
+        <div class="r"><span>Послуга</span><strong>Манікюр з покриттям</strong></div>
+        <div class="r"><span>Майстер</span><strong>Олена, топ-майстер</strong></div>
+        <div class="r"><span>Коли</span><strong>чт 22 жовтня, оберіть час</strong></div>
+        <div class="total"><span><small>Разом · топ +20 %</small></span><strong>900 ₴</strong></div>
+        <p class="guar">Гарантія на покриття <strong>до 12 листопада</strong></p>
+        <a class="btn btn-cherry" href="#">Контакти →</a>
+      </div>
+    </div>
+  </section>
+</main>
+</body>
+</html>

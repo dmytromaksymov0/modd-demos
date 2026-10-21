@@ -1,0 +1,159 @@
+---
+// Подарункові сертифікати: the constructor with a live preview IS the first screen. Nominal (500/1000/1500/2000 ₴) or a
+// service, design, to / from / wish, delivery; the request goes to the administrator (/api/lead, kind = sertyfikat).
+// Payment is not taken on the demo: the administrator sends a payment link. Without JS the form posts and the preview
+// stays at its default.
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Field from '../../components/ui/Field.astro';
+import Chip from '../../components/ui/Chip.astro';
+import Button from '../../components/ui/Button.astro';
+import Logo from '../../components/brand/Logo.astro';
+import Icon from '../../components/ui/Icon.astro';
+import { services, uah } from '../../data/services';
+import { site } from '../../config/site';
+const designs = [{ id: 'vyshnia', name: 'Вишня', token: '--color-shade-vyshnia' }, { id: 'pudra', name: 'Пудра', token: '--color-shade-pudra' }, { id: 'moloko', name: 'Молоко', token: '--color-shade-moloko' }];
+---
+<BaseLayout title="Подарунковий сертифікат · манікюр, брови, вії · Вишня, Харків" description="Сертифікат на 500, 1000, 1500, 2000 ₴ або на конкретну послугу. Діє 6 місяців, приходить у Telegram, Viber або в крафт-конверті. Зберіть сертифікат з живим превʼю." current="/sertyfikaty/" og="sertyfikaty" crumb="Сертифікати">
+  <section class="wrap pt-5 lg:pt-7" aria-labelledby="cert-title">
+    <nav aria-label="Навігаційний ланцюжок" class="text-caption text-graphite"><ol class="flex gap-1.5"><li><a href="/" class="inline-flex min-h-11 items-center">Головна</a></li><li aria-hidden="true" class="flex items-center">/</li><li class="flex items-center" aria-current="page">Сертифікати</li></ol></nav>
+    <h1 id="cert-title" class="t-h1">Подарунковий сертифікат</h1>
+
+    <form class="cert mt-6 grid gap-8 lg:grid-cols-[minmax(0,7fr)_minmax(0,5fr)] lg:gap-12" action="/api/lead" method="post" data-cert>
+      <input type="hidden" name="kind" value="sertyfikat" /><input type="hidden" name="page" value="/sertyfikaty/" />
+      <div class="hp" aria-hidden="true"><label>Компанія <input type="text" name="company" tabindex="-1" autocomplete="off" /></label></div>
+
+      <div class="grid min-w-0 content-start gap-6 lg:order-1">
+        <fieldset class="grid gap-3"><legend class="mb-1 font-display text-h3 font-medium">1. Що дарувати</legend>
+          <div class="flex flex-wrap gap-2"><Chip name="typ" value="nominal" checked>Номінал</Chip><Chip name="typ" value="posluga">Конкретна послуга</Chip></div>
+          <div class="flex flex-wrap gap-2" data-when="nominal">{[500, 1000, 1500, 2000].map((n, i) => <Chip name="nominal" value={String(n)} checked={i === 1}><span class="num">{uah(n)}</span></Chip>)}</div>
+          <label class="grid gap-1.5 text-small font-semibold" data-when="posluga" data-hide-js>Послуга
+            <select name="cert_posluga" class="min-h-12 rounded-field border-[1.5px] border-line-strong bg-white px-4 text-body font-normal">
+              {services.map((s) => <option value={s.id} data-price={s.price}>{s.name} — {uah(s.price)}</option>)}
+            </select>
+          </label>
+          <p class="t-caption text-graphite" data-when="posluga" data-hide-js>Ціна у майстрині; якщо подарунок до топ-майстрині — різницю доплатять на місці.</p>
+        </fieldset>
+        <fieldset class="grid gap-3"><legend class="mb-1 font-display text-h3 font-medium">2. Дизайн і текст</legend>
+          <div class="flex flex-wrap gap-3">
+            {designs.map((d, i) => (
+              <label class="group relative flex cursor-pointer items-center gap-2 text-small font-semibold">
+                <input class="sr-only" type="radio" name="dyzain" value={d.id} checked={i === 0} />
+                <span class="tip-sm block h-11 w-7 shadow-[inset_0_0_0_1px_rgb(34_27_30/0.14)] outline-offset-2 group-has-checked:outline-2 group-has-checked:outline-ink group-has-focus-visible:outline-3 group-has-focus-visible:outline-cherry" style={`background:var(${d.token})`}></span>{d.name}
+              </label>
+            ))}
+          </div>
+          <div class="grid gap-4 sm:grid-cols-2">
+            <Field id="c-komu" name="komu" label="Кому" placeholder="Мамі, Олені…" />
+            <Field id="c-vid" name="vid" label="Від кого" placeholder="Від Каті" />
+            <Field id="c-wish" name="pobazhannia" label="Побажання" textarea hint="До 140 символів — поміститься на сертифікаті" class="sm:col-span-2" />
+          </div>
+        </fieldset>
+        <fieldset class="grid gap-3"><legend class="mb-1 font-display text-h3 font-medium">3. Як отримати й оплатити</legend>
+          <div class="flex flex-wrap gap-2"><Chip name="dostavka" value="telegram" checked>У Telegram</Chip><Chip name="dostavka" value="viber">У Viber</Chip><Chip name="dostavka" value="paper">Крафт-конверт у студії</Chip></div>
+          <div class="grid gap-4 sm:grid-cols-2">
+            <Field id="c-name" name="name" label="Ваше імʼя" autocomplete="given-name" />
+            <Field id="c-phone" name="phone" type="tel" label="Телефон" autocomplete="tel" inputmode="tel" required placeholder="067 123 45 67" />
+          </div>
+          <label class="flex items-start gap-3 text-small"><input type="checkbox" name="zgoda" required class="mt-0.5 size-5 shrink-0 accent-cherry" /><span>Погоджуюсь на <a href="/pryvatnist/">обробку імені й телефону</a>. Адміністраторка надішле посилання на оплату — онлайн-оплати на сайті немає.</span></label>
+          <p class="t-caption hidden font-semibold text-alert" data-cert-err></p>
+          <div class="hidden rounded-field border-[1.5px] border-alert bg-alert-50 p-4 text-small" role="alert" data-cert-fail></div>
+          <p id="pomylka" class="target-box rounded-field border-[1.5px] border-alert bg-alert-50 p-4 text-small text-alert">Перевірте телефон, номінал і згоду — і надішліть ще раз.</p>
+          <div id="ne-nadislano" class="target-box rounded-field border-[1.5px] border-alert bg-alert-50 p-4 text-small">Не вдалося надіслати заявку. Зателефонуйте <a href={site.phoneHref} class="font-semibold num">{site.phone}</a> або напишіть у <a href={site.telegram} class="font-semibold">Telegram</a>.</div>
+          <p><Button type="submit" size="lg" iconAfter="arrow-right" data-cert-submit>Замовити сертифікат</Button></p>
+        </fieldset>
+      </div>
+
+      <div class="lg:order-2 lg:sticky lg:top-24 lg:self-start">
+        <figure class="grid gap-3" aria-label="Превʼю сертифіката">
+          <div class="cert-card relative flex aspect-[5/7] max-h-[34rem] flex-col justify-between overflow-hidden rounded-[999px_999px_28px_28px] p-7 pt-16 sm:p-9 sm:pt-20" data-design="vyshnia" data-preview>
+            <div class="grid justify-items-center gap-1 text-center">
+              <Logo class="h-9 w-auto" mark={false} tone="white" />
+              <p class="cert-k text-micro font-semibold tracking-[0.18em] uppercase">Подарунковий сертифікат</p>
+            </div>
+            <div class="grid justify-items-center gap-2 text-center">
+              <p class="cert-amount font-display text-[3.25rem] leading-none font-semibold num" data-p-amount>1 000 ₴</p>
+              <p class="cert-k text-small" data-p-service>на будь-яку послугу студії</p>
+            </div>
+            <div class="grid gap-2 text-center">
+              <p class="font-display text-h3 font-medium" data-p-to>Для вас</p>
+              <p class="cert-k t-small min-h-10 italic" data-p-wish>Побажання зʼявиться тут</p>
+              <p class="cert-k text-caption" data-p-from></p>
+            </div>
+            <div class="cert-k flex justify-between border-t pt-3 text-caption" style="border-color:currentColor"><span data-p-valid>діє 6 місяців</span><span class="num">№ VY-0000</span></div>
+          </div>
+          <figcaption class="t-caption text-graphite">Превʼю: так виглядатиме електронний сертифікат. Паперовий — той самий дизайн у крафт-конверті.</figcaption>
+        </figure>
+      </div>
+    </form>
+  </section>
+
+  <section class="wrap pt-(--spacing-section)" aria-labelledby="how-title">
+    <h2 id="how-title" class="t-h2">Як це працює</h2>
+    <ol class="mt-8 grid gap-6 md:grid-cols-3">
+      {[['send', 'Заявка', 'Ви збираєте сертифікат тут — адміністраторка отримує його в Telegram за хвилину.'], ['shield-check', 'Оплата', 'Протягом 15 хвилин у робочий час надсилаємо посилання на оплату карткою.'], ['gift', 'Подарунок', 'Електронний сертифікат приходить у месенджер, паперовий чекає в крафт-конверті в студії.']].map(([icon, t, d]) => (
+        <li class="grid content-start gap-2 rounded-card bg-white p-6"><Icon name={icon} size={24} class="text-cherry" /><h3 class="font-display text-h3 font-medium">{t}</h3><p class="t-small text-graphite">{d}</p></li>
+      ))}
+    </ol>
+    <dl class="mt-8 grid gap-3 text-small md:grid-cols-2">
+      {[['Скільки діє', '6 місяців з дня оплати'], ['Якщо послуга дорожча', 'різницю доплачують на місці'], ['Якщо дешевша', 'залишок можна використати наступного разу в межах терміну'], ['Повернення', 'сертифікат не обмінюється на гроші']].map(([k, v]) => (
+        <div class="flex justify-between gap-4 border-b border-line pb-2"><dt class="text-graphite">{k}</dt><dd class="text-right font-semibold">{v}</dd></div>
+      ))}
+    </dl>
+  </section>
+</BaseLayout>
+<script>
+  import { normalizeUaPhone, PHONE_INVALID, PHONE_REQUIRED, CONSENT, SEND_FAIL } from '../../lib/lead';
+  import { site } from '../../config/site';
+  const form = document.querySelector<HTMLFormElement>('[data-cert]')!;
+  form.noValidate = true; // our messages instead of the browser bubbles; without JS `required` still guards the post
+  form.querySelectorAll('[data-hide-js]').forEach((el) => el.removeAttribute('data-hide-js')); // CSS hid them before paint (no CLS)
+  const P = (k: string) => document.querySelector<HTMLElement>(`[data-p-${k}]`)!;
+  const card = document.querySelector<HTMLElement>('[data-preview]')!;
+  const MONTH_GEN = ['січня', 'лютого', 'березня', 'квітня', 'травня', 'червня', 'липня', 'серпня', 'вересня', 'жовтня', 'листопада', 'грудня'];
+  const uah = (n: number) => `${n.toLocaleString('uk-UA').replace(/\s/g, ' ')} ₴`;
+  const v = (n: string) => (form.elements.namedItem(n) as RadioNodeList | HTMLInputElement).value;
+  const until = new Date(); until.setMonth(until.getMonth() + 6);
+  function render() {
+    const typ = v('typ');
+    form.querySelectorAll<HTMLElement>('[data-when]').forEach((el) => { el.hidden = el.dataset.when !== typ; });
+    const sel = form.elements.namedItem('cert_posluga') as HTMLSelectElement;
+    const opt = sel.selectedOptions[0];
+    P('amount').textContent = typ === 'posluga' ? uah(Number(opt.dataset.price)) : uah(Number(v('nominal')));
+    P('service').textContent = typ === 'posluga' ? opt.textContent!.split(' — ')[0] : 'на будь-яку послугу студії';
+    card.dataset.design = v('dyzain');
+    P('to').textContent = v('komu').trim() ? `Для: ${v('komu').trim()}` : 'Для вас';
+    P('wish').textContent = v('pobazhannia').trim().slice(0, 140) || 'Побажання зʼявиться тут';
+    P('from').textContent = v('vid').trim() ? `від ${v('vid').trim()}` : '';
+    P('valid').textContent = `діє до ${until.getDate()} ${MONTH_GEN[until.getMonth()]} ${until.getFullYear()}`;
+  }
+  form.addEventListener('input', render); form.addEventListener('change', render); render();
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const err = form.querySelector<HTMLElement>('[data-cert-err]')!, fail = form.querySelector<HTMLElement>('[data-cert-fail]')!;
+    fail.classList.add('hidden');
+    const phone = v('phone').trim(), consent = (form.elements.namedItem('zgoda') as HTMLInputElement).checked;
+    const msg = !phone ? PHONE_REQUIRED : !normalizeUaPhone(phone) ? PHONE_INVALID : !consent ? CONSENT : '';
+    err.textContent = msg; err.classList.toggle('hidden', !msg);
+    if (msg) { (form.elements.namedItem(phone && normalizeUaPhone(phone) ? 'zgoda' : 'phone') as HTMLElement).focus(); return; }
+    const btn = form.querySelector<HTMLButtonElement>('[data-cert-submit]')!; btn.disabled = true;
+    try {
+      const res = await fetch(form.action, { method: 'POST', body: new FormData(form), headers: { accept: 'application/json' } });
+      const json = await res.json().catch(() => ({}));
+      if (res.ok && json.ok) { location.assign(json.thanks); return; }
+      const e2 = json.errors ?? {};
+      if (e2.phone || e2.zgoda || e2.nominal) { err.textContent = e2.phone ?? e2.zgoda ?? e2.nominal; err.classList.remove('hidden'); }
+      else throw new Error('delivery');
+    } catch {
+      fail.innerHTML = `<p class="font-semibold text-alert">${SEND_FAIL.replace('запис', 'заявку на сертифікат').replace(' на той самий час', '')}</p><p class="mt-2 flex flex-wrap gap-x-4"><a class="font-semibold" href="${site.phoneHref}">${site.phone}</a><a class="font-semibold" href="${site.telegram}">Написати в Telegram</a></p>`;
+      fail.classList.remove('hidden');
+    } finally { btn.disabled = false; }
+  });
+</script>
+<style is:global>
+  [data-when][hidden] { display: none !important; }
+  .cert-card { background: var(--color-shade-vyshnia); color: var(--color-white); transition: background-color var(--duration-base) var(--ease-out); }
+  .cert-card[data-design='pudra'] { background: var(--color-shade-pudra); color: var(--color-ink); }
+  .cert-card[data-design='moloko'] { background: var(--color-shade-moloko); color: var(--color-ink); box-shadow: inset 0 0 0 1px var(--color-line); }
+  .cert-card[data-design='pudra'] svg, .cert-card[data-design='moloko'] svg { color: var(--color-ink); }
+  .cert-card .cert-k { opacity: 0.85; }
+</style>

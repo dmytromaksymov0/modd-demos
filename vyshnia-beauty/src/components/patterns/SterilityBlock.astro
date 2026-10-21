@@ -1,0 +1,51 @@
+---
+// «Пакет відкривають при вас»: four real stages with photos (captions = only what is in the frame) and the
+// pouch card — the thing the client can check herself: indicator colour, date, mode. Not a document:
+// one card, three facts, an indicator strip that changes from «до циклу» to «після циклу».
+import TipPhoto from '../booking/TipPhoto.astro';
+import Icon from '../ui/Icon.astro';
+interface Props { compact?: boolean; state?: 'before' | 'after' }
+const { compact = false, state = 'after' } = Astro.props;
+const stages = [
+  { photo: 'sterile-tray', alt: 'Інструменти в металевому лотку', title: 'Дезінфекція', text: 'Після кожної клієнтки — розчин і ультразвукова мийка.', ratio: '3 / 4' },
+  { photo: 'sterile-cabinet', alt: 'Сухожарова шафа: ручка, термостат і таймер', title: 'Сухожар 180\u00A0°C · 60\u00A0хв', text: 'Шафа тримає температуру весь цикл, таймер не дасть відкрити раніше.', ratio: '3 / 4', position: '0% 50%' },
+  { photo: 'sterile-kraft', alt: 'Пушер, кюретка й пилка в крафт-пакеті', title: 'Крафт-пакет', text: 'Набір лежить запечатаним, доки ви не сіли за стіл.', ratio: '3 / 4' },
+  { photo: 'sterile-file', alt: 'Ножиці, апельсинові палички, баф і пилка на сірому рушнику', title: 'Одноразове', text: 'Пилки, бафи й палички — нові для кожної клієнтки, віддаємо вам.', ratio: '3 / 4' },
+];
+---
+<section class="sterility grid gap-8 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:items-start lg:gap-12">
+  <div class="grid gap-5">
+    <h2 class="t-h2">Пакет відкривають <span class="sharp">при вас</span></h2>
+    <p class="t-lead measure text-ink">Сухожар 180 °C, 60 хвилин, крафт-пакет з індикатором. Пилки, бафи й палички одноразові. Попросіть показати індикатор — ми покажемо самі.</p>
+    <div class="pouch-card grid max-w-sm gap-3 rounded-card bg-white p-5 shadow-(--shadow-hair)" data-state={state}>
+      <p class="flex items-center justify-between text-caption"><span class="font-semibold">Набір № 214</span><span class="text-graphite">Олена Коваль</span></p>
+      <div class="grid gap-1.5">
+        <span class="pouch-strip block h-3 rounded-full" aria-hidden="true"></span>
+        <p class="flex justify-between text-micro text-graphite"><span>індикатор</span><span class="font-semibold text-ink">{state === 'after' ? 'колір змінився — цикл пройдено' : 'до циклу'}</span></p>
+      </div>
+      <dl class="grid grid-cols-2 gap-2 text-small">
+        <div><dt class="text-caption text-graphite">Режим</dt><dd class="font-semibold num">180 °C · 60 хв</dd></div>
+        <div><dt class="text-caption text-graphite">Стерилізовано</dt><dd class="font-semibold num">22.10 · 09:40</dd></div>
+      </dl>
+      <p class="flex items-center gap-2 border-t border-line pt-3 text-small font-semibold"><Icon name="package" size={18} class="text-cherry" />Відкриваємо при вас</p>
+    </div>
+  </div>
+  <ol class={`grid grid-cols-2 gap-x-4 gap-y-6 ${compact ? '' : 'sm:grid-cols-4'}`}>
+    {stages.map((s, i) => (
+      <li class="grid content-start gap-2.5">
+        <figure class="grid gap-2">
+          <TipPhoto src={s.photo} alt={s.alt} ratio={s.ratio} position={s.position} sizes="(min-width: 64rem) 13vw, 44vw" />
+          <figcaption class="sr-only">{s.alt}</figcaption>
+        </figure>
+        <p class="font-display text-micro font-semibold text-cherry num">{i + 1} / 4</p>
+        <h3 class="font-display text-[1.0625rem] font-medium leading-tight">{s.title}</h3>
+        <p class="t-caption text-graphite">{s.text}</p>
+      </li>
+    ))}
+  </ol>
+</section>
+<style>
+  /* Indicator strip: class-4 pouch indicators change colour after the cycle. «before» = pale, «after» = dark. */
+  .pouch-strip { background: var(--color-nude); transition: background-color var(--duration-base) var(--ease-out); }
+  [data-state='after'] .pouch-strip { background: linear-gradient(90deg, var(--color-shade-tsehla), var(--color-cherry)); }
+</style>

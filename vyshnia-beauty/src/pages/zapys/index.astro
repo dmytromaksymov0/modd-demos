@@ -1,0 +1,25 @@
+---
+// Запис онлайн as its own page (links «Записатися» from inner pages, «Хочу так само» from /roboty/ and /maistry/).
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import HeroBooking from '../../components/booking/HeroBooking.astro';
+import MobileBar from '../../components/layout/MobileBar.astro';
+import Icon from '../../components/ui/Icon.astro';
+---
+<BaseLayout title="Запис онлайн за 4 кроки · Вишня, студія краси, Харків" description="Оберіть послугу, майстриню, день і час — ціну й дату гарантії видно до підтвердження. Без передоплати, перенести можна безкоштовно за 12 годин." current="/zapys/" og="zapys" crumb="Запис" mobileBar={false} bookHref="#zapys">
+  <HeroBooking page="/zapys/">
+    <div slot="heading">
+      <nav aria-label="Навігаційний ланцюжок" class="text-caption text-graphite"><ol class="flex gap-1.5"><li><a href="/" class="inline-flex min-h-11 items-center">Головна</a></li><li aria-hidden="true" class="flex items-center">/</li><li class="flex items-center" aria-current="page">Запис</li></ol></nav>
+      <h1 id="hero-title" class="t-h1">Запис онлайн</h1>
+      <p class="t-lead mt-2 text-graphite">Чотири кроки, ціна й дата гарантії — до підтвердження.</p>
+    </div>
+  </HeroBooking>
+  <section class="wrap pt-(--spacing-section)" aria-labelledby="before-title">
+    <h2 id="before-title" class="t-h2">Перед першим візитом</h2>
+    <ul class="mt-6 grid gap-3 md:grid-cols-2">
+      {['Передоплати немає — оплата на місці карткою чи готівкою.', 'Перенести або скасувати можна безкоштовно за 12 годин.', 'Запізнення понад 15 хвилин — скоротимо послугу або перенесемо.', 'Чуже покриття знімаємо безкоштовно — напишіть про це в коментарі.', 'Маєте фото бажаного дизайну — додайте його в Telegram після запису.', 'Набір інструментів відкривають з крафт-пакета при вас.'].map((t) => (
+        <li class="flex items-start gap-3 rounded-field bg-white p-4 text-small"><Icon name="check" size={20} class="mt-0.5 shrink-0 text-cherry" />{t}</li>
+      ))}
+    </ul>
+  </section>
+  <div class="when-nojs"><MobileBar bookHref="#zapys" /></div>
+</BaseLayout>

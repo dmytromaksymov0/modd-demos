@@ -1,0 +1,15 @@
+---
+// Small labels. cherry = selected / «Топ +20 %», soft = tint, outline = neutral fact, note = «Приклад».
+interface Props { tone?: 'cherry' | 'soft' | 'outline' | 'note' | 'open'; class?: string }
+const { tone = 'outline', class: cls = '' } = Astro.props;
+const tones = {
+  cherry: 'bg-cherry text-white',
+  soft: 'bg-cherry-50 text-cherry',
+  outline: 'border border-line-strong text-ink bg-white',
+  note: 'bg-porcelain-2 text-graphite',
+  open: 'bg-white text-ink border border-line',
+};
+---
+<span class={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 font-sans text-micro font-semibold whitespace-nowrap ${tones[tone]} ${cls}`}>
+  {tone === 'open' && <span class="size-1.5 rounded-full bg-open" aria-hidden="true"></span>}<slot />
+</span>

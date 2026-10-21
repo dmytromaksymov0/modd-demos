@@ -1,0 +1,86 @@
+---
+// Стерильність як ритуал: first screen = the pouch card you can check yourself (indicator before / after the cycle)
+// next to the real kraft pouch; then the four stages with photos, the disposables and what to check at the table.
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import TipPhoto from '../../components/booking/TipPhoto.astro';
+import Icon from '../../components/ui/Icon.astro';
+import Button from '../../components/ui/Button.astro';
+const stages = [
+  { photo: 'sterile-tray', alt: 'Інструменти в металевому лотку', title: 'Дезінфекція', time: '15 хв', text: 'Одразу після клієнтки інструменти йдуть у дезінфекційний розчин, потім — в ультразвукову мийку: вона вибиває залишки з насічок пушера й пазів кусачок.' },
+  { photo: 'sterile-cabinet', alt: 'Сухожарова шафа: ручка, термостат і таймер', title: 'Сухожар 180 °C', time: '60 хв', text: 'Сухі інструменти запечатуємо в крафт-пакети й ставимо в сухожарову шафу на 180 °C. Таймер не дає відкрити раніше: цикл або пройдено повністю, або починається знову.', pos: '0% 50%' },
+  { photo: 'sterile-kraft', alt: 'Пушер, кюретка й пилка в крафт-пакеті', title: 'Крафт-пакет', time: 'до 20 діб', text: 'На пакеті — дата й час стерилізації. Індикатор змінює колір після циклу. Набір лежить запечатаним, доки ви не сіли за стіл.' },
+  { photo: 'sterile-file', alt: 'Ножиці, апельсинові палички, баф і пилка на сірому рушнику', title: 'Відкриваємо при вас', time: 'щоразу', text: 'Майстриня розриває пакет на ваших очах. Пилка, баф і апельсинова паличка — нові, після процедури віддаємо їх вам.' },
+];
+---
+<BaseLayout title="Стерильність: сухожар 180 °C, крафт-пакет при вас · Вишня, Харків" description="Як у «Вишні» стерилізують інструменти: дезінфекція, ультразвук, сухожар 180 °C на 60 хвилин, крафт-пакет з індикатором, який відкривають при вас. Пилки й бафи одноразові." current="/sterylnist/" og="sterylnist" crumb="Стерильність">
+  <section class="wrap grid gap-8 pt-5 lg:grid-cols-[minmax(0,7fr)_minmax(0,5fr)] lg:items-center lg:gap-12 lg:pt-7" aria-labelledby="st-title">
+    <div class="grid content-start gap-5">
+      <nav aria-label="Навігаційний ланцюжок" class="text-caption text-graphite"><ol class="flex gap-1.5"><li><a href="/" class="inline-flex min-h-11 items-center">Головна</a></li><li aria-hidden="true" class="flex items-center">/</li><li class="flex items-center" aria-current="page">Стерильність</li></ol></nav>
+      <h1 id="st-title" class="t-h1 max-w-[18ch]">Пакет відкривають <span class="sharp">при вас</span></h1>
+      <p class="t-lead measure">Сухожар 180 °C, 60 хвилин, крафт-пакет з індикатором. Ви бачите все самі — і можете попросити показати індикатор.</p>
+      <div class="pouch-card grid max-w-md gap-4 rounded-card bg-white p-5 shadow-(--shadow-hair)" data-state="after" data-pouch>
+        <p class="flex items-center justify-between text-caption"><span class="font-semibold">Набір № 214 · Олена Коваль</span><span class="text-graphite num">22.10 · 09:40</span></p>
+        <div class="grid gap-1.5">
+          <span class="pouch-strip block h-4 rounded-full" aria-hidden="true"></span>
+          <p class="flex justify-between text-small"><span class="text-graphite">індикатор</span><span class="font-semibold" data-pouch-label>колір змінився — цикл пройдено</span></p>
+        </div>
+        <div class="flex flex-wrap gap-2" role="group" aria-label="Як виглядає індикатор">
+          <button type="button" class="pouch-btn min-h-11 rounded-full border-[1.5px] px-4 text-small font-semibold" aria-pressed="false" data-pouch-set="before">До циклу</button>
+          <button type="button" class="pouch-btn min-h-11 rounded-full border-[1.5px] px-4 text-small font-semibold" aria-pressed="true" data-pouch-set="after">Після 180 °C · 60 хв</button>
+        </div>
+        <p class="flex items-center gap-2 border-t border-line pt-3 text-small font-semibold"><Icon name="package" size={18} class="text-cherry" />Якщо індикатор не змінився — набір не використовуємо</p>
+      </div>
+    </div>
+    <div class="mx-auto w-full max-w-sm lg:max-w-none"><TipPhoto src="sterile-kraft" alt="Пушер, кюретка й пилка в крафт-пакеті" ratio="4 / 5" sizes="(min-width: 64rem) 34vw, 90vw" priority /></div>
+  </section>
+
+  <section class="wrap pt-(--spacing-section)" aria-labelledby="stages-title">
+    <h2 id="stages-title" class="t-h2">Чотири кроки після кожної клієнтки</h2>
+    <ol class="mt-10 grid gap-10 md:grid-cols-2 xl:grid-cols-4 xl:gap-8">
+      {stages.map((s, i) => (
+        <li class="grid content-start gap-3">
+          <div class="max-w-[16rem] xl:max-w-none"><TipPhoto src={s.photo} alt={s.alt} ratio="3 / 4" position={s.pos} sizes="(min-width: 80rem) 22vw, (min-width: 48rem) 40vw, 70vw" /></div>
+          <p class="flex items-center gap-3 font-display text-micro font-semibold text-cherry num">{i + 1} / 4<span class="font-sans font-normal text-graphite">{s.time}</span></p>
+          <h3 class="font-display text-h3 font-medium">{s.title}</h3>
+          <p class="t-small text-graphite">{s.text}</p>
+        </li>
+      ))}
+    </ol>
+  </section>
+
+  <section class="wrap pt-(--spacing-section)" aria-labelledby="check-title">
+    <div class="grid gap-8 lg:grid-cols-2 lg:gap-12">
+      <div class="grid content-start gap-4">
+        <h2 id="check-title" class="t-h2">Що ви можете перевірити самі</h2>
+        <ul class="grid gap-3">
+          {['Пакет запечатаний, на ньому дата й час стерилізації.', 'Індикатор на пакеті змінив колір.', 'Майстриня відкриває пакет при вас, а не до вашого приходу.', 'Пилка й баф нові — їх віддають вам після процедури.', 'Майстриня в рукавичках, робоче місце протерте до вас.'].map((t) => (
+            <li class="flex items-start gap-3 rounded-field bg-white p-4 text-small"><Icon name="check" size={20} class="mt-0.5 shrink-0 text-cherry" />{t}</li>
+          ))}
+        </ul>
+      </div>
+      <div class="grid content-start gap-4">
+        <h2 class="t-h2">Брови й вії</h2>
+        <p class="t-lead text-graphite">Пінцети проходять ту саму обробку й сухожар. Щіточки, мікробраші й патчі — одноразові. Склади для ламінування — гіпоалергенні; при чутливій шкірі зробимо тест на згині ліктя за 24 години.</p>
+        <p class="flex items-center gap-2 text-small"><Icon name="zap" size={18} class="text-cherry" />Світло є: генератор тримає і сухожар, і лампи — цикл не переривається при відключеннях.</p>
+        <p><Button href="/zapys/" iconAfter="arrow-right">Записатися</Button></p>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+<script>
+  const card = document.querySelector<HTMLElement>('[data-pouch]');
+  const label = card?.querySelector('[data-pouch-label]');
+  card?.addEventListener('click', (e) => {
+    const b = (e.target as Element).closest<HTMLButtonElement>('[data-pouch-set]'); if (!b) return;
+    const st = b.dataset.pouchSet!;
+    card.dataset.state = st;
+    card.querySelectorAll('[data-pouch-set]').forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
+    if (label) label.textContent = st === 'after' ? 'колір змінився — цикл пройдено' : 'до циклу — колір ще не змінився';
+  });
+</script>
+<style is:global>
+  [data-pouch] .pouch-strip { background: var(--color-nude); transition: background var(--duration-base) var(--ease-out); }
+  [data-pouch][data-state='after'] .pouch-strip { background: linear-gradient(90deg, var(--color-shade-tsehla), var(--color-cherry)); }
+  .pouch-btn { border-color: var(--color-line-strong); background: var(--color-white); }
+  .pouch-btn[aria-pressed='true'] { border-color: var(--color-ink); background: var(--color-ink); color: var(--color-white); }
+</style>

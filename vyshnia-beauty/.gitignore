@@ -1,0 +1,6 @@
+# Working material that doesn't need to be in git (the boards and comparisons built from it are kept):
+design/phase-1/candidates/
+design/phase-2/candidates/
+design/phase-2/rejected/
+design/phase-3/live/
+# The root .gitignore already excludes node_modules, dist, .astro, .wrangler, .dev.vars, screenshots/, reports/.

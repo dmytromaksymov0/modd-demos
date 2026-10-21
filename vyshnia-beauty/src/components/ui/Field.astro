@@ -1,0 +1,17 @@
+---
+// Text field with a visible label, optional hint and error (error text + icon, linked via aria-describedby).
+import Icon from './Icon.astro';
+interface Props { id: string; label: string; type?: string; name?: string; value?: string; hint?: string; error?: string; required?: boolean; autocomplete?: string; inputmode?: string; placeholder?: string; class?: string; textarea?: boolean }
+const { id, label, type = 'text', name = id, value, hint, error, required = false, autocomplete, inputmode, placeholder, class: cls = '', textarea = false } = Astro.props;
+const describedby = [hint && `${id}-hint`, error && `${id}-err`].filter(Boolean).join(' ') || undefined;
+const input = 'block w-full rounded-field border-[1.5px] bg-white px-4 py-3 text-body text-ink placeholder:text-graphite/80 transition-[border-color,box-shadow] duration-(--duration-fast) focus-visible:border-cherry';
+const state = error ? 'border-alert' : 'border-line-strong hover:border-ink';
+---
+<div class={`field grid content-start gap-1.5 ${cls}`}>
+  <label for={id} class="text-small font-semibold text-ink">{label}{!required && <span class="font-normal text-graphite"> · необовʼязково</span>}</label>
+  {textarea
+    ? <textarea id={id} name={name} rows="3" class={`${input} ${state} resize-y`} required={required} aria-invalid={error ? 'true' : undefined} aria-describedby={describedby} placeholder={placeholder}>{value}</textarea>
+    : <input id={id} name={name} type={type} value={value} class={`${input} ${state}`} required={required} autocomplete={autocomplete} inputmode={inputmode} placeholder={placeholder} aria-invalid={error ? 'true' : undefined} aria-describedby={describedby} />}
+  {hint && !error && <p id={`${id}-hint`} class="t-caption text-graphite">{hint}</p>}
+  {error && <p id={`${id}-err`} class="t-caption flex items-start gap-1.5 font-semibold text-alert"><Icon name="alert-circle" size={16} class="mt-0.5 shrink-0" />{error}</p>}
+</div>

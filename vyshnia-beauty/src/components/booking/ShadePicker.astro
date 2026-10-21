@@ -1,0 +1,26 @@
+---
+// Optional sub-step of «Послуга» for coated services: pick a shade on swatch tips (or «підберемо на місці»).
+// The same swatches filter «Хочу так само». Colours come from tokens (--color-shade-*).
+import { shades } from '../../data/shades';
+interface Props { name?: string; checked?: string; compact?: boolean; legend?: string; class?: string; [k: string]: unknown }
+const { name = 'kolir', checked = 'vyshnia', compact = false, legend = 'Колір покриття', class: cls = '', ...rest } = Astro.props;
+---
+<fieldset class={`shade-picker min-w-0 ${cls}`} {...rest}>
+  <legend class="mb-2 text-caption text-graphite"><span class="font-semibold text-ink" data-shade-legend>{legend}</span> · необовʼязково</legend>
+  <div class={compact ? 'flex flex-wrap gap-1.5' : 'grid max-w-md grid-cols-7 gap-1'}>
+    {shades.map((s) => (
+      <label class="group relative flex cursor-pointer flex-col items-center gap-1.5" title={s.note}>
+        <input class="sr-only" type="radio" name={name} value={s.id} checked={s.id === checked} />
+        <span class={`tip-sm block ${compact ? 'h-9 w-6' : 'h-11 w-7'} shadow-[inset_0_0_0_1px_rgb(34_27_30/0.14)] outline-offset-2 group-has-checked:outline-2 group-has-checked:outline-ink group-has-focus-visible:outline-3 group-has-focus-visible:outline-cherry`} style={`background:var(${s.token})`}></span>
+        {!compact && <span class="text-micro text-graphite group-has-checked:font-semibold group-has-checked:text-ink">{s.name}</span>}
+        {compact && <span class="sr-only">{s.name}</span>}
+      </label>
+    ))}
+    <label class="group relative flex cursor-pointer flex-col items-center gap-1.5">
+      <input class="sr-only" type="radio" name={name} value="na-mistsi" checked={checked === 'na-mistsi'} />
+      <span class={`tip-sm grid ${compact ? 'h-9 w-6' : 'h-11 w-7'} place-items-center border border-dashed border-line-strong text-micro text-graphite group-has-checked:border-ink group-has-checked:text-ink group-has-focus-visible:outline-3 group-has-focus-visible:outline-cherry`}>?</span>
+      {!compact && <span class="text-micro text-graphite group-has-checked:font-semibold group-has-checked:text-ink">На місці</span>}
+      {compact && <span class="sr-only">Підберемо на місці</span>}
+    </label>
+  </div>
+</fieldset>

@@ -1,0 +1,10 @@
+---
+// Selectable chip (radio/checkbox under the hood — keyboard and screen readers work without JS).
+// Extra attributes (data-*) go on the label.
+interface Props { name: string; value: string; type?: 'radio' | 'checkbox'; checked?: boolean; class?: string; [k: string]: unknown }
+const { name, value, type = 'radio', checked = false, class: cls = '', ...rest } = Astro.props;
+---
+<label class={`chip relative inline-flex min-h-11 cursor-pointer items-center gap-1.5 rounded-full border-[1.5px] border-line-strong bg-white px-4 text-small font-semibold text-ink transition-colors duration-(--duration-fast) hover:border-ink has-checked:border-ink has-checked:bg-ink has-checked:text-white has-focus-visible:outline-3 has-focus-visible:outline-offset-3 has-focus-visible:outline-cherry ${cls}`} {...rest}>
+  <input class="sr-only" type={type} name={name} value={value} checked={checked} />
+  <slot />
+</label>

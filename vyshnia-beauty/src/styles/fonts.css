@@ -1,0 +1,27 @@
+/* Self-hosted, one file per family (design/phase-2/subset_fonts.py from the google/fonts variable sources):
+   Latin + Ukrainian Cyrillic + punctuation + ₴ №. No arrows in either font — use Lucide icons. */
+@font-face {
+  font-family: "Vyshnia Display";
+  src: url("/fonts/vyshnia-display.woff2") format("woff2");
+  font-weight: 400 600;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Vyshnia Text";
+  src: url("/fonts/vyshnia-text.woff2") format("woff2");
+  font-weight: 400 600;
+  font-style: normal;
+  font-display: swap;
+}
+/* Metric-matched fallbacks (size-adjust measured in phase 3 with scripts/font-swap-check.cjs). */
+@font-face {
+  font-family: "Vyshnia Display Fallback";
+  src: local("Arial"), local("Liberation Sans"), local("Roboto");
+  size-adjust: 104%;
+}
+@font-face {
+  font-family: "Vyshnia Text Fallback";
+  src: local("Arial"), local("Liberation Sans"), local("Roboto");
+  size-adjust: 102%;
+}

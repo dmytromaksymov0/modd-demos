@@ -1,0 +1,28 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import HeroBooking from '../components/booking/HeroBooking.astro';
+import WorksSection from '../components/home/WorksSection.astro';
+import MastersSection from '../components/home/MastersSection.astro';
+import SterilityBlock from '../components/patterns/SterilityBlock.astro';
+import GuaranteeSection from '../components/home/GuaranteeSection.astro';
+import PricesSection from '../components/home/PricesSection.astro';
+import ReviewsSection from '../components/home/ReviewsSection.astro';
+import ContactsSection from '../components/home/ContactsSection.astro';
+import MobileBar from '../components/layout/MobileBar.astro';
+import { beautySalon, faqPage } from '../lib/schema';
+import { faq } from '../data/faq';
+---
+<BaseLayout title="Вишня — манікюр, педикюр, брови й вії в центрі Харкова · запис онлайн" description="Студія краси в центрі Харкова: онлайн-запис за 4 кроки з ціною наперед, гарантія на покриття 21 день, сухожар 180 °C і крафт-пакет, який відкривають при вас." current="/" mobileBar={false} bookHref="#zapys" jsonld={[beautySalon(Astro.site!), faqPage(faq)]}>
+  <HeroBooking />
+  <WorksSection />
+  <MastersSection />
+  <section class="wrap pt-(--spacing-section)" id="sterylnist" aria-label="Стерильність">
+    <SterilityBlock />
+    <p class="mt-6"><a href="/sterylnist/" class="inline-flex min-h-11 items-center gap-2 text-small font-semibold">Як ми стерилізуємо — по кроках<span aria-hidden="true">→</span></a></p>
+  </section>
+  <GuaranteeSection />
+  <PricesSection />
+  <ReviewsSection />
+  <ContactsSection />
+  <div class="when-nojs"><MobileBar bookHref="#zapys" /></div>
+</BaseLayout>

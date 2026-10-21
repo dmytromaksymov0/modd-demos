@@ -1,0 +1,44 @@
+---
+// «Хочу так само»: the work feed with a filter by service and colour; every work opens the booking with the same
+// service, master and shade (data-prefill → HeroBooking). The filter is a tiny inline script; without JS all works show.
+import SectionHead from './SectionHead.astro';
+import WorkCard from '../patterns/WorkCard.astro';
+import Chip from '../ui/Chip.astro';
+import { works, homeOrder } from '../../data/works';
+import { shades } from '../../data/shades';
+const shown = homeOrder.map((id) => works.find((w) => w.id === id)!);
+const used = shades.filter((s) => shown.some((w) => w.shade === s.id));
+---
+<section class="wrap pt-(--spacing-section)" aria-labelledby="works-title" id="roboty">
+  <SectionHead id="works-title" title="Хочу так само" lead="Побачили роботу — записуйтеся до тієї ж майстрині з тим самим кольором. Послуга, майстриня й відтінок підставляться в запис самі." href="/roboty/" linkText="Усі роботи" />
+  <form class="works-filter mt-8 flex flex-wrap items-center gap-x-6 gap-y-3" aria-label="Фільтр робіт" data-works-filter>
+    <fieldset class="flex min-w-0 flex-wrap gap-2"><legend class="sr-only">Послуга</legend>
+      <Chip name="wg" value="" checked>Усі</Chip><Chip name="wg" value="manicure">Манікюр</Chip><Chip name="wg" value="pedicure">Педикюр</Chip><Chip name="wg" value="brows">Брови</Chip><Chip name="wg" value="lashes">Вії</Chip>
+    </fieldset>
+    <fieldset class="flex min-w-0 items-center gap-1.5"><legend class="float-left mr-2 text-caption text-graphite">Колір</legend>
+      <label class="group relative grid h-9 cursor-pointer place-items-center rounded-full border-[1.5px] border-line-strong bg-white px-3 text-micro font-semibold has-checked:border-ink has-checked:bg-ink has-checked:text-white has-focus-visible:outline-3 has-focus-visible:outline-cherry"><input class="sr-only" type="radio" name="wc" value="" checked />будь-який</label>
+      {used.map((s) => (
+        <label class="group relative cursor-pointer" title={s.name}>
+          <input class="sr-only" type="radio" name="wc" value={s.id} />
+          <span class="tip-sm block h-9 w-6 shadow-[inset_0_0_0_1px_rgb(34_27_30/0.14)] outline-offset-2 group-has-checked:outline-2 group-has-checked:outline-ink group-has-focus-visible:outline-3 group-has-focus-visible:outline-cherry" style={`background:var(${s.token})`}></span>
+          <span class="sr-only">{s.name}</span>
+        </label>
+      ))}
+    </fieldset>
+  </form>
+  <div class="mt-8 grid grid-cols-2 gap-x-4 gap-y-9 md:grid-cols-3 lg:grid-cols-4 lg:gap-x-6" data-works>
+    {shown.map((w) => <WorkCard work={w} base="/" />)}
+  </div>
+  <p class="t-small mt-6 hidden text-graphite" data-works-empty role="status">У стрічці таких робіт поки немає — напишіть нам у Telegram, покажемо більше.</p>
+</section>
+<script>
+  const f = document.querySelector<HTMLFormElement>('[data-works-filter]');
+  const cards = [...document.querySelectorAll<HTMLElement>('[data-works] .work-card')];
+  const empty = document.querySelector<HTMLElement>('[data-works-empty]');
+  f?.addEventListener('change', () => {
+    const g = (f.elements.namedItem('wg') as RadioNodeList).value, c = (f.elements.namedItem('wc') as RadioNodeList).value;
+    let n = 0;
+    for (const card of cards) { const show = (!g || card.dataset.group === g) && (!c || card.dataset.shade === c); card.hidden = !show; if (show) n++; }
+    empty?.classList.toggle('hidden', n > 0);
+  });
+</script>

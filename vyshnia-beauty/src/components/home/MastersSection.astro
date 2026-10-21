@@ -1,0 +1,27 @@
+---
+// Six masters. Photos are of this kind of work (hands at work), the name is the card's title, the alt says what the frame shows.
+import SectionHead from './SectionHead.astro';
+import TipPhoto from '../booking/TipPhoto.astro';
+import Badge from '../ui/Badge.astro';
+import { masters } from '../../data/masters';
+import { defaultService } from '../../lib/booking';
+const years = (n: number) => `${n} ${n % 10 === 1 && n % 100 !== 11 ? 'рік' : [2, 3, 4].includes(n % 10) && ![12, 13, 14].includes(n % 100) ? 'роки' : 'років'}`;
+const dative: Record<string, string> = { olena: 'Олени', daryna: 'Дарини', sofiia: 'Софії', marta: 'Марти', iryna: 'Ірини', alina: 'Аліни' };
+---
+<section class="wrap pt-(--spacing-section)" aria-labelledby="masters-title" id="maistry">
+  <SectionHead id="masters-title" title="Майстрині" lead="Чотири майстрині манікюру й педикюру, бровистка й лешмейкерка. Топ-майстриня працює на 30–40 хвилин швидше й веде складні дизайни — тому її послуги на 20 % дорожчі." href="/maistry/" linkText="Усі профілі й роботи" />
+  <ul class="mt-10 grid gap-x-6 gap-y-8 sm:grid-cols-2 xl:grid-cols-3">
+    {masters.map((m) => (
+      <li class="grid grid-cols-[7.5rem_minmax(0,1fr)] items-start gap-4 sm:grid-cols-[8.5rem_minmax(0,1fr)]">
+        <TipPhoto src={m.photo} alt={m.photoAlt} ratio="3 / 4" sizes="136px" widths={[136, 272]} />
+        <div class="grid content-start gap-1.5">
+          <h3 class="font-display text-h3 font-medium tracking-[-0.01em]">{m.name}</h3>
+          <p class="text-caption text-graphite">{m.role} · {years(m.years)}</p>
+          <p class="text-small">{m.style}</p>
+          <p class="mt-1">{m.top ? <Badge tone="soft">Топ-майстриня · +20 %</Badge> : <Badge>Майстриня</Badge>}</p>
+          <a href={`/?posluga=${defaultService(m.groups[0]).id}&maister=${m.id}#zapys`} data-prefill class="mt-1 inline-flex min-h-11 w-fit items-center gap-2 text-small font-semibold">Записатися до {dative[m.id]}<span aria-hidden="true">→</span></a>
+        </div>
+      </li>
+    ))}
+  </ul>
+</section>

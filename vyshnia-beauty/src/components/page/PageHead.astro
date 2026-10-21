@@ -1,0 +1,10 @@
+---
+// Inner page heading: crumbs, H1, one-line lead. Compact on purpose — the page's tool must start in the first screen.
+interface Props { title: string; lead?: string; crumb: string; class?: string }
+const { title, lead, crumb, class: cls = '' } = Astro.props;
+---
+<header class={`wrap pt-5 lg:pt-7 ${cls}`}>
+  <nav aria-label="Навігаційний ланцюжок" class="text-caption text-graphite"><ol class="flex gap-1.5"><li><a href="/" class="inline-flex min-h-11 items-center">Головна</a></li><li aria-hidden="true" class="flex items-center">/</li><li class="flex items-center" aria-current="page">{crumb}</li></ol></nav>
+  <h1 class="t-h1 max-w-[22ch]"><slot name="title">{title}</slot></h1>
+  {lead && <p class="t-lead measure mt-3 text-graphite">{lead}</p>}
+</header>

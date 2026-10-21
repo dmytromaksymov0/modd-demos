@@ -1,0 +1,12 @@
+---
+// Section heading: H2 + one-paragraph lead + optional link to the full page. Left-aligned, measure-bound.
+interface Props { id?: string; title: string; lead?: string; href?: string; linkText?: string; class?: string }
+const { id, title, lead, href, linkText, class: cls = '' } = Astro.props;
+---
+<div class={`flex flex-wrap items-end justify-between gap-x-10 gap-y-3 ${cls}`}>
+  <div class="grid max-w-3xl gap-3">
+    <h2 id={id} class="t-h2"><slot name="title">{title}</slot></h2>
+    {lead && <p class="t-lead measure text-graphite">{lead}</p>}
+  </div>
+  {href && <a href={href} class="inline-flex min-h-11 items-center gap-2 text-small font-semibold">{linkText}<span aria-hidden="true">→</span></a>}
+</div>

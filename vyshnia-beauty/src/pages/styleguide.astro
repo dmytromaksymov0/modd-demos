@@ -1,0 +1,229 @@
+---
+// /styleguide — the design system on one page (noindex). Every component here is the one the pages use.
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Logo from '../components/brand/Logo.astro';
+import Button from '../components/ui/Button.astro';
+import Badge from '../components/ui/Badge.astro';
+import Field from '../components/ui/Field.astro';
+import Chip from '../components/ui/Chip.astro';
+import Icon from '../components/ui/Icon.astro';
+import TipPhoto from '../components/booking/TipPhoto.astro';
+import Steps from '../components/booking/Steps.astro';
+import ServiceTip from '../components/booking/ServiceTip.astro';
+import ShadePicker from '../components/booking/ShadePicker.astro';
+import Summary from '../components/booking/Summary.astro';
+import MasterTip from '../components/booking/MasterTip.astro';
+import SlotPicker from '../components/booking/SlotPicker.astro';
+import WorkCard from '../components/patterns/WorkCard.astro';
+import WorksFilter from '../components/patterns/WorksFilter.astro';
+import SterilityBlock from '../components/patterns/SterilityBlock.astro';
+import MobileBar from '../components/layout/MobileBar.astro';
+import { masters } from '../data/masters';
+import { works } from '../data/works';
+import { groups, services, topPrice, uah, duration } from '../data/services';
+import { shades } from '../data/shades';
+
+const colors = [
+  ['porcelain', '#F3F3F1', 'фон сторінки'], ['porcelain-2', '#E9E8E5', 'тихі блоки'], ['white', '#FFFFFF', 'картки, поля, підсумок'],
+  ['ink', '#221B1E', 'текст'], ['graphite', '#6B6366', 'другорядний текст'], ['line', '#DCD8D7', 'лінії (декор)'],
+  ['line-strong', '#8C8487', 'межі полів і чипів'], ['cherry', '#7E1631', 'лак: кнопки, вибір, акцент'], ['cherry-deep', '#63102A', 'hover'],
+  ['cherry-50', '#F4E7EB', 'тінт обраного'], ['nude', '#E9D6CF', 'порожня типса'], ['alert', '#A3201F', 'помилки форм'],
+];
+const lum = (h: string) => { const c = [1, 3, 5].map((i) => parseInt(h.slice(i, i + 2), 16) / 255).map((x) => (x <= 0.03928 ? x / 12.92 : ((x + 0.055) / 1.055) ** 2.4)); return 0.2126 * c[0] + 0.7152 * c[1] + 0.0722 * c[2]; };
+const cr = (a: string, b: string) => { const [x, y] = [lum(a), lum(b)].sort((p, q) => q - p); return ((x + 0.05) / (y + 0.05)).toFixed(1); };
+const pairs = [
+  ['ink', '#221B1E', 'porcelain', '#F3F3F1'], ['graphite', '#6B6366', 'porcelain', '#F3F3F1'], ['graphite', '#6B6366', 'white', '#FFFFFF'],
+  ['white', '#FFFFFF', 'cherry', '#7E1631'], ['cherry', '#7E1631', 'porcelain', '#F3F3F1'], ['cherry', '#7E1631', 'cherry-50', '#F4E7EB'],
+  ['ink', '#221B1E', 'nude', '#E9D6CF'], ['line-strong', '#8C8487', 'white', '#FFFFFF'], ['alert', '#A3201F', 'white', '#FFFFFF'],
+];
+const type = [
+  ['t-display', 'Display · Geologica 470, SHRP 60', 'Оберіть колір. Ми відповідаємо за нього 21 день.'],
+  ['t-h1', 'H1 · Geologica 480', 'Послуги та ціни'],
+  ['t-h2', 'H2 · Geologica 480', 'Пакет відкривають при вас'],
+  ['t-h3', 'H3 · Geologica 500', 'Манікюр з покриттям'],
+  ['t-lead', 'Lead · Golos Text 400', 'Сухожар 180 °C, 60 хвилин, крафт-пакет з індикатором.'],
+  ['', 'Body 17 · Golos Text 400', 'Зняття старого покриття входить у вартість. Якщо покриття відшарується протягом 21 дня — виправимо безкоштовно.'],
+  ['t-small', 'Small 15', 'Перенести запис можна безкоштовно за 12 годин.'],
+  ['t-caption', 'Caption 14', 'вільно: сьогодні 17:30'],
+  ['t-micro', 'Micro 13 · бейджі, назви відтінків', 'Топ-майстер · +20 %'],
+  ['t-price', 'Price · Geologica 560, tabular', '1 140 ₴'],
+];
+const days = [
+  { iso: '2026-10-21', wd: 'ср', d: 21 }, { iso: '2026-10-22', wd: 'чт', d: 22 }, { iso: '2026-10-23', wd: 'пт', d: 23 }, { iso: '2026-10-24', wd: 'сб', d: 24 },
+  { iso: '2026-10-25', wd: 'нд', d: 25, off: true }, { iso: '2026-10-26', wd: 'пн', d: 26 }, { iso: '2026-10-27', wd: 'вт', d: 27 },
+];
+const slotGroups = [
+  { label: 'Ранок', slots: [{ t: '09:00', busy: true }, { t: '10:00' }, { t: '11:00', busy: true }, { t: '11:30' }] },
+  { label: 'День', slots: [{ t: '13:00' }, { t: '14:30', busy: true }, { t: '15:00' }, { t: '16:00', busy: true }] },
+  { label: 'Вечір', slots: [{ t: '17:30' }, { t: '18:30', busy: true }, { t: '19:00' }, { t: '19:30', busy: true }] },
+];
+const sections = ['Бренд', 'Колір', 'Типографіка', 'Типса', 'Кнопки й бейджі', 'Поля', 'Запис', 'Майстри', 'Хочу так само', 'Стерильність', 'Навігація', 'Іконки'];
+---
+<BaseLayout title="Стайлгайд · Вишня, студія краси" description="Дизайн-система сайту «Вишня»: токени, типографіка, компоненти запису." noindex mobileBar={false}>
+  <div class="wrap pt-8 pb-4">
+    <p class="text-caption text-graphite">Дизайн-система · напрям A «Віяло» · фаза 2</p>
+    <h1 class="t-h1 mt-2">Стайлгайд</h1>
+    <p class="t-lead measure mt-3 text-graphite">Усі кольори, шрифти й відступи — токени з <code>src/styles/tokens.css</code>. Компоненти нижче — ті самі, що на сторінках. Перший екран окремо: <a href="/styleguide/hero/">/styleguide/hero/</a>.</p>
+    <nav class="mt-6 flex flex-wrap gap-2" aria-label="Розділи стайлгайду">{sections.map((s, i) => <a href={`#s${i + 1}`} class="rounded-full border border-line bg-white px-3 py-1.5 text-caption no-underline hover:border-ink">{s}</a>)}</nav>
+  </div>
+
+  <div class="wrap grid grid-cols-1 gap-(--spacing-section) pt-10">
+    <!-- 1 Brand -->
+    <section id="s1" class="grid grid-cols-1 gap-6">
+      <h2 class="t-h2">Бренд</h2>
+      <div class="grid grid-cols-1 gap-4 md:grid-cols-3">
+        <div class="grid min-h-44 place-items-center rounded-card bg-white p-8"><Logo class="h-14 w-auto" /></div>
+        <div class="grid min-h-44 place-items-center rounded-card bg-cherry p-8 text-white"><Logo class="h-14 w-auto" tone="white" /></div>
+        <div class="flex min-h-44 flex-wrap items-center justify-center gap-6 rounded-card bg-porcelain-2 p-6">
+          <Logo class="h-10 w-auto" tagline={false} />
+          <img src="/favicon.svg" width="56" height="56" alt="Фавікон: вишнева типса з відблиском лаку" />
+          <Logo class="h-8 w-auto" mark={false} tagline={false} />
+        </div>
+      </div>
+      <p class="t-small measure text-graphite">Вордмарк «вишня» — контури Geologica 560 з віссю SHRP 100 (гострі закінчення, як свіжий манікюр). Знак — типса: мигдалева арка зверху, рівний край знизу, відблиск лаку. Ягоди немає. SVG: <code>public/brand/</code>.</p>
+    </section>
+
+    <!-- 2 Colour -->
+    <section id="s2" class="grid grid-cols-1 gap-6">
+      <h2 class="t-h2">Колір</h2>
+      <ul class="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">
+        {colors.map(([n, hex, role]) => (
+          <li class="grid grid-cols-1 gap-2 rounded-card bg-white p-3">
+            <span class="block h-16 rounded-field shadow-[inset_0_0_0_1px_rgb(34_27_30/0.1)]" style={`background:var(--color-${n})`}></span>
+            <span class="text-small font-semibold">{n}</span><span class="text-caption text-graphite">{hex} · {role}</span>
+          </li>
+        ))}
+      </ul>
+      <h3 class="t-h3">Контраст (WCAG)</h3>
+      <ul class="grid grid-cols-1 gap-2 sm:grid-cols-3">
+        {pairs.map(([a, ah, b, bh]) => (
+          <li class="flex items-center gap-3 rounded-field bg-white p-3 text-small">
+            {a === 'line-strong'
+              ? <span class="block size-11 shrink-0 rounded-field border-[1.5px]" style={`background:var(--color-${b});border-color:var(--color-${a})`} aria-hidden="true"></span>
+              : <span class="grid size-11 shrink-0 place-items-center rounded-field font-semibold" style={`background:var(--color-${b});color:var(--color-${a});box-shadow:inset 0 0 0 1px rgb(34 27 30/.1)`}>Аа</span>}
+            <span><strong class="num">{cr(ah, bh)} : 1</strong><br /><span class="text-caption text-graphite">{a} на {b}{a === 'line-strong' ? ' · лише межі (≥ 3:1)' : ''}</span></span>
+          </li>
+        ))}
+      </ul>
+      <h3 class="t-h3">Відтінки на типсах</h3>
+      <ul class="flex flex-wrap gap-5">
+        {shades.map((s) => <li class="grid justify-items-center gap-2 text-caption"><span class="tip-sm block h-16 w-10 shadow-[inset_0_0_0_1px_rgb(34_27_30/0.14)]" style={`background:var(${s.token})`}></span><strong class="font-semibold">{s.name}</strong><span class="text-micro text-graphite">{s.note}</span></li>)}
+      </ul>
+    </section>
+
+    <!-- 3 Type -->
+    <section id="s3" class="grid grid-cols-1 gap-6">
+      <h2 class="t-h2">Типографіка</h2>
+      <p class="t-small measure text-graphite">Geologica (заголовки, ціни, вісь SHRP — гострота) + Golos Text (текст, інтерфейс, табличні цифри). Обидва — повна українська кирилиця: і ї є ґ ʼ ₴ №. Self-hosted, 27 + 24 КБ.</p>
+      <dl class="grid grid-cols-1 gap-5">
+        {type.map(([cls, label, sample]) => (
+          <div class="grid grid-cols-1 gap-1 border-b border-line pb-5 md:grid-cols-[14rem_minmax(0,1fr)] md:gap-6">
+            <dt class="text-caption text-graphite">{label}</dt><dd class={cls}>{sample}</dd>
+          </div>
+        ))}
+      </dl>
+      <p class="font-display text-h2">Ґанок, їжак, єнот, ʼяблуко — № 7, 1 140 ₴</p>
+    </section>
+
+    <!-- 4 Tip -->
+    <section id="s4" class="grid grid-cols-1 gap-6">
+      <h2 class="t-h2">Типса — маска фото</h2>
+      <p class="t-small measure text-graphite">Мигдалева арка зверху (<code>--radius-tip</code>), рівний край знизу. Висоти в одному ряду різні — як справжнє віяло в майстра. Порожня типса — <code>nude</code>, поки фото вантажиться.</p>
+      <div class="flex flex-wrap items-end gap-4">
+        <div class="w-20"><TipPhoto src="work-nude-almond" alt="Нюдовий мигдаль" ratio="3 / 4" sizes="80px" /><p class="mt-2 text-caption text-graphite">S · 80</p></div>
+        <div class="w-32"><TipPhoto src="svc-manicure" alt="Вишневий гель-лак" ratio="3 / 4.3" sizes="128px" /><p class="mt-2 text-caption text-graphite">M · 128</p></div>
+        <div class="w-48"><TipPhoto src="tips-scissors" alt="Віяло типс, ножиці й апельсинова паличка" ratio="3 / 4" sizes="192px" position="70% 50%" /><p class="mt-2 text-caption text-graphite">L · 192</p></div>
+        <div class="w-64"><TipPhoto src="work-pedi-milk" alt="Молочний педикюр на бежевому пледі" ratio="4 / 5" sizes="256px" /><p class="mt-2 text-caption text-graphite">XL · 256, 4:5</p></div>
+        <div class="w-24"><span class="tip block" style="aspect-ratio:3/4"></span><p class="mt-2 text-caption text-graphite">порожня</p></div>
+      </div>
+    </section>
+
+    <!-- 5 Buttons & badges -->
+    <section id="s5" class="grid grid-cols-1 gap-6">
+      <h2 class="t-h2">Кнопки й бейджі</h2>
+      <div class="flex flex-wrap items-center gap-3">
+        <Button iconAfter="arrow-right">Далі: майстер</Button><Button variant="secondary">Усі послуги</Button><Button variant="quiet">Що входить</Button>
+        <Button size="lg">Записатися</Button><Button size="sm">Записатися</Button><Button disabled>Недоступно</Button>
+        <span class="rounded-card bg-cherry p-3"><Button variant="light" icon="send">Telegram</Button></span>
+      </div>
+      <div class="flex flex-wrap items-center gap-2">
+        <Badge tone="cherry">Обрано</Badge><Badge tone="soft">Топ-майстер · +20 %</Badge><Badge>Майстер</Badge><Badge tone="note">Приклад відгуку</Badge><Badge tone="open">щодня 9:00–21:00</Badge>
+      </div>
+    </section>
+
+    <!-- 6 Fields -->
+    <section id="s6" class="grid grid-cols-1 gap-6">
+      <h2 class="t-h2">Поля</h2>
+      <form class="grid max-w-3xl gap-5 rounded-card bg-white p-6 md:grid-cols-2" novalidate>
+        <Field id="sg-name" label="Імʼя" autocomplete="given-name" required value="Катерина" />
+        <Field id="sg-phone" label="Телефон" type="tel" autocomplete="tel" inputmode="tel" required value="+380 67 12" error="Номер закороткий: потрібно 9 цифр після +380" />
+        <Field id="sg-note" label="Коментар для майстрині" textarea hint="Наприклад: «знімати чуже покриття»" class="md:col-span-2" />
+        <fieldset class="flex flex-wrap gap-2 md:col-span-2"><legend class="mb-2 text-small font-semibold">Куди нагадати</legend><Chip name="sg-remind" value="tg" checked>Telegram</Chip><Chip name="sg-remind" value="viber">Viber</Chip><Chip name="sg-remind" value="sms">SMS</Chip></fieldset>
+        <label class="flex items-start gap-3 text-small md:col-span-2"><input type="checkbox" class="mt-1 size-5 accent-cherry" checked /><span>Погоджуюсь на обробку даних для запису</span></label>
+      </form>
+    </section>
+
+    <!-- 7 Booking -->
+    <section id="s7" class="grid grid-cols-1 gap-8">
+      <h2 class="t-h2">Запис за 4 кроки</h2>
+      <div class="grid grid-cols-1 gap-3"><h3 class="t-h3">Кроки</h3><Steps current={1} /><Steps current={3} /><p class="t-caption text-graphite">До 768 px — «Крок 1 з 4 · Послуга» з наступним кроком і чотирма рисками; «з» завжди мала.</p></div>
+      <div class="grid grid-cols-1 gap-3">
+        <h3 class="t-h3">Крок 1 — віяло послуг</h3>
+        <div class="no-scrollbar -mx-(--spacing-gutter) flex snap-x snap-mandatory gap-3 overflow-x-auto px-(--spacing-gutter) sm:mx-0 sm:grid sm:grid-cols-4 sm:items-end sm:gap-4 sm:px-0">
+          {groups.map((g, i) => <div class="w-[calc((100%-1.5rem)/2.3)] shrink-0 snap-start sm:w-auto"><ServiceTip name="sg-posluga" value={g.id} title={g.name} photo={g.photo} alt={g.lead} minutes={g.minutes} from={g.from} checked={i === 1} ratio={['3 / 4', '3 / 4.3', '3 / 4.15', '3 / 3.9'][i]} /></div>)}
+        </div>
+        <ShadePicker name="sg-kolir" checked="moloko" legend="Колір покриття для педикюру" />
+      </div>
+      <div class="grid grid-cols-1 gap-3">
+        <h3 class="t-h3">Крок 3 — день і час</h3>
+        <div class="rounded-card bg-porcelain-2 p-4 sm:p-6"><SlotPicker days={days} day="2026-10-22" groups={slotGroups} checked="17:30" /></div>
+      </div>
+      <div class="grid grid-cols-1 gap-4 lg:grid-cols-[minmax(0,1fr)_19.5rem]">
+        <div class="grid content-start gap-3">
+          <h3 class="t-h3">Підсумок</h3>
+          <p class="t-small measure text-graphite">Завжди поруч із кроками. Гарантія — датою: день візиту + 21 день, лише для покриттів. На мобільному — нижня панель з ціною й кнопкою (нижче — зразок без фіксації).</p>
+          <div class="relative max-w-md [&_.summary-bar]:static [&_.summary-bar]:lg:flex"><Summary variant="bar" rows={[]} total={1140} totalNote="Педикюр · Дарина, топ" guarantee="12 листопада" cta="Контакти" /></div>
+        </div>
+        <Summary variant="panel" step={3} rows={[{ label: 'Послуга', value: 'Педикюр з покриттям' }, { label: 'Колір', value: 'Молоко' }, { label: 'Майстер', value: 'Дарина Мельник, топ' }, { label: 'Коли', value: 'чт 22 жовтня, 17:30' }]} total={topPrice(950)} totalNote="Разом · топ +20 %" guarantee="12 листопада" cta="Далі: контакти" />
+      </div>
+    </section>
+
+    <!-- 8 Masters -->
+    <section id="s8" class="grid grid-cols-1 gap-6">
+      <h2 class="t-h2">Майстри</h2>
+      <p class="t-small measure text-graphite">Фото «за роботою» в типсі (на безкоштовних стоках немає шести портретів в одному стилі). Категорія — факт: топ-майстер +20 % до ціни, бо швидша й веде складні дизайни.</p>
+      <div class="grid max-w-4xl grid-cols-2 gap-x-5 gap-y-10 md:grid-cols-3">{masters.map((m, i) => <MasterTip master={m} selectable name="sg-maister" checked={i === 0} />)}</div>
+    </section>
+
+    <!-- 9 Works -->
+    <section id="s9" class="grid grid-cols-1 gap-6">
+      <h2 class="t-h2">Хочу так само</h2>
+      <WorksFilter />
+      <div class="grid grid-cols-2 gap-x-4 gap-y-8 md:grid-cols-3 lg:grid-cols-4">{works.slice(0, 8).map((w) => <WorkCard work={w} />)}</div>
+    </section>
+
+    <!-- 10 Sterility -->
+    <section id="s10" class="grid grid-cols-1 gap-6">
+      <SterilityBlock />
+      <div class="grid max-w-xl grid-cols-2 gap-4 text-caption text-graphite">
+        <div class="pouch-demo" data-state="before"><p class="mb-2">Індикатор до циклу</p><span class="block h-3 rounded-full bg-nude"></span></div>
+        <div><p class="mb-2">Після 180 °C · 60 хв</p><span class="block h-3 rounded-full bg-[linear-gradient(90deg,var(--color-shade-tsehla),var(--color-cherry))]"></span></div>
+      </div>
+    </section>
+
+    <!-- 11 Navigation -->
+    <section id="s11" class="grid grid-cols-1 gap-6">
+      <h2 class="t-h2">Навігація</h2>
+      <p class="t-small measure text-graphite">Шапка — вгорі цієї сторінки (до 1280 px меню в <code>details</code>, працює без JS). Нижня панель на мобільному — для сторінок без підсумку запису. Футер — внизу.</p>
+      <div class="max-w-md"><MobileBar fixed={false} /></div>
+    </section>
+
+    <!-- 12 Icons -->
+    <section id="s12" class="grid grid-cols-1 gap-6">
+      <h2 class="t-h2">Іконки · Lucide</h2>
+      <ul class="flex flex-wrap gap-3">
+        {['arrow-right', 'check', 'phone', 'send', 'map-pin', 'clock', 'calendar', 'shield-check', 'thermometer', 'package', 'zap', 'gift', 'instagram', 'message-circle', 'alert-circle', 'menu', 'x'].map((n) => <li class="grid w-24 justify-items-center gap-2 rounded-field bg-white p-3 text-micro text-graphite"><Icon name={n} size={24} class="text-ink" />{n}</li>)}
+      </ul>
+    </section>
+  </div>
+</BaseLayout>

@@ -1,0 +1,23 @@
+---
+// Wordmark from font outlines (design/phase-2/make_logo.py): the cherry tip with a lacquer gloss streak,
+// «вишня» in Geologica (follows currentColor) and the tagline in graphite. No berry.
+import P from './logo-paths.json';
+interface Props { class?: string; tagline?: boolean; mark?: boolean; title?: string; tone?: 'ink' | 'white' }
+const { class: cls = 'h-10 w-auto', tagline = true, mark = true, title = 'Вишня, студія краси', tone = 'ink' } = Astro.props;
+const x0 = mark ? 0 : P.tipWidth + Math.round(P.tipWidth * 0.5);
+const g = P.gloss;
+---
+<svg class={cls} viewBox={`${x0} 0 ${P.width - x0} ${P.height}`} role="img" aria-label={title} data-tone={tone}>
+  {mark && <path class="logo-tip" d={P.tip} />}
+  {mark && <rect x={g[0]} y={g[1]} width={g[2]} height={g[3]} rx={g[4]} class="logo-gloss" />}
+  <path fill="currentColor" transform={P.wordTransform} d={P.word} />
+  {tagline && <path class="logo-tag" transform={P.tagTransform} d={P.tag} />}
+</svg>
+<style>
+  .logo-tip { fill: var(--color-cherry); }
+  .logo-gloss { fill: var(--color-white); fill-opacity: 0.5; }
+  .logo-tag { fill: var(--color-graphite); }
+  svg[data-tone='white'] .logo-tag { fill: var(--color-nude); }
+  svg[data-tone='white'] .logo-tip { fill: var(--color-white); }
+  svg[data-tone='white'] .logo-gloss { fill: var(--color-cherry); fill-opacity: 0.35; }
+</style>

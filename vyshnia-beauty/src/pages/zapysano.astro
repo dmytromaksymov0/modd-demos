@@ -1,0 +1,72 @@
+---
+// «Дякуємо» after a booking or a certificate request (/api/lead → 303, or fetch → location). Reads the choice from the
+// query to confirm it and says what happens next. noindex.
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Button from '../components/ui/Button.astro';
+import Icon from '../components/ui/Icon.astro';
+import TipPhoto from '../components/booking/TipPhoto.astro';
+import { site } from '../config/site';
+const nextBooking = [
+  ['send', 'Підтвердження', 'Протягом 15 хвилин у робочий час адміністраторка підтвердить запис у вибраному месенджері або дзвінком.'],
+  ['calendar', 'Нагадування', 'За день до візиту нагадаємо час і адресу. Перенести можна безкоштовно за 12 годин.'],
+  ['package', 'Візит', 'Майстриня відкриє крафт-пакет з інструментами при вас. Оплата на місці — картка або готівка.'],
+];
+const nextCert = [
+  ['send', 'Посилання на оплату', 'Протягом 15 хвилин у робочий час адміністраторка надішле посилання на оплату карткою.'],
+  ['gift', 'Сертифікат', 'Після оплати електронний сертифікат прийде в месенджер, паперовий — чекатиме в крафт-конверті в студії.'],
+  ['calendar', '6 місяців', 'Сертифікат діє пів року з дня оплати — на будь-яку послугу або на ту, яку ви обрали.'],
+];
+---
+<BaseLayout title="Дякуємо! Запис прийнято · Вишня" description="Запис прийнято — адміністраторка підтвердить його в месенджері або дзвінком." noindex>
+  <section class="wrap grid gap-8 pt-8 lg:grid-cols-[minmax(0,7fr)_minmax(0,5fr)] lg:gap-12 lg:pt-12">
+    <div class="grid content-start gap-5">
+      <p class="flex items-center gap-2 font-display text-small font-semibold text-cherry"><Icon name="check" size={18} /><span data-kicker>Запис прийнято</span></p>
+      <h1 class="t-h1" data-title>Дякуємо! Чекаємо на вас</h1>
+      <dl class="grid max-w-md grid-cols-[6.5rem_minmax(0,1fr)] gap-x-3 gap-y-2 rounded-card bg-white p-5 text-small" data-summary hidden></dl>
+      <h2 class="font-display text-h3 font-medium">Що далі</h2>
+      <ol class="grid gap-3" data-next-booking>
+        {nextBooking.map(([icon, t, d], i) => (
+          <li class="grid grid-cols-[2.5rem_minmax(0,1fr)] gap-3 rounded-field bg-white p-4"><span class="grid size-10 place-items-center rounded-full bg-cherry-50 text-cherry"><Icon name={icon} size={18} /></span><div><p class="font-semibold">{i + 1}. {t}</p><p class="t-small text-graphite">{d}</p></div></li>
+        ))}
+      </ol>
+      <ol class="grid gap-3" data-next-cert hidden>
+        {nextCert.map(([icon, t, d], i) => (
+          <li class="grid grid-cols-[2.5rem_minmax(0,1fr)] gap-3 rounded-field bg-white p-4"><span class="grid size-10 place-items-center rounded-full bg-cherry-50 text-cherry"><Icon name={icon} size={18} /></span><div><p class="font-semibold">{i + 1}. {t}</p><p class="t-small text-graphite">{d}</p></div></li>
+        ))}
+      </ol>
+      <p class="t-small text-graphite">Щось змінилось? <a href={site.phoneHref} class="font-semibold text-ink num">{site.phone}</a> або <a href={site.telegram} class="font-semibold text-ink">Telegram</a>.</p>
+      <div class="flex flex-wrap gap-3"><Button href="/" variant="secondary">На головну</Button><Button href="/sterylnist/" variant="quiet" iconAfter="arrow-right">Як ми стерилізуємо</Button></div>
+    </div>
+    <div class="mx-auto hidden w-full max-w-xs lg:block"><TipPhoto src="sterile-kraft" alt="Пушер, кюретка й пилка в крафт-пакеті" ratio="4 / 5" sizes="22rem" /></div>
+  </section>
+  <script>
+    import { serviceById, masterById, guaranteeIso, parseIso } from '../lib/booking';
+    import { shades } from '../data/shades';
+    const p = new URLSearchParams(location.search);
+    const $ = (s: string) => document.querySelector<HTMLElement>(s);
+    const dl = $('[data-summary]');
+    const fmt = (iso: string) => new Intl.DateTimeFormat('uk-UA', { weekday: 'short', day: 'numeric', month: 'long' }).format(parseIso(iso));
+    const rows: [string, string][] = [];
+    if (p.get('typ') === 'sertyfikat') {
+      $('[data-kicker]')!.textContent = 'Заявку на сертифікат прийнято';
+      $('[data-title]')!.textContent = 'Дякуємо! Подарунок майже готовий';
+      $('[data-next-booking]')!.hidden = true; $('[data-next-cert]')!.hidden = false;
+      document.title = 'Дякуємо! Заявку на сертифікат прийнято · Вишня';
+      const sum = Number(p.get('suma')); if (sum) rows.push(['Сертифікат', `${sum.toLocaleString('uk-UA')} ₴`]);
+      const d = p.get('dostavka'); if (d) rows.push(['Отримання', d === 'paper' ? 'крафт-конверт у студії' : d === 'viber' ? 'у Viber' : 'у Telegram']);
+    } else {
+      const s = serviceById(p.get('posluga') ?? ''); const m = masterById(p.get('maister') ?? '');
+      if (s) {
+        rows.push(['Послуга', s.name]);
+        const sh = shades.find((x) => x.id === p.get('kolir')); if (sh && s.coat) rows.push(['Колір', sh.name]);
+        rows.push(['Майстер', m ? m.name : 'будь-яка вільна']);
+        const d = p.get('data'), t = p.get('chas'); if (d) rows.push(['Коли', `${fmt(d)}${t ? `, ${t}` : ''}`]);
+        if (d && s.coat) rows.push(['Гарантія', `до ${fmt(guaranteeIso(d))}`]);
+      }
+    }
+    if (dl && rows.length) {
+      for (const [k, v] of rows) { const dt = document.createElement('dt'); dt.className = 'text-graphite'; dt.textContent = k; const dd = document.createElement('dd'); dd.className = 'font-semibold'; dd.textContent = v; dl.append(dt, dd); }
+      dl.hidden = false;
+    }
+  </script>
+</BaseLayout>

@@ -1,0 +1,84 @@
+---
+// Послуги та ціни: the price list IS the first screen — groups nav (sticky on desktop, chips on phones), every service
+// with what's included, how long it lasts, both categories and «Записатися» that opens the booking with it.
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHead from '../../components/page/PageHead.astro';
+import GuaranteeSection from '../../components/home/GuaranteeSection.astro';
+import Button from '../../components/ui/Button.astro';
+import Icon from '../../components/ui/Icon.astro';
+import TipPhoto from '../../components/booking/TipPhoto.astro';
+import { groups, topPrice, uah, duration } from '../../data/services';
+import { servicesIn } from '../../lib/booking';
+const titles: Record<string, string> = { manicure: 'Манікюр', pedicure: 'Педикюр', brows: 'Брови', lashes: 'Вії' };
+const leads: Record<string, string> = {
+  manicure: 'Апаратний або комбінований — майстриня підбере за станом кутикули. Гель-лак під кутикулу, без пропилів.',
+  pedicure: 'Стопи апаратом: тріщини, натоптиші, вросші кути — без води й замочування.',
+  brows: 'Форма під риси обличчя, фарба або хна, ламінування для неслухняних брів.',
+  lashes: 'Ламінування для своїх вій або легкий 2D — без ефекту «ляльки».',
+};
+const crumbs = [{ href: '/', label: 'Головна' }, { href: '/poslugy/', label: 'Послуги та ціни' }];
+---
+<BaseLayout title="Послуги та ціни · манікюр, педикюр, брови, вії · Вишня, Харків" description="Ціни у майстрині й топ-майстрині (+20 %), що входить і скільки тримається: манікюр від 750 ₴, педикюр від 950 ₴, брови від 450 ₴, вії від 800 ₴. Зняття старого покриття входить." current="/poslugy/" og="poslugy" crumb="Послуги та ціни">
+  <PageHead title="Послуги та ціни" crumb="Послуги та ціни" lead="Зняття старого покриття входить у вартість. У топ-майстрині — на 20 % дорожче: вона швидша на 30–40 хвилин і веде складні дизайни." />
+
+  <div class="wrap mt-6 grid grid-cols-1 gap-8 lg:mt-8 lg:grid-cols-[14rem_minmax(0,1fr)] lg:gap-12">
+    <aside class="lg:sticky lg:top-24 lg:self-start">
+      <nav aria-label="Групи послуг" class="no-scrollbar -mx-(--spacing-gutter) flex gap-2 overflow-x-auto px-(--spacing-gutter) lg:mx-0 lg:grid lg:gap-1 lg:overflow-visible lg:px-0">
+        {groups.map((g) => (
+          <a href={`#${g.id}`} class="flex min-h-11 shrink-0 items-center gap-3 rounded-full border border-line bg-white py-1 pr-4 pl-1 text-small font-semibold no-underline hover:border-ink lg:rounded-field lg:border-0 lg:bg-transparent lg:pl-0">
+            <span class="tip-sm block h-9 w-6 shrink-0 overflow-hidden"><TipPhoto src={g.photo} alt="" ratio="2 / 3" sizes="24px" widths={[48]} class="!rounded-[999px_999px_6px_6px]" /></span>{titles[g.id]}<span class="ml-auto font-normal text-graphite num">від {uah(g.from)}</span>
+          </a>
+        ))}
+      </nav>
+      <div class="mt-6 hidden gap-2 rounded-card bg-white p-4 text-caption lg:grid">
+        <p class="font-semibold text-ink">Топ-майстриня · +20 %</p>
+        <p class="text-graphite">7+ років досвіду, швидше на 30–40 хв, складні дизайни й архітектура. Ціну видно в записі до підтвердження.</p>
+      </div>
+    </aside>
+
+    <div class="grid gap-12">
+      {groups.map((g) => (
+        <section id={g.id} class="scroll-mt-24" aria-labelledby={`${g.id}-title`}>
+          <div class="flex flex-wrap items-end justify-between gap-3 border-b-2 border-ink pb-3">
+            <h2 id={`${g.id}-title`} class="t-h2">{titles[g.id]}</h2>
+            <p class="t-caption text-graphite">майстриня · <span class="text-ink">топ +20 %</span></p>
+          </div>
+          <p class="t-small measure mt-3 text-graphite">{leads[g.id]}</p>
+          <ul class="mt-2">
+            {servicesIn(g.id).map((s) => (
+              <li class="grid gap-x-6 gap-y-2 border-b border-line py-4 sm:grid-cols-[minmax(0,1fr)_auto_auto] sm:items-center">
+                <div class="grid gap-1">
+                  <h3 class="font-display text-h3 font-medium">{s.name}</h3>
+                  <p class="t-caption text-graphite">{s.includes}</p>
+                  <p class="t-caption flex flex-wrap gap-x-4 text-graphite"><span class="flex items-center gap-1.5"><Icon name="clock" size={15} />{duration(s.minutes)}</span><span>тримається: {s.lasts}</span>{s.coat && <span class="font-semibold text-cherry">гарантія 21 день</span>}</p>
+                </div>
+                <p class="flex items-baseline gap-4 sm:justify-end"><span class="t-price text-[1.5rem]">{uah(s.price)}</span><span class="num text-small text-graphite">топ {uah(topPrice(s.price))}</span></p>
+                <a href={`/zapys/?posluga=${s.id}#zapys`} class="inline-flex min-h-11 w-fit items-center gap-2 rounded-full border-[1.5px] border-ink px-4 text-small font-semibold no-underline hover:bg-ink hover:text-white">Записатися<span class="sr-only">: {s.name}</span><Icon name="arrow-right" size={16} /></a>
+              </li>
+            ))}
+          </ul>
+        </section>
+      ))}
+    </div>
+  </div>
+
+  <section class="wrap pt-(--spacing-section)" aria-labelledby="extra-title">
+    <div class="grid grid-cols-1 gap-8 lg:grid-cols-2 lg:gap-12">
+      <div class="grid content-start gap-4">
+        <h2 id="extra-title" class="t-h2">Паралельно в чотири руки</h2>
+        <p class="t-lead text-graphite">Манікюр і педикюр одночасно двома майстринями: замість 3 год 45 хв — близько 2 годин. Платите суму двох послуг, без доплати за паралель.</p>
+        <p><Button href="/zapys/?posluga=mani-coat#zapys" variant="secondary" iconAfter="arrow-right">Записатися на манікюр</Button></p>
+        <p class="t-caption text-graphite">Напишіть «паралельно» в коментарі — адміністраторка підбере другу майстриню на той самий час.</p>
+      </div>
+      <div class="grid content-start gap-3 rounded-card bg-white p-6">
+        <h2 class="font-display text-h3 font-medium">Доплати й правила</h2>
+        <dl class="grid gap-2 text-small">
+          {[['Зняття чужого покриття', 'входить'], ['Дизайн, 1 ніготь', 'від 30 ₴'], ['Френч на всі нігті', '+100 ₴'], ['Ремонт 1 нігтя', '50 ₴'], ['Довжина 3+ при нарощуванні', '+150 ₴'], ['Перенести або скасувати за 12 год', 'безкоштовно'], ['Запізнення більше 15 хв', 'скоротимо послугу або перенесемо']].map(([k, v]) => (
+            <div class="flex justify-between gap-4 border-b border-line pb-2"><dt>{k}</dt><dd class="text-right font-semibold tabular-nums">{v}</dd></div>
+          ))}
+        </dl>
+      </div>
+    </div>
+  </section>
+  <GuaranteeSection />
+</BaseLayout>

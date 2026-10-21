@@ -1,0 +1,49 @@
+---
+// How to find us + FAQ. No heavy map iframe: address, three steps from the metro, buttons to Google / Apple Maps.
+import Icon from '../ui/Icon.astro';
+import Button from '../ui/Button.astro';
+import TipPhoto from '../booking/TipPhoto.astro';
+import { site } from '../../config/site';
+import { faq } from '../../data/faq';
+const maps = 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent('Харків, станція метро Архітектора Бекетова');
+---
+<section class="wrap pt-(--spacing-section)" aria-labelledby="contacts-title" id="kontakty">
+  <div class="grid gap-10 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:gap-14">
+    <div class="grid content-start gap-6">
+      <h2 id="contacts-title" class="t-h2">Як нас знайти</h2>
+      <div class="grid grid-cols-[6rem_minmax(0,1fr)] items-start gap-5 sm:grid-cols-[7.5rem_minmax(0,1fr)]">
+        <TipPhoto src="interior-table" alt="Світлий манікюрний стіл з квітами й склянкою пензлів" ratio="3 / 4" sizes="120px" widths={[120, 240]} position="55% 50%" />
+        <div class="grid gap-2">
+          <p class="font-display text-h3 font-medium">{site.address}</p>
+          <p class="t-small text-graphite">{site.addressNote}</p>
+          <p class="t-small flex items-center gap-2"><Icon name="clock" size={18} class="text-cherry" />{site.hours}</p>
+          <p class="t-small flex items-center gap-2"><Icon name="zap" size={18} class="text-cherry" />Світло є: генератор і станція</p>
+        </div>
+      </div>
+      <ol class="grid gap-3 border-l-2 border-cherry pl-5 text-small">
+        <li><strong class="font-semibold">Метро «Архітектора Бекетова»</strong>, вихід до вулиці — і 4 хвилини пішки.</li>
+        <li><strong class="font-semibold">Арка між будинками 5 і 7</strong>, у дворі — двері з табличкою «Вишня».</li>
+        <li><strong class="font-semibold">2 поверх</strong>, дзвінок праворуч. Вас зустріне адміністраторка.</li>
+      </ol>
+      <div class="grid gap-3">
+        <a href={site.phoneHref} class="inline-flex min-h-12 w-fit items-center font-display text-[2rem] leading-none font-medium no-underline num">{site.phone}</a>
+        <div class="flex flex-wrap gap-2">
+          <Button href={site.telegram} variant="secondary" icon="send">Telegram</Button>
+          <Button href={site.viber} variant="secondary" icon="message-circle">Viber</Button>
+          <Button href={maps} variant="quiet" icon="map-pin">Відкрити в Google Maps</Button>
+        </div>
+      </div>
+    </div>
+    <div class="grid content-start gap-4">
+      <h2 class="t-h2">Часті запитання</h2>
+      <div class="grid">
+        {faq.map((f) => (
+          <details class="faq group border-b border-line py-1">
+            <summary class="flex min-h-14 cursor-pointer list-none items-center justify-between gap-4 py-3 font-display text-h3 font-medium [&::-webkit-details-marker]:hidden">{f.q}<span class="shrink-0 transition-transform group-open:rotate-180"><Icon name="chevron-down" size={22} /></span></summary>
+            <p class="t-body measure pb-5 text-ink">{f.a}</p>
+          </details>
+        ))}
+      </div>
+    </div>
+  </div>
+</section>

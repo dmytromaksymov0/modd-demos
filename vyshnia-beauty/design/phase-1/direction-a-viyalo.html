@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang="uk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Вишня · A «Віяло»</title>
+<link rel="stylesheet" href="fonts/fontsource-variable-geologica/full.css">
+<link rel="stylesheet" href="fonts/fontsource-variable-golos-text/index.css">
+<style>
+:root{
+  --c-bg:#F3F3F1;        /* фарфор: холодный светлый, не кремовый */
+  --c-surface:#FFFFFF;
+  --c-ink:#221B1E;       /* чорнило з вишневим відтінком */
+  --c-muted:#6B6366;
+  --c-line:#DCD8D7;
+  --c-cherry:#7E1631;    /* вишневий лак */
+  --c-cherry-ink:#FFFFFF;
+  --c-nude:#E9D6CF;      /* колір порожньої типси */
+  --f-display:'Geologica Variable', system-ui, sans-serif;
+  --f-text:'Golos Text Variable', system-ui, sans-serif;
+  --r-tip: 999px 999px 18px 18px;   /* форма типси: мигдаль зверху, рівний край знизу */
+  --s-gutter:clamp(16px,3.2vw,40px);
+}
+*{box-sizing:border-box;margin:0}
+body{background:var(--c-bg);color:var(--c-ink);font:400 16px/1.5 var(--f-text);-webkit-font-smoothing:antialiased}
+a{color:inherit}
+ol{padding:0;list-style:none}
+header *{white-space:nowrap}
+.wrap{padding:0 var(--s-gutter);max-width:1440px;margin:0 auto}
+
+/* шапка */
+header{display:flex;align-items:center;gap:28px;height:68px}
+.logo{font:600 22px/1 var(--f-display);letter-spacing:-.01em;text-decoration:none;display:flex;align-items:baseline;gap:8px}
+.logo i{font-style:normal;font:400 12px/1 var(--f-text);color:var(--c-muted);letter-spacing:.02em}
+nav{display:flex;gap:22px;font-size:15px}
+nav a{text-decoration:none;color:var(--c-ink)}
+.h-right{margin-left:auto;display:flex;align-items:center;gap:18px;font-size:15px}
+.open{display:flex;align-items:center;gap:8px;color:var(--c-muted)}
+.open::before{content:"";width:7px;height:7px;border-radius:50%;background:#2F7A4F}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:44px;padding:0 20px;border-radius:999px;border:0;font:600 15px/1 var(--f-text);text-decoration:none;cursor:pointer}
+.btn-cherry{background:var(--c-cherry);color:var(--c-cherry-ink)}
+.btn-ghost{background:transparent;border:1.5px solid var(--c-ink);color:var(--c-ink)}
+.burger{display:none}
+
+/* перший екран */
+.hero{padding-top:clamp(20px,4vh,44px)}
+.top{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:end;gap:24px}
+h1{font:500 clamp(34px,4.6vw,66px)/1.02 var(--f-display);letter-spacing:-.025em;font-variation-settings:"SHRP" 60;max-width:16ch}
+h1 em{font-style:normal;color:var(--c-cherry);font-variation-settings:"SHRP" 100}
+.shades{display:flex;gap:10px;align-items:center;font-size:13px;color:var(--c-muted)}
+.shade{display:flex;flex-direction:column;align-items:center;gap:6px}
+.shade b{display:block;width:26px;height:40px;border-radius:var(--r-tip);box-shadow:inset 0 0 0 1px rgba(0,0,0,.06)}
+.shade span{font-size:12px;line-height:1}
+
+/* кроки */
+.steps{display:flex;gap:6px;margin-top:clamp(18px,3vh,32px);font-size:14px;flex-wrap:wrap}
+.step{display:flex;align-items:center;gap:8px;padding:8px 14px 8px 8px;border-radius:999px;border:1px solid var(--c-line);background:var(--c-surface);color:var(--c-muted)}
+.step b{display:grid;place-items:center;width:24px;height:24px;border-radius:50%;background:var(--c-bg);font-weight:600;font-size:13px;color:var(--c-ink)}
+.step.on{border-color:var(--c-ink);color:var(--c-ink)}
+.step.on b{background:var(--c-cherry);color:#fff}
+
+/* віяло послуг */
+.rack{display:grid;grid-template-columns:repeat(4,minmax(0,1fr)) minmax(0,1.15fr);gap:clamp(10px,1.4vw,18px);margin-top:16px;align-items:end}
+.tip{position:relative;display:flex;flex-direction:column;gap:10px;text-decoration:none;border:0;background:none;padding:0;text-align:left;font:inherit;color:inherit;cursor:pointer}
+.tip .ph{position:relative;aspect-ratio:3/4.1;border-radius:var(--r-tip);overflow:hidden;background:var(--c-nude)}
+.tip:nth-child(2) .ph{aspect-ratio:3/4.5}
+.tip:nth-child(3) .ph{aspect-ratio:3/4.25}
+.tip:nth-child(4) .ph{aspect-ratio:3/3.9}
+.tip img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.tip.on .ph{outline:3px solid var(--c-cherry);outline-offset:4px}
+.tip .nm{font:500 18px/1.15 var(--f-display);letter-spacing:-.01em}
+.tip .mt{font-size:14px;color:var(--c-muted);display:flex;justify-content:space-between;gap:8px}
+.tip .mt strong{color:var(--c-ink);font-weight:600;font-variant-numeric:tabular-nums}
+.tip .chk{position:absolute;top:14px;left:50%;translate:-50% 0;background:var(--c-cherry);color:#fff;font:600 12px/1 var(--f-text);padding:6px 10px;border-radius:999px}
+
+/* підсумок */
+.sum{background:var(--c-surface);border-radius:22px;padding:20px;display:flex;flex-direction:column;gap:12px;box-shadow:0 1px 0 var(--c-line)}
+.sum h2{font:500 15px/1 var(--f-text);color:var(--c-muted);display:flex;justify-content:space-between}
+.row{display:flex;justify-content:space-between;gap:10px;font-size:15px;padding-bottom:10px;border-bottom:1px solid var(--c-line)}
+.row span{color:var(--c-muted)}
+.row.empty strong{color:#9A9396;font-weight:400}
+.total{display:flex;justify-content:space-between;align-items:baseline;font:500 15px/1 var(--f-text)}
+.total strong{font:600 30px/1 var(--f-display);font-variant-numeric:tabular-nums;letter-spacing:-.02em}
+.guar{display:flex;gap:10px;align-items:center;font-size:13px;line-height:1.35;color:var(--c-ink);background:var(--c-bg);padding:10px 12px;border-radius:12px}
+.guar b{flex:none;width:14px;height:22px;border-radius:var(--r-tip);background:var(--c-cherry)}
+.sum .btn{width:100%}
+
+.trust{display:flex;gap:28px;margin:22px 0 28px;font-size:14px;color:var(--c-muted);flex-wrap:wrap}
+.trust strong{color:var(--c-ink);font-weight:600}
+
+a:focus-visible,button:focus-visible{outline:3px solid var(--c-cherry);outline-offset:3px}
+
+@media (max-width:1340px){.open{display:none}nav{gap:18px}}
+@media (max-width:1100px){
+  nav{display:none}
+  .rack{grid-template-columns:repeat(4,minmax(0,1fr))}
+  .sum{grid-column:1/-1}
+}
+@media (max-width:640px){
+  header{height:58px;gap:12px}
+  .open,.h-right .phone{display:none}
+  .burger{display:inline-flex;width:44px;padding:0}
+  .h-right .btn-cherry{display:none}
+  .top{grid-template-columns:1fr}
+  h1{font-size:31px;max-width:none}
+  .shades{display:none}
+  .steps{margin-top:14px;gap:4px;font-size:13px;flex-wrap:nowrap;overflow:hidden}
+  .step{padding:6px 10px 6px 6px}
+  .step:not(.on) em{display:none}
+  .step em{font-style:normal}
+  .rack{grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin-top:12px}
+  .tip .ph,.tip:nth-child(n) .ph{aspect-ratio:3/4.6}
+  .tip .nm{font-size:14px}
+  .tip .mt{flex-direction:column;gap:0;font-size:12.5px}
+  .tip .chk{display:none}
+  .sum{position:fixed;left:8px;right:8px;bottom:8px;z-index:5;border-radius:18px;padding:12px 12px 12px 16px;flex-direction:row;align-items:center;box-shadow:0 10px 30px rgba(34,27,30,.18)}
+  .sum h2,.sum .row,.sum .guar{display:none}
+  .total{flex-direction:column;align-items:flex-start;gap:4px;font-size:12.5px;color:var(--c-muted)}
+  .total strong{font-size:22px;color:var(--c-ink)}
+  .sum .btn{width:auto;margin-left:auto}
+  .trust{display:none}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <a class="logo" href="#">вишня <i>студія краси · Харків</i></a>
+    <nav><a href="#">Послуги та ціни</a><a href="#">Майстри</a><a href="#">Роботи</a><a href="#">Стерильність</a><a href="#">Сертифікати</a><a href="#">Контакти</a></nav>
+    <div class="h-right">
+      <span class="open">Відчинено до 21:00</span>
+      <a class="phone" href="tel:+380570002121">057 000 21 21</a>
+      <a class="btn btn-cherry" href="#zapys">Записатися</a>
+      <button class="btn btn-ghost burger" aria-label="Меню">≡</button>
+    </div>
+  </header>
+
+  <main class="hero" id="zapys">
+    <div class="top">
+      <h1>Оберіть колір. Ми відповідаємо за нього <em>21&nbsp;день</em>.</h1>
+      <div class="shades" aria-label="Відтінки сезону">
+        <div class="shade"><b style="background:#7E1631"></b><span>Вишня</span></div>
+        <div class="shade"><b style="background:#E9D6CF"></b><span>Пудра</span></div>
+        <div class="shade"><b style="background:#F4EFEC"></b><span>Молоко</span></div>
+        <div class="shade"><b style="background:#B4473F"></b><span>Цегла</span></div>
+        <div class="shade"><b style="background:#2A2326"></b><span>Ніч</span></div>
+      </div>
+    </div>
+
+    <ol class="steps" aria-label="Запис за 4 кроки" data-check="steps">
+      <li class="step on"><b>1</b><em>Послуга</em></li>
+      <li class="step"><b>2</b><em>Майстер</em></li>
+      <li class="step"><b>3</b><em>День і час</em></li>
+      <li class="step"><b>4</b><em>Контакти</em></li>
+    </ol>
+
+    <div class="rack">
+      <button class="tip on" data-check="step1">
+        <span class="ph"><img src="img/nails-cherry.jpg" alt="Короткі нігті, вишневий гель-лак з втиркою на одному нігті"><span class="chk">Обрано</span></span>
+        <span class="nm">Манікюр з покриттям</span>
+        <span class="mt">1 год 45 хв <strong>від 750 ₴</strong></span>
+      </button>
+      <button class="tip">
+        <span class="ph"><img src="img/pedi.jpg" alt="Майстер у рукавичках наносить рожевий гель-лак на нігті ніг"></span>
+        <span class="nm">Педикюр з покриттям</span>
+        <span class="mt">2 год <strong>від 950 ₴</strong></span>
+      </button>
+      <button class="tip">
+        <span class="ph"><img src="img/brows.jpg" alt="Майстриня оформлює брови клієнтці"></span>
+        <span class="nm">Брови</span>
+        <span class="mt">45 хв <strong>від 450 ₴</strong></span>
+      </button>
+      <button class="tip">
+        <span class="ph"><img src="img/lashes.jpg" alt="Майстер у чорних рукавичках нарощує вії пінцетом"></span>
+        <span class="nm">Вії</span>
+        <span class="mt">1 год 15 хв <strong>від 800 ₴</strong></span>
+      </button>
+
+      <aside class="sum" aria-label="Ваш запис">
+        <h2>Ваш запис <span>крок 1 з 4</span></h2>
+        <div class="row"><span>Послуга</span><strong>Манікюр з покриттям</strong></div>
+        <div class="row empty"><span>Майстер</span><strong>будь-який вільний</strong></div>
+        <div class="row empty"><span>Коли</span><strong>найближче: сьогодні 17:30</strong></div>
+        <div class="total"><span>Разом, майстер</span><strong>750 ₴</strong></div>
+        <div class="guar"><b></b>Гарантія на покриття — до 12 листопада, якщо прийдете в четвер 22.10</div>
+        <a class="btn btn-cherry" href="#">Далі: майстер →</a>
+      </aside>
+    </div>
+
+    <p class="trust"><span><strong>Сухожар 180 °C</strong> · крафт-пакет відкривають при вас</span><span><strong>6 майстрів</strong> · топ-майстер +20 %</span><span><strong>4 хв</strong> від м. Архітектора Бекетова</span></p>
+  </main>
+</div>
+</body>
+</html>

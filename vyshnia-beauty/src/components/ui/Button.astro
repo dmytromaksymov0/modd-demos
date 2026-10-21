@@ -1,0 +1,21 @@
+---
+// One button for links and buttons. Variants: primary (cherry lacquer), secondary (ink outline),
+// quiet (text with underline on hover), light (white on cherry/photo). Min height 48px (44 for sm).
+import Icon from './Icon.astro';
+interface Props { href?: string; variant?: 'primary' | 'secondary' | 'quiet' | 'light'; size?: 'sm' | 'md' | 'lg'; icon?: string; iconAfter?: string; type?: 'button' | 'submit'; class?: string; disabled?: boolean; [k: string]: unknown }
+const { href, variant = 'primary', size = 'md', icon, iconAfter, type = 'button', class: cls = '', disabled = false, ...rest } = Astro.props;
+const base = 'btn inline-flex items-center justify-center gap-2 rounded-full font-sans font-semibold whitespace-nowrap select-none transition-[background-color,color,border-color,box-shadow] duration-(--duration-fast) ease-(--ease-out)';
+const sizes = { sm: 'min-h-11 px-4 text-small', md: 'min-h-12 px-6 text-small', lg: 'min-h-14 px-7 text-body' };
+const variants = {
+  primary: 'bg-cherry text-white hover:bg-cherry-deep',
+  secondary: 'border-[1.5px] border-ink text-ink hover:bg-ink hover:text-white',
+  quiet: 'px-0! min-h-11 text-ink underline-offset-[0.25em] hover:underline',
+  light: 'bg-white text-ink hover:bg-porcelain',
+};
+const classes = [base, sizes[size], variants[variant], disabled && 'opacity-45 pointer-events-none', cls].filter(Boolean).join(' ');
+---
+{href ? (
+  <a href={href} class={classes} aria-disabled={disabled ? 'true' : undefined} {...rest}>{icon && <Icon name={icon} size={18} />}<slot />{iconAfter && <Icon name={iconAfter} size={18} />}</a>
+) : (
+  <button type={type} class={classes} disabled={disabled} {...rest}>{icon && <Icon name={icon} size={18} />}<slot />{iconAfter && <Icon name={iconAfter} size={18} />}</button>
+)}

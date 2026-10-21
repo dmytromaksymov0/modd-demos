@@ -1,0 +1,75 @@
+---
+// Майстрині: first screen = all six with a filter by service; then each profile with its works, schedule and «Записатися до …».
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHead from '../../components/page/PageHead.astro';
+import TipPhoto from '../../components/booking/TipPhoto.astro';
+import WorkCard from '../../components/patterns/WorkCard.astro';
+import Badge from '../../components/ui/Badge.astro';
+import Button from '../../components/ui/Button.astro';
+import Chip from '../../components/ui/Chip.astro';
+import { masters } from '../../data/masters';
+import { works } from '../../data/works';
+import { defaultService, DAY_OFF } from '../../lib/booking';
+import { site } from '../../config/site';
+const years = (n: number) => `${n} ${n % 10 === 1 && n % 100 !== 11 ? 'рік' : [2, 3, 4].includes(n % 10) && ![12, 13, 14].includes(n % 100) ? 'роки' : 'років'}`;
+const WD_FULL = ['неділя', 'понеділок', 'вівторок', 'середа', 'четвер', 'пʼятниця', 'субота'];
+const kind = (g: string[]) => (g.includes('manicure') || g.includes('pedicure') ? 'nails' : g[0]);
+---
+<BaseLayout title="Майстрині · манікюр, педикюр, брови, вії · Вишня, Харків" description="Шість майстринь студії «Вишня»: стаж, стиль, роботи й запис до конкретної майстрині. Топ-майстриня — +20 % до ціни." current="/maistry/" og="maistry" crumb="Майстрині">
+  <PageHead title="Майстрині" crumb="Майстрині" lead="Обирайте людину, а не салон: у кожної — свій стиль, стаж і вихідний. Запис до конкретної майстрині — в один клік." />
+
+  <section class="wrap mt-6 lg:mt-8" aria-label="Усі майстрині">
+    <form class="flex flex-wrap gap-2" aria-label="Фільтр майстринь" data-m-filter>
+      <Chip name="mf" value="" checked>Усі шість</Chip><Chip name="mf" value="nails">Манікюр і педикюр</Chip><Chip name="mf" value="brows">Брови</Chip><Chip name="mf" value="lashes">Вії</Chip>
+    </form>
+    <ul class="mt-6 grid grid-cols-2 gap-x-4 gap-y-6 sm:grid-cols-3 lg:grid-cols-6" data-m-grid>
+      {masters.map((m, i) => (
+        <li data-kind={kind(m.groups)}>
+          <a href={`#${m.id}`} class="group grid gap-2.5 no-underline">
+            <TipPhoto src={m.photo} alt={m.photoAlt} ratio={['3 / 4.2', '3 / 4.5', '3 / 4', '3 / 4.4', '3 / 4.1', '3 / 4.3'][i]} sizes="(min-width: 64rem) 15vw, 45vw" priority={i < 2} />
+            <span class="font-display text-h3 font-medium group-hover:underline">{m.name.split(' ')[0]}</span>
+            <span class="text-caption text-graphite">{m.role} · {years(m.years)}</span>
+            {m.top ? <Badge tone="soft" class="w-fit">Топ · +20 %</Badge> : <Badge class="w-fit">Майстриня</Badge>}
+          </a>
+        </li>
+      ))}
+    </ul>
+  </section>
+
+  {masters.map((m) => {
+    const mine = works.filter((w) => w.master === m.id);
+    const svc = defaultService(m.groups[0]);
+    return (
+      <section id={m.id} class="wrap scroll-mt-24 pt-(--spacing-section)" aria-labelledby={`${m.id}-title`}>
+        <div class="grid gap-8 lg:grid-cols-[minmax(0,4fr)_minmax(0,8fr)] lg:gap-12">
+          <div class="max-w-xs"><TipPhoto src={m.photo} alt={m.photoAlt} ratio="4 / 5" sizes="(min-width: 64rem) 28vw, 80vw" /></div>
+          <div class="grid content-start gap-5">
+            <div class="grid gap-2">
+              <p class="flex flex-wrap items-center gap-2">{m.top ? <Badge tone="soft">Топ-майстриня · +20 %</Badge> : <Badge>Майстриня</Badge>}<span class="text-caption text-graphite">{m.role} · {years(m.years)}</span></p>
+              <h2 id={`${m.id}-title`} class="t-h2">{m.name}</h2>
+              <p class="t-lead measure">{m.about}</p>
+            </div>
+            <dl class="grid gap-3 sm:grid-cols-3">
+              <div class="rounded-field bg-white p-4"><dt class="text-caption text-graphite">Найкраще виходить</dt><dd class="mt-1 text-small font-semibold">{m.best?.join(' · ')}</dd></div>
+              <div class="rounded-field bg-white p-4"><dt class="text-caption text-graphite">Графік</dt><dd class="mt-1 text-small font-semibold">{site.hours.replace('щодня ', '')}, вихідний — {WD_FULL[DAY_OFF[m.id]]}</dd></div>
+              <div class="rounded-field bg-white p-4"><dt class="text-caption text-graphite">Ціна</dt><dd class="mt-1 text-small font-semibold">{m.top ? 'прайс +20 %' : 'за прайсом'}</dd></div>
+            </dl>
+            <p><Button href={`/zapys/?posluga=${svc.id}&maister=${m.id}#zapys`} iconAfter="arrow-right">Записатися до {m.dative}</Button></p>
+            {mine.length > 0 && (
+              <div class="grid gap-3">
+                <h3 class="font-display text-h3 font-medium">Роботи {m.dative}</h3>
+                <div class="grid grid-cols-2 gap-x-4 gap-y-6 md:grid-cols-3 xl:grid-cols-4">{mine.map((w) => <WorkCard work={w} ratio="1 / 1.1" />)}</div>
+              </div>
+            )}
+          </div>
+        </div>
+      </section>
+    );
+  })}
+</BaseLayout>
+<script>
+  const f = document.querySelector<HTMLFormElement>('[data-m-filter]');
+  const items = [...document.querySelectorAll<HTMLElement>('[data-m-grid] > li')];
+  f?.addEventListener('change', () => { const v = (f.elements.namedItem('mf') as RadioNodeList).value; items.forEach((li) => { li.hidden = !!v && li.dataset.kind !== v; }); });
+</script>
+<style is:global>[data-m-grid] > li[hidden] { display: none !important; }</style>
