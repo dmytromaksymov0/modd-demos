@@ -7,8 +7,8 @@
 import Icon from '../ui/Icon.astro';
 import Button from '../ui/Button.astro';
 import { site, curfew } from '../../config/site';
-interface Props { kind: 'now' | 'today' | 'plan'; onTheWay?: string[]; watch?: string[]; reasons?: string[]; worse?: string; bookHref?: string; headingLevel?: 'h2' | 'h3' }
-const { kind, onTheWay = [], watch = [], reasons = [], worse, bookHref = '/zapys/', headingLevel = 'h3' } = Astro.props;
+interface Props { kind: 'now' | 'today' | 'plan'; onTheWay?: string[]; dont?: string[]; watch?: string[]; reasons?: string[]; worse?: string; bookHref?: string; headingLevel?: 'h2' | 'h3' }
+const { kind, onTheWay = [], dont = [], watch = [], reasons = [], worse, bookHref = '/zapys/', headingLevel = 'h3' } = Astro.props;
 const H = headingLevel;
 const title = { now: 'Їдьте зараз', today: 'Покажіть лікарю сьогодні', plan: 'Можна записатися планово' }[kind];
 const sub = {
@@ -32,7 +32,10 @@ const sub = {
   {kind === 'now' && <p class="flex items-start gap-2 text-[0.9375rem]"><Icon name="map-pin" class="mt-0.5 size-5 text-lamp" /><span>{site.address.street} · {site.address.entrance}</span></p>}
   <div data-reasons-wrap hidden={reasons.length === 0}><p class="font-semibold">{kind === 'now' ? 'Чому терміново' : 'Чому так'}</p><ul class="mt-2 grid gap-1.5 text-[0.9375rem]" data-list="reasons">{reasons.map((x) => <li class="flex gap-2"><Icon name="check" class="mt-0.5 size-4 shrink-0" /><span>{x}</span></li>)}</ul></div>
   {kind === 'now'
-    ? <div data-way-wrap hidden={onTheWay.length === 0}><p class="font-semibold">Що робити дорогою</p><ul class="mt-2 grid gap-1.5 text-[0.9375rem]" data-list="way">{onTheWay.map((x) => <li class="flex gap-2"><Icon name="check" class="mt-0.5 size-4 shrink-0 text-lamp" /><span>{x}</span></li>)}</ul></div>
+    ? <div class="grid gap-4 sm:grid-cols-2 sm:gap-6">
+        <div data-way-wrap hidden={onTheWay.length === 0}><p class="font-semibold">Що робити дорогою</p><ul class="mt-2 grid gap-1.5 text-[0.9375rem]" data-list="way">{onTheWay.map((x) => <li class="flex gap-2"><Icon name="check" class="mt-0.5 size-4 shrink-0 text-lamp" /><span>{x}</span></li>)}</ul></div>
+        <div data-dont-wrap hidden={dont.length === 0}><p class="font-semibold">Чого не робити</p><ul class="mt-2 grid gap-1.5 text-[0.9375rem]" data-list="dont">{dont.map((x) => <li class="flex gap-2"><Icon name="x" class="mt-0.5 size-4 shrink-0 text-urgent-night" /><span>{x}</span></li>)}</ul></div>
+      </div>
     : <div data-watch-wrap hidden={watch.length === 0}><p class="font-semibold">Що спостерігати до візиту</p><ul class="mt-2 grid gap-1.5 text-[0.9375rem]" data-list="watch">{watch.map((x) => <li class="flex gap-2"><Icon name="check" class="mt-0.5 size-4 shrink-0" /><span>{x}</span></li>)}</ul></div>}
   {worse && <p class="worse flex items-start gap-2 rounded-sm border-l-4 border-urgent bg-white px-4 py-3 text-[0.9375rem] text-ink"><Icon name="alert" class="mt-0.5 size-5 text-urgent" /><span><strong>Їдьте зараз,</strong> {worse}</span></p>}
   <p class="flex items-start gap-2 border-t border-rule pt-4 text-[0.875rem] text-fg-mute"><Icon name="info" class="mt-px size-4" />Це не діагноз. Підказка допомагає вирішити, як швидко їхати. Остаточну оцінку дає лікар на огляді. Сумніваєтесь — дзвоніть.</p>

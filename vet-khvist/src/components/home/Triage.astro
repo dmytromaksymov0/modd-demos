@@ -8,7 +8,8 @@ import Button from '../ui/Button.astro';
 import Chip from '../ui/Chip.astro';
 import SectionHead from '../ui/SectionHead.astro';
 import TriageOutcome from '../patterns/TriageOutcome.astro';
-import { RED_FLAGS, SYMPTOMS, AREAS, GO_NOW_IF } from '../../lib/triage';
+import { RED_FLAGS, SYMPTOMS, AREAS, GO_NOW_IF, onTheWay } from '../../lib/triage';
+const general = onTheWay([]); // replaced by the tips for what was picked once the result is shown
 import { site } from '../../config/site';
 interface Props { bookHref?: string; headingLevel?: 'h1' | 'h2' }
 const { bookHref = '/zapys/' } = Astro.props;
@@ -75,7 +76,7 @@ const { bookHref = '/zapys/' } = Astro.props;
       </form>
 
       <div class="mt-6 grid gap-4" data-result hidden>
-        <div data-outcome="now" hidden><TriageOutcome kind="now" onTheWay={['Подзвоніть дорогою — лікар підготує кабінет']} bookHref={bookHref} /></div>
+        <div data-outcome="now" hidden><TriageOutcome kind="now" onTheWay={general.doNow} dont={general.dont} bookHref={bookHref} /></div>
         <div data-outcome="today" hidden><TriageOutcome kind="today" worse={GO_NOW_IF} bookHref={bookHref} /></div>
         <div data-outcome="plan" hidden><TriageOutcome kind="plan" worse={GO_NOW_IF} bookHref={bookHref} /></div>
         <button type="button" class="inline-flex min-h-11 items-center gap-2 self-start underline underline-offset-4" data-go="restart">Пройти ще раз</button>

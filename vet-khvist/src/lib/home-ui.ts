@@ -6,9 +6,10 @@ import { PHONE_REQUIRED } from './lead.ts';
 import { club } from '../config/site.ts';
 
 const reduce = () => matchMedia('(prefers-reduced-motion: reduce)').matches;
-const li = (text: string) => {
+const ICON = { check: ['', 'M20 6 9 17l-5-5'], x: [' text-urgent-night', 'M18 6 6 18M6 6l12 12'] } as const;
+const li = (text: string, icon: keyof typeof ICON = 'check') => {
   const el = document.createElement('li'); el.className = 'flex gap-2';
-  el.innerHTML = '<svg class="mt-0.5 size-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>';
+  el.innerHTML = `<svg class="mt-0.5 size-4 shrink-0${ICON[icon][0]}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="${ICON[icon][1]}"/></svg>`;
   const s = document.createElement('span'); s.textContent = text; el.append(s); return el;
 };
 const LABEL: Record<Level, string> = { now: 'Їдьте зараз', today: 'Сьогодні', plan: 'Планово' };
@@ -32,10 +33,10 @@ function initTriage(root: HTMLElement) {
     const box = result.querySelector<HTMLElement>(`[data-outcome="${r.level}"]`)!;
     const fill = (name: string, items: string[]) => {
       const ul = box.querySelector(`[data-list="${name}"]`); const wrap = ul?.parentElement as HTMLElement | null;
-      if (!ul || !wrap) return; ul.replaceChildren(...items.map(li)); wrap.hidden = !items.length;
+      if (!ul || !wrap) return; ul.replaceChildren(...items.map((t) => li(t, name === 'dont' ? 'x' : 'check'))); wrap.hidden = !items.length;
     };
     fill('reasons', r.reasons);
-    if (r.level === 'now') fill('way', onTheWay(r, a.species)); else fill('watch', r.watch);
+    if (r.level === 'now') { const w = onTheWay(r.way, a.species); fill('way', w.doNow); fill('dont', w.dont); } else fill('watch', r.watch);
     last = { level: r.level, summary: `${LABEL[r.level]}${r.reasons.length ? ` — ${r.reasons.slice(0, 2).join('; ')}` : ''}` };
     box.querySelector<HTMLElement>('[data-outcome-title]')?.focus({ preventScroll: true });
     result.scrollIntoView({ behavior: reduce() ? 'auto' : 'smooth', block: 'start' });
@@ -58,7 +59,11 @@ function initTriage(root: HTMLElement) {
     result.hidden = false; form.hidden = true; empty.classList.add('hidden');
     result.querySelectorAll<HTMLElement>('[data-outcome]').forEach((o) => { o.hidden = o.dataset.outcome !== 'now'; });
     const box = result.querySelector<HTMLElement>('[data-outcome="now"]')!;
-    const ul = box.querySelector('[data-list="way"]'); if (ul) { ul.replaceChildren(...onTheWay({ poison: false }).map(li)); (ul.parentElement as HTMLElement).hidden = false; }
+    // Nothing ticked, species not asked yet → only the general, species-neutral tips.
+    const w = onTheWay([]);
+    for (const [name, items] of [['way', w.doNow], ['dont', w.dont]] as const) {
+      const ul = box.querySelector(`[data-list="${name}"]`); if (ul) { ul.replaceChildren(...items.map((t) => li(t, name === 'dont' ? 'x' : 'check'))); (ul.parentElement as HTMLElement).hidden = !items.length; }
+    }
     const rs = box.querySelector('[data-list="reasons"]'); if (rs) (rs.parentElement as HTMLElement).hidden = true;
     last = { level: 'now', summary: LABEL.now };
     box.querySelector<HTMLElement>('[data-outcome-title]')?.focus({ preventScroll: true });

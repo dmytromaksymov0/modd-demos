@@ -18,7 +18,7 @@ const BASE = process.argv[2] || 'http://localhost:4321';
   await p.click('[data-go="restart"]');
   // 2. poison flag → now with package advice
   await p.check('input[name="flag"][value="poison"]'); await p.click('[data-go="flags"]');
-  console.log('2 poison → way list:', (await p.textContent('[data-outcome="now"] [data-list="way"]')).includes('упаковку'));
+  console.log("2 poison → way list:", (await p.textContent('[data-outcome="now"] [data-list="way"]')).includes("упаковку"), "· dont:", (await p.textContent('[data-outcome="now"] [data-list="dont"]')).includes("нічого"));
   await p.click('[data-go="restart"]');
   // 3. step 2: adult dog, itch, days → plan
   await p.click('[data-go="step2"]');

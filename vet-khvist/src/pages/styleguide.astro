@@ -9,6 +9,8 @@ import Badge from '../components/ui/Badge.astro';
 import Icon from '../components/ui/Icon.astro';
 import TimeStatus from '../components/layout/TimeStatus.astro';
 import TriageOutcome from '../components/patterns/TriageOutcome.astro';
+import { onTheWay } from '../lib/triage';
+const poisonWay = onTheWay(['poison'], 'cat');
 import BotMessage from '../components/patterns/BotMessage.astro';
 import Figure from '../components/patterns/Figure.astro';
 import PageHero from '../components/page/PageHero.astro';
@@ -192,7 +194,7 @@ const type = [
     <h2 class="t-h2">Тріаж «Чи терміново?»: три результати</h2>
     <p class="t-small max-w-[75ch] text-fg-mute">Результат — місце й строк, не діагноз. Номер видно текстом у кожному результаті. Найм’якший результат усе одно має шлях угору.</p>
     <div class="grid items-start gap-6 lg:grid-cols-3">
-      <TriageOutcome kind="now" onTheWay={['Тримайте в теплі, кота — у переносці', 'Не давайте їжу, воду й ліки людини', 'Візьміть упаковку того, що з’їв']} />
+      <TriageOutcome kind="now" onTheWay={poisonWay.doNow} dont={poisonWay.dont} />
       <TriageOutcome kind="today" watch={['Чи п’є і чи ходить у туалет', 'Чи не частішає блювання']} worse="якщо з’явиться кров, сильна млявість або важке дихання." />
       <TriageOutcome kind="plan" worse="якщо тварина перестане їсти більше ніж на добу або стане млявою." />
     </div>

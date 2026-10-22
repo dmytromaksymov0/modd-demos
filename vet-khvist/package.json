@@ -17,7 +17,8 @@
     "qa:fonts": "node scripts/font-swap-check.cjs http://localhost:4321",
     "og": "node scripts/make-og.cjs",
     "logo": "python3 design/phase-2/make_logo.py",
-    "photos": "python3 design/phase-2/process_photos.py"
+    "photos": "python3 design/phase-2/process_photos.py",
+    "e2e:triage": "node scripts/e2e-triage.cjs"
   },
   "dependencies": {
     "@astrojs/sitemap": "^3.7.4",

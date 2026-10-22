@@ -132,9 +132,11 @@ npx wrangler pages dev dist
 npm test
 npm run build && npm run e2e
 npm run preview
+npm run e2e:triage -- http://localhost:4321
 ```
-- `npm test` — 35 unit-тестов:
+- `npm test` — 43 unit-теста:
   - триаж — все правила безопасности;
+  - «що робити дорогою / чого не робити» — собирается из выбранных флагов и вида, без дублей, тексты совпадают с /nevidkladna;
   - календарь, день / ночь / комендантська, в том числе переход на летнее время;
   - телефоны и валидация, сообщение в Telegram, открытый редирект;
   - сама функция с mock-fetch.
