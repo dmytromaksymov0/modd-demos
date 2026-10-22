@@ -15,7 +15,6 @@ const defClass = 'B', defWorks = ['pads-front', 'discs-front'];
 const r = calculate(defWorks, carClasses.find((c) => c.id === defClass)!.rate, works, combos);
 // Brakes first: the default selection (front pads + discs) is then visible on the first screen.
 const groups = (['halma', 'khodova', 'to', 'diagnostyka', 'kondytsioner'] as (keyof typeof serviceLabels)[]).map((k) => ({ k, label: serviceLabels[k], items: works.filter((w) => w.service === k) }));
-const heights = ['min-h-14', 'min-h-15', 'min-h-16', 'min-h-17'];
 ---
 <BaseLayout og="kalkulyator" schema={[breadcrumbs(Astro.site, [{ name: 'Калькулятор', path: '/kalkulyator/' }])]} mobileBar={false} title="Калькулятор вартості ремонту — ТОРК Автосервіс, Харків" description="Порахуйте ціну роботи й час до візиту: клас авто × роботи. Роботи, які робимо разом, дешевші. Ціна роботи з калькулятора = ціна роботи в чеку.">
   <section id="kalk" class="bg-paper" aria-labelledby="calc-title">
@@ -31,9 +30,9 @@ const heights = ['min-h-14', 'min-h-15', 'min-h-16', 'min-h-17'];
         <div class="window grid content-start gap-7 p-5 sm:p-7">
           <fieldset class="min-w-0">
             <legend class="t-plate mb-3">1 · Клас авто</legend>
-            <div class="grid grid-cols-2 items-end gap-1.5 sm:grid-cols-4">
-              {carClasses.map((c, i) => (
-                <label class={`flex cursor-pointer flex-col justify-end border-2 border-steel bg-white px-3 pb-2 pt-3 has-[:checked]:bg-ochre has-[:focus-visible]:outline-3 has-[:focus-visible]:outline-steel has-[:focus-visible]:outline-offset-2 ${heights[i]}`}>
+            <div class="grid auto-rows-fr grid-cols-2 gap-1.5 sm:grid-cols-4">
+              {carClasses.map((c) => (
+                <label class="flex min-h-16 cursor-pointer flex-col justify-start border-2 border-steel bg-white px-3 pb-2 pt-3 has-[:checked]:bg-ochre has-[:focus-visible]:outline-3 has-[:focus-visible]:outline-steel has-[:focus-visible]:outline-offset-2">
                   <input class="sr-only" type="radio" name="klas" value={c.id} checked={c.id === defClass} />
                   <b class="font-display text-[1.375rem] leading-none font-[850] [font-variation-settings:'wdth'_60]">Клас {c.label}</b>
                   <span class="mt-1 text-label leading-snug">{c.examples}</span>

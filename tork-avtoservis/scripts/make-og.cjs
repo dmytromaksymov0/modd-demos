@@ -21,6 +21,8 @@ const pages = [
 const html = (p) => `<!doctype html><html><head><meta charset="utf-8"><style>
 @font-face{font-family:D;src:url(${f('design/fonts-src/ScienceGothic.ttf')});font-weight:100 900;font-stretch:50% 200%}
 @font-face{font-family:T;src:url(${f('design/fonts-src/Onest.ttf')});font-weight:100 900}
+/* ss01 = standard Ukrainian Д Л д л (the default set draws them as Λ-like triangles); review fix 22.10.2026 */
+.k,h1,.fact{font-feature-settings:'ss01'}
 *{margin:0;box-sizing:border-box}body{width:1200px;height:630px;background:#20262A;padding:10px;display:grid;grid-template-columns:690px 1fr;gap:10px;font-family:T;color:#20262A}
 .l{background:#F4F4F1;padding:44px 44px 40px;display:flex;flex-direction:column}.l svg{width:250px;height:auto}
 .k{font-family:D;font-variation-settings:'wdth' 150;font-weight:650;font-size:18px;letter-spacing:.06em;text-transform:uppercase;color:#3F5A55;margin-top:auto}

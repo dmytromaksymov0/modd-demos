@@ -8,17 +8,19 @@ from fontTools.varLib import instancer
 from fontTools.pens.svgPathPen import SVGPathPen
 from fontTools.pens.transformPen import TransformPen
 import json, os
-SRC = 'node_modules/@fontsource-variable/science-gothic/files/science-gothic-cyrillic-standard-normal.woff2'
+# Full OFL source (same revision 1.035 as the fontsource files). It has the ss01 alternates: Science Gothic's default
+# Д Л д л are Λ-like triangles («СААТІВКА»); the standard Ukrainian forms are the *.alt glyphs. Review fix 22.10.2026.
+SRC = 'design/fonts-src/ScienceGothic.ttf'
+UA_FORMS = {'Д': 'uni0414.alt', 'Л': 'uni041B.alt', 'д': 'uni0434.alt', 'л': 'uni043B.alt'}
 STEEL, OCHRE, PAPER = '#20262A', '#E0A01A', '#F4F4F1'
 
 def text_path(s, wdth, wght, size, tracking=0):
-    fonts = [instancer.instantiateVariableFont(TTFont(p), {'wdth': wdth, 'wght': wght, 'slnt': 0}) for p in (SRC, SRC.replace('cyrillic', 'latin'))]
-    f = fonts[0]; upm = f['head'].unitsPerEm; sc = size / upm
+    f = instancer.instantiateVariableFont(TTFont(SRC), {'wdth': wdth, 'wght': wght, 'slnt': 0, 'CTRS': 0})
+    upm = f['head'].unitsPerEm; sc = size / upm; gs = f.getGlyphSet(); cmap = f.getBestCmap()
     pen = SVGPathPen(f.getGlyphSet(), ntos=lambda v: ('%.2f' % v).rstrip('0').rstrip('.'))
     x = 0
     for ch in s:
-        ff = next(F for F in fonts if ord(ch) in F.getBestCmap()); gs = ff.getGlyphSet()
-        g = gs[ff.getBestCmap()[ord(ch)]]
+        g = gs[UA_FORMS.get(ch, cmap[ord(ch)])]
         if ch == ' ': x += g.width + tracking * upm; continue
         g.draw(TransformPen(pen, (sc, 0, 0, -sc, x * sc, 0)))
         x += g.width + tracking * upm

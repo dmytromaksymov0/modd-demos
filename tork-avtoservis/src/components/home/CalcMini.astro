@@ -11,7 +11,6 @@ const defClass = 'B', defWorks = ['pads-front', 'discs-front'];
 const rate = carClasses.find((c) => c.id === defClass)!.rate;
 const r = calculate(defWorks, rate, works, combos);
 const list = homeWorks.map((id) => works.find((w) => w.id === id)!);
-const heights = ['min-h-15', 'min-h-17', 'min-h-19', 'min-h-21'];
 ---
 <section id="kalkulyator" class="border-t-2 border-steel bg-paper" aria-labelledby="calc-title">
   <div class="wrap py-section">
@@ -20,9 +19,9 @@ const heights = ['min-h-15', 'min-h-17', 'min-h-19', 'min-h-21'];
       <div class="window grid gap-8 p-5 sm:p-7">
         <fieldset class="min-w-0">
           <legend class="t-plate mb-3">1 · Клас авто</legend>
-          <div class="grid grid-cols-2 items-end gap-1.5 sm:grid-cols-4">
-            {carClasses.map((c, i) => (
-              <label class={`flex cursor-pointer flex-col justify-end border-2 border-steel bg-white px-3 pb-2 pt-3 has-[:checked]:bg-ochre has-[:focus-visible]:outline-3 has-[:focus-visible]:outline-steel has-[:focus-visible]:outline-offset-2 ${heights[i]}`}>
+          <div class="grid auto-rows-fr grid-cols-2 gap-1.5 sm:grid-cols-4">
+            {carClasses.map((c) => (
+              <label class="flex min-h-16 cursor-pointer flex-col justify-start border-2 border-steel bg-white px-3 pb-2 pt-3 has-[:checked]:bg-ochre has-[:focus-visible]:outline-3 has-[:focus-visible]:outline-steel has-[:focus-visible]:outline-offset-2">
                 <input class="sr-only" type="radio" name="klas" value={c.id} checked={c.id === defClass} data-rate={c.rate} />
                 <b class="font-display text-[1.375rem] leading-none font-[850] [font-variation-settings:'wdth'_60]">Клас {c.label}</b>
                 <span class="mt-1 text-label leading-snug">{c.examples}</span>
