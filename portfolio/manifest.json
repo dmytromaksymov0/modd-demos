@@ -1,0 +1,582 @@
+{
+  "studio": "modd.",
+  "generated": "2026-10-22",
+  "collage": {
+    "png": "final/modd-collage.png",
+    "avif": "final/modd-collage.avif",
+    "webp": "final/modd-collage.webp",
+    "width": 2400,
+    "height": 1400,
+    "alt": {
+      "uk": "П’ять сайтів студії modd. в одному колажі",
+      "en": "Five modd. websites in one collage"
+    }
+  },
+  "section": {
+    "title": {
+      "uk": "Роботи",
+      "en": "Work"
+    },
+    "note": {
+      "uk": "Частина проєктів — власні розробки студії під нішу.",
+      "en": "Some projects are the studio’s own builds for a niche."
+    }
+  },
+  "projects": [
+    {
+      "key": "kestrel",
+      "title": "Kestrel Roofing",
+      "url": "https://kestrel-roofing-co.pages.dev",
+      "niche": {
+        "uk": "покрівля",
+        "en": "roofing"
+      },
+      "geo": {
+        "uk": "Колумбус, США",
+        "en": "Columbus, Ohio, USA"
+      },
+      "description": {
+        "uk": "Сайт покрівельної компанії з Огайо, де ціну даху видно ще до виїзду майстра, а страховий випадок розкладено по кроках.",
+        "en": "A roofing contractor site from Ohio that shows the price of a new roof before anyone climbs a ladder and walks homeowners through an insurance claim step by step."
+      },
+      "features": [
+        {
+          "uk": "Калькулятор вартості даху з вибором уклону за фото реальних будинків",
+          "en": "Roof cost calculator with pitch picked from photos of real houses"
+        },
+        {
+          "uk": "Страховий випадок у три доріжки: ви, Kestrel, страхова",
+          "en": "Insurance claim in three lanes: you, Kestrel, the insurer"
+        },
+        {
+          "uk": "День заміни даху погодинно — від 7:00 до 17:30",
+          "en": "Replacement day hour by hour, 7:00 to 5:30"
+        },
+        {
+          "uk": "Заявка у два кроки з перевіркою ZIP-коду",
+          "en": "Two-step lead form with live ZIP check"
+        }
+      ],
+      "lighthouse_mobile": "96–100",
+      "images": {
+        "cover": {
+          "png": "final/kestrel/kestrel-cover.png",
+          "avif": "final/kestrel/kestrel-cover.avif",
+          "webp": "final/kestrel/kestrel-cover.webp",
+          "width": 1600,
+          "height": 1000,
+          "alt": {
+            "uk": "Kestrel Roofing: головна сторінка в браузері й на телефоні",
+            "en": "Kestrel Roofing: home page in a browser window and on a phone"
+          }
+        },
+        "wide": {
+          "png": "final/kestrel/kestrel-wide.png",
+          "avif": "final/kestrel/kestrel-wide.avif",
+          "webp": "final/kestrel/kestrel-wide.webp",
+          "width": 2400,
+          "height": 1200,
+          "alt": {
+            "uk": "Kestrel Roofing: три мобільні екрани поруч",
+            "en": "Kestrel Roofing: three mobile screens side by side"
+          }
+        },
+        "detail": {
+          "png": "final/kestrel/kestrel-detail.png",
+          "avif": "final/kestrel/kestrel-detail.avif",
+          "webp": "final/kestrel/kestrel-detail.webp",
+          "width": 1600,
+          "height": 1000,
+          "alt": {
+            "uk": "Kestrel Roofing: калькулятор вартості даху, крупним планом",
+            "en": "Kestrel Roofing: close-up of roof cost calculator with pitch picked from photos of real houses"
+          }
+        },
+        "scroll": {
+          "png": "final/kestrel/kestrel-scroll.png",
+          "avif": "final/kestrel/kestrel-scroll.avif",
+          "webp": "final/kestrel/kestrel-scroll.webp",
+          "width": 1600,
+          "height": 7329,
+          "alt": {
+            "uk": "Kestrel Roofing: головна сторінка повністю",
+            "en": "Kestrel Roofing: the full home page"
+          }
+        },
+        "og": {
+          "png": "final/kestrel/kestrel-og.png",
+          "avif": "final/kestrel/kestrel-og.avif",
+          "webp": "final/kestrel/kestrel-og.webp",
+          "width": 1200,
+          "height": 630,
+          "alt": {
+            "uk": "Kestrel Roofing — покрівля, яку спершу міряють, а потім рахують",
+            "en": "Kestrel Roofing — A roofing contractor site from Ohio that shows the price of a new roof before anyone climbs a ladder and walks homeowners through an insurance claim step by step."
+          }
+        },
+        "thumb": {
+          "png": "final/kestrel/kestrel-thumb.png",
+          "avif": "final/kestrel/kestrel-thumb.avif",
+          "webp": "final/kestrel/kestrel-thumb.webp",
+          "width": 800,
+          "height": 600,
+          "alt": {
+            "uk": "Kestrel Roofing: мініатюра проєкту",
+            "en": "Kestrel Roofing: project thumbnail"
+          }
+        }
+      },
+      "video": {
+        "mp4": "final/kestrel/kestrel-scroll.mp4",
+        "alt": {
+          "uk": "Kestrel Roofing: прокрутка головної сторінки",
+          "en": "Kestrel Roofing: scrolling through the home page"
+        }
+      }
+    },
+    {
+      "key": "brightwater",
+      "title": "Brightwater Family Dental",
+      "url": "https://brightwater-dental-ba5.pages.dev",
+      "niche": {
+        "uk": "стоматологія",
+        "en": "family dentistry"
+      },
+      "geo": {
+        "uk": "Остін, США",
+        "en": "Austin, Texas, USA"
+      },
+      "description": {
+        "uk": "Сайт сімейної стоматології з Техасу, де всю родину записують одним заходом, а страховку перевіряють із відповіддю в доларах.",
+        "en": "A family dental practice site from Texas that books the whole family in one go and answers “am I covered?” in dollars."
+      },
+      "features": [
+        {
+          "uk": "Запис усієї родини: крісла поруч, один набір контактів",
+          "en": "Whole-family booking: chairs side by side, one set of contacts"
+        },
+        {
+          "uk": "Перевірка страховки з відповіддю в доларах",
+          "en": "Insurance check that answers in dollars"
+        },
+        {
+          "uk": "План комфорту для тих, хто боїться стоматолога",
+          "en": "Comfort plan for anxious patients"
+        },
+        {
+          "uk": "Тріаж невідкладних випадків",
+          "en": "Emergency triage"
+        }
+      ],
+      "lighthouse_mobile": "97–100",
+      "images": {
+        "cover": {
+          "png": "final/brightwater/brightwater-cover.png",
+          "avif": "final/brightwater/brightwater-cover.avif",
+          "webp": "final/brightwater/brightwater-cover.webp",
+          "width": 1600,
+          "height": 1000,
+          "alt": {
+            "uk": "Brightwater Family Dental: головна сторінка в браузері й на телефоні",
+            "en": "Brightwater Family Dental: home page in a browser window and on a phone"
+          }
+        },
+        "wide": {
+          "png": "final/brightwater/brightwater-wide.png",
+          "avif": "final/brightwater/brightwater-wide.avif",
+          "webp": "final/brightwater/brightwater-wide.webp",
+          "width": 2400,
+          "height": 1200,
+          "alt": {
+            "uk": "Brightwater Family Dental: три мобільні екрани поруч",
+            "en": "Brightwater Family Dental: three mobile screens side by side"
+          }
+        },
+        "detail": {
+          "png": "final/brightwater/brightwater-detail.png",
+          "avif": "final/brightwater/brightwater-detail.avif",
+          "webp": "final/brightwater/brightwater-detail.webp",
+          "width": 1600,
+          "height": 1000,
+          "alt": {
+            "uk": "Brightwater Family Dental: перевірка страховки, крупним планом",
+            "en": "Brightwater Family Dental: close-up of whole-family booking: chairs side by side, one set of contacts"
+          }
+        },
+        "scroll": {
+          "png": "final/brightwater/brightwater-scroll.png",
+          "avif": "final/brightwater/brightwater-scroll.avif",
+          "webp": "final/brightwater/brightwater-scroll.webp",
+          "width": 1600,
+          "height": 7816,
+          "alt": {
+            "uk": "Brightwater Family Dental: головна сторінка повністю",
+            "en": "Brightwater Family Dental: the full home page"
+          }
+        },
+        "og": {
+          "png": "final/brightwater/brightwater-og.png",
+          "avif": "final/brightwater/brightwater-og.avif",
+          "webp": "final/brightwater/brightwater-og.webp",
+          "width": 1200,
+          "height": 630,
+          "alt": {
+            "uk": "Brightwater Family Dental — стоматологія за сімейним розкладом",
+            "en": "Brightwater Family Dental — A family dental practice site from Texas that books the whole family in one go and answers “am I covered?” in dollars."
+          }
+        },
+        "thumb": {
+          "png": "final/brightwater/brightwater-thumb.png",
+          "avif": "final/brightwater/brightwater-thumb.avif",
+          "webp": "final/brightwater/brightwater-thumb.webp",
+          "width": 800,
+          "height": 600,
+          "alt": {
+            "uk": "Brightwater Family Dental: мініатюра проєкту",
+            "en": "Brightwater Family Dental: project thumbnail"
+          }
+        }
+      },
+      "video": {
+        "mp4": "final/brightwater/brightwater-scroll.mp4",
+        "alt": {
+          "uk": "Brightwater Family Dental: прокрутка головної сторінки",
+          "en": "Brightwater Family Dental: scrolling through the home page"
+        }
+      }
+    },
+    {
+      "key": "tork",
+      "title": "ТОРК Автосервіс",
+      "url": "https://tork-avtoservis.pages.dev",
+      "niche": {
+        "uk": "автосервіс",
+        "en": "car service"
+      },
+      "geo": {
+        "uk": "Харків",
+        "en": "Kharkiv, Ukraine"
+      },
+      "description": {
+        "uk": "Сайт харківського СТО в мові конструктивізму Держпрому, де кошторис погоджують у чаті з майстром, а ціну видно до візиту.",
+        "en": "A Kharkiv car service site in the language of Derzhprom constructivism, where the estimate is approved in a chat with the mechanic and the price is known before the visit."
+      },
+      "features": [
+        {
+          "uk": "Ремонт у чаті з інтерактивним кошторисом",
+          "en": "Repair-in-chat with an interactive estimate"
+        },
+        {
+          "uk": "Калькулятор: клас авто × роботи → сума й час",
+          "en": "Calculator: car class × jobs → price and time"
+        },
+        {
+          "uk": "Фасад-сітка в дусі харківського конструктивізму",
+          "en": "Facade grid inspired by Kharkiv constructivism"
+        },
+        {
+          "uk": "Ціни за класами авто — від Lanos до Land Cruiser",
+          "en": "Prices by car class, from Lanos to Land Cruiser"
+        }
+      ],
+      "lighthouse_mobile": "96–100",
+      "images": {
+        "cover": {
+          "png": "final/tork/tork-cover.png",
+          "avif": "final/tork/tork-cover.avif",
+          "webp": "final/tork/tork-cover.webp",
+          "width": 1600,
+          "height": 1000,
+          "alt": {
+            "uk": "ТОРК Автосервіс: головна сторінка в браузері й на телефоні",
+            "en": "ТОРК Автосервіс: home page in a browser window and on a phone"
+          }
+        },
+        "wide": {
+          "png": "final/tork/tork-wide.png",
+          "avif": "final/tork/tork-wide.avif",
+          "webp": "final/tork/tork-wide.webp",
+          "width": 2400,
+          "height": 1200,
+          "alt": {
+            "uk": "ТОРК Автосервіс: три мобільні екрани поруч",
+            "en": "ТОРК Автосервіс: three mobile screens side by side"
+          }
+        },
+        "detail": {
+          "png": "final/tork/tork-detail.png",
+          "avif": "final/tork/tork-detail.avif",
+          "webp": "final/tork/tork-detail.webp",
+          "width": 1600,
+          "height": 1000,
+          "alt": {
+            "uk": "ТОРК Автосервіс: калькулятор: клас авто × роботи, крупним планом",
+            "en": "ТОРК Автосервіс: close-up of repair-in-chat with an interactive estimate"
+          }
+        },
+        "scroll": {
+          "png": "final/tork/tork-scroll.png",
+          "avif": "final/tork/tork-scroll.avif",
+          "webp": "final/tork/tork-scroll.webp",
+          "width": 1600,
+          "height": 10529,
+          "alt": {
+            "uk": "ТОРК Автосервіс: головна сторінка повністю",
+            "en": "ТОРК Автосервіс: the full home page"
+          }
+        },
+        "og": {
+          "png": "final/tork/tork-og.png",
+          "avif": "final/tork/tork-og.avif",
+          "webp": "final/tork/tork-og.webp",
+          "width": 1200,
+          "height": 630,
+          "alt": {
+            "uk": "ТОРК Автосервіс — автосервіс без сюрпризів у чеку",
+            "en": "ТОРК Автосервіс — A Kharkiv car service site in the language of Derzhprom constructivism, where the estimate is approved in a chat with the mechanic and the price is known before the visit."
+          }
+        },
+        "thumb": {
+          "png": "final/tork/tork-thumb.png",
+          "avif": "final/tork/tork-thumb.avif",
+          "webp": "final/tork/tork-thumb.webp",
+          "width": 800,
+          "height": 600,
+          "alt": {
+            "uk": "ТОРК Автосервіс: мініатюра проєкту",
+            "en": "ТОРК Автосервіс: project thumbnail"
+          }
+        }
+      },
+      "video": {
+        "mp4": "final/tork/tork-scroll.mp4",
+        "alt": {
+          "uk": "ТОРК Автосервіс: прокрутка головної сторінки",
+          "en": "ТОРК Автосервіс: scrolling through the home page"
+        }
+      }
+    },
+    {
+      "key": "vet",
+      "title": "Ветклініка «Хвіст»",
+      "url": "https://vet-khvist.pages.dev",
+      "niche": {
+        "uk": "ветклініка 24/7",
+        "en": "24/7 vet clinic"
+      },
+      "geo": {
+        "uk": "Харків",
+        "en": "Kharkiv, Ukraine"
+      },
+      "description": {
+        "uk": "Сайт цілодобової ветклініки, який удень, уночі й у комендантську годину показує різне — і допомагає вирішити, чи їхати зараз.",
+        "en": "A 24/7 vet clinic site that changes by day, night and curfew hours and helps owners decide whether to come in right now."
+      },
+      "features": [
+        {
+          "uk": "Сайт перебудовується вдень, уночі й у комендантську годину",
+          "en": "The site rebuilds itself for day, night and curfew"
+        },
+        {
+          "uk": "«Чи терміново?» — червоні прапорці першими",
+          "en": "“Is it urgent?” triage with red flags first"
+        },
+        {
+          "uk": "Календар турботи на рік із нагадуваннями в Telegram",
+          "en": "Year-long care calendar with Telegram reminders"
+        },
+        {
+          "uk": "Ціни «все включено» без «без урахування наркозу»",
+          "en": "All-inclusive prices, anaesthesia included"
+        }
+      ],
+      "lighthouse_mobile": "100",
+      "images": {
+        "cover": {
+          "png": "final/vet/vet-cover.png",
+          "avif": "final/vet/vet-cover.avif",
+          "webp": "final/vet/vet-cover.webp",
+          "width": 1600,
+          "height": 1000,
+          "alt": {
+            "uk": "Ветклініка «Хвіст»: головна сторінка в браузері й на телефоні",
+            "en": "Ветклініка «Хвіст»: home page in a browser window and on a phone"
+          }
+        },
+        "wide": {
+          "png": "final/vet/vet-wide.png",
+          "avif": "final/vet/vet-wide.avif",
+          "webp": "final/vet/vet-wide.webp",
+          "width": 2400,
+          "height": 1200,
+          "alt": {
+            "uk": "Ветклініка «Хвіст»: три мобільні екрани поруч",
+            "en": "Ветклініка «Хвіст»: three mobile screens side by side"
+          }
+        },
+        "detail": {
+          "png": "final/vet/vet-detail.png",
+          "avif": "final/vet/vet-detail.avif",
+          "webp": "final/vet/vet-detail.webp",
+          "width": 1600,
+          "height": 1000,
+          "alt": {
+            "uk": "Ветклініка «Хвіст»: тріаж «Чи терміново?», крупним планом",
+            "en": "Ветклініка «Хвіст»: close-up of the site rebuilds itself for day, night and curfew"
+          }
+        },
+        "scroll": {
+          "png": "final/vet/vet-scroll.png",
+          "avif": "final/vet/vet-scroll.avif",
+          "webp": "final/vet/vet-scroll.webp",
+          "width": 1600,
+          "height": 9834,
+          "alt": {
+            "uk": "Ветклініка «Хвіст»: головна сторінка повністю",
+            "en": "Ветклініка «Хвіст»: the full home page"
+          }
+        },
+        "og": {
+          "png": "final/vet/vet-og.png",
+          "avif": "final/vet/vet-og.avif",
+          "webp": "final/vet/vet-og.webp",
+          "width": 1200,
+          "height": 630,
+          "alt": {
+            "uk": "Ветклініка «Хвіст» — ветклініка, де світло горить цілодобово",
+            "en": "Ветклініка «Хвіст» — A 24/7 vet clinic site that changes by day, night and curfew hours and helps owners decide whether to come in right now."
+          }
+        },
+        "thumb": {
+          "png": "final/vet/vet-thumb.png",
+          "avif": "final/vet/vet-thumb.avif",
+          "webp": "final/vet/vet-thumb.webp",
+          "width": 800,
+          "height": 600,
+          "alt": {
+            "uk": "Ветклініка «Хвіст»: мініатюра проєкту",
+            "en": "Ветклініка «Хвіст»: project thumbnail"
+          }
+        }
+      },
+      "video": {
+        "mp4": "final/vet/vet-scroll.mp4",
+        "alt": {
+          "uk": "Ветклініка «Хвіст»: прокрутка головної сторінки",
+          "en": "Ветклініка «Хвіст»: scrolling through the home page"
+        }
+      }
+    },
+    {
+      "key": "vyshnia",
+      "title": "Вишня, студія краси",
+      "url": "https://vyshnia-beauty.pages.dev",
+      "niche": {
+        "uk": "студія краси",
+        "en": "beauty studio"
+      },
+      "geo": {
+        "uk": "Харків",
+        "en": "Kharkiv, Ukraine"
+      },
+      "description": {
+        "uk": "Сайт студії манікюру, брів і вій, де запис за чотири кроки стоїть на першому екрані, а дату гарантії видно до підтвердження.",
+        "en": "A nail, brow and lash studio site with four-step booking on the first screen and the coating guarantee date shown before you confirm."
+      },
+      "features": [
+        {
+          "uk": "Запис за 4 кроки на першому екрані з ціною й датою гарантії",
+          "en": "4-step booking on the first screen with price and guarantee date"
+        },
+        {
+          "uk": "«Хочу так само» — робота підставляє послугу, колір і майстриню",
+          "en": "“I want this one” — a work pre-fills service, colour and artist"
+        },
+        {
+          "uk": "Стерильність як ритуал: пакет відкривають при вас",
+          "en": "Sterility as a ritual: the pouch is opened in front of you"
+        },
+        {
+          "uk": "Конструктор подарункового сертифіката з живим превʼю",
+          "en": "Gift certificate builder with live preview"
+        }
+      ],
+      "lighthouse_mobile": "100",
+      "images": {
+        "cover": {
+          "png": "final/vyshnia/vyshnia-cover.png",
+          "avif": "final/vyshnia/vyshnia-cover.avif",
+          "webp": "final/vyshnia/vyshnia-cover.webp",
+          "width": 1600,
+          "height": 1000,
+          "alt": {
+            "uk": "Вишня, студія краси: головна сторінка в браузері й на телефоні",
+            "en": "Вишня, студія краси: home page in a browser window and on a phone"
+          }
+        },
+        "wide": {
+          "png": "final/vyshnia/vyshnia-wide.png",
+          "avif": "final/vyshnia/vyshnia-wide.avif",
+          "webp": "final/vyshnia/vyshnia-wide.webp",
+          "width": 2400,
+          "height": 1200,
+          "alt": {
+            "uk": "Вишня, студія краси: три мобільні екрани поруч",
+            "en": "Вишня, студія краси: three mobile screens side by side"
+          }
+        },
+        "detail": {
+          "png": "final/vyshnia/vyshnia-detail.png",
+          "avif": "final/vyshnia/vyshnia-detail.avif",
+          "webp": "final/vyshnia/vyshnia-detail.webp",
+          "width": 1600,
+          "height": 1000,
+          "alt": {
+            "uk": "Вишня, студія краси: запис за 4 кроки, крупним планом",
+            "en": "Вишня, студія краси: close-up of 4-step booking on the first screen with price and guarantee date"
+          }
+        },
+        "scroll": {
+          "png": "final/vyshnia/vyshnia-scroll.png",
+          "avif": "final/vyshnia/vyshnia-scroll.avif",
+          "webp": "final/vyshnia/vyshnia-scroll.webp",
+          "width": 1600,
+          "height": 7729,
+          "alt": {
+            "uk": "Вишня, студія краси: головна сторінка повністю",
+            "en": "Вишня, студія краси: the full home page"
+          }
+        },
+        "og": {
+          "png": "final/vyshnia/vyshnia-og.png",
+          "avif": "final/vyshnia/vyshnia-og.avif",
+          "webp": "final/vyshnia/vyshnia-og.webp",
+          "width": 1200,
+          "height": 630,
+          "alt": {
+            "uk": "Вишня, студія краси — запис за чотири кроки — і гарантія 21 день",
+            "en": "Вишня, студія краси — A nail, brow and lash studio site with four-step booking on the first screen and the coating guarantee date shown before you confirm."
+          }
+        },
+        "thumb": {
+          "png": "final/vyshnia/vyshnia-thumb.png",
+          "avif": "final/vyshnia/vyshnia-thumb.avif",
+          "webp": "final/vyshnia/vyshnia-thumb.webp",
+          "width": 800,
+          "height": 600,
+          "alt": {
+            "uk": "Вишня, студія краси: мініатюра проєкту",
+            "en": "Вишня, студія краси: project thumbnail"
+          }
+        }
+      },
+      "video": {
+        "mp4": "final/vyshnia/vyshnia-scroll.mp4",
+        "alt": {
+          "uk": "Вишня, студія краси: прокрутка головної сторінки",
+          "en": "Вишня, студія краси: scrolling through the home page"
+        }
+      }
+    }
+  ]
+}

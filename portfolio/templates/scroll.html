@@ -1,0 +1,19 @@
+<!doctype html>
+<html lang="uk"><head><meta charset="utf-8"><link rel="stylesheet" href="base.css">
+<style>
+  /* height is set by the renderer from the screenshot's aspect ratio */
+  :root { --w: 1600px; --h: {{height}}px; }
+  .browser { left: 80px; top: 80px; width: 1440px; }
+  .caption { left: 80px; bottom: 40px; }
+  .mark { right: 80px; bottom: 34px; width: 92px; }
+</style></head>
+<body>
+  <div class="browser">
+    <div class="bar"><div class="dots"><i></i><i></i><i></i></div>
+      <div class="url"><svg viewBox="0 0 12 12"><path d="M3 5V3.5a3 3 0 0 1 6 0V5" fill="none" stroke="#565C66" stroke-width="1.4"/><rect x="2" y="5" width="8" height="6" rx="1" fill="#565C66"/></svg>{{domain}}</div>
+      <div class="dots-right"></div></div>
+    <div class="view"><img src="{{full}}" alt=""></div>
+  </div>
+  <div class="caption"><span class="tab"></span><b>{{title}}</b><span class="sep">·</span>{{niche}}<span class="sep">·</span>{{geo}}</div>
+  <img class="mark" src="brand/modd-wordmark-ink.svg" alt="">
+</body></html>

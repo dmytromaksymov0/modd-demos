@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="uk"><head><meta charset="utf-8"><link rel="stylesheet" href="base.css">
+<style>
+  :root { --w: 1200px; --h: 630px; }
+  .side { position: absolute; left: 64px; top: 64px; bottom: 64px; width: 380px; display: flex; flex-direction: column; }
+  .side .mark { position: static; width: 104px; }
+  .side h1 { margin-top: auto; font-size: 50px; line-height: 1.04; }
+  .side p { margin-top: 18px; font-size: 20px; line-height: 1.4; color: var(--muted); }
+  .side .tag { margin-top: 22px; display: flex; gap: 10px; align-items: center; font-size: 17px; color: var(--ink); }
+  .side .tag .tab { font-size: 12px; }
+  .browser { left: 492px; top: 64px; width: 860px; height: 566px; --bar: 36px; border-bottom: 0; border-radius: 10px 10px 0 0; }
+  .browser .bar { gap: 12px; padding: 0 12px; }
+  .browser .url { height: 22px; font-size: 12px; }
+</style></head>
+<body>
+  <div class="side">
+    <img class="mark" src="brand/modd-wordmark-ink.svg" alt="">
+    <h1 class="display">{{headline}}</h1>
+    <p>{{title}} · {{geo}}</p>
+    <div class="tag"><span class="tab"></span>{{niche}}</div>
+  </div>
+  <div class="browser">
+    <div class="bar"><div class="dots"><i></i><i></i><i></i></div>
+      <div class="url">{{domain}}</div><div class="dots-right"></div></div>
+    <div class="view"><img src="{{desktop}}" alt=""></div>
+  </div>
+</body></html>

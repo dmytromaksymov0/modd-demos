@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="uk"><head><meta charset="utf-8"><link rel="stylesheet" href="base.css">
+<style>
+  :root { --w: 2400px; --h: 1400px; }
+  .head { position: absolute; left: 112px; top: 96px; width: 600px; }
+  .head .mark { position: static; width: 168px; }
+  .head h1 { margin-top: 64px; font-size: 76px; line-height: 1.02; }
+  .head p { margin-top: 28px; font-size: 26px; line-height: 1.45; color: var(--muted); max-width: 520px; }
+  .head ul { list-style: none; margin-top: 40px; display: grid; gap: 14px; font-size: 22px; }
+  .head li { display: flex; gap: 14px; align-items: center; }
+  .head li .tab { font-size: 13px; }
+  .head li span:last-child { color: var(--muted); }
+  .head p.note { margin-top: 36px; font-size: 16px; line-height: 1.4; }
+  .browser { --bar: 34px; }
+  .browser .bar { gap: 12px; padding: 0 12px; }
+  .browser .dots i { width: 9px; height: 9px; }
+  .browser .url { height: 22px; font-size: 13px; max-width: 360px; }
+  .browser .dots-right { width: 39px; }
+  .b1 { left: 800px; top: 96px;  width: 960px; height: 634px; }
+  .b2 { left: 1800px; top: 96px; width: 520px; height: 360px; }
+  .b3 { left: 1800px; top: 494px; width: 520px; height: 360px; }
+  .b4 { left: 800px; top: 774px; width: 700px; height: 466px; }
+  .b5 { left: 1540px; top: 892px; width: 780px; height: 404px; }
+  .phone { left: 1560px; top: 360px; width: 196px; height: 412px; --pr: 30px; --pb: 7px; z-index: 3; }
+  .phone .notch { height: 14px; top: 15px; }
+  .phone2 { left: 112px; top: 880px; }
+</style></head>
+<body>
+  <div class="head">
+    <img class="mark" src="brand/modd-wordmark-ink.svg" alt="">
+    <h1 class="display">п’ять сайтів, зроблених, щоб приводити заявки</h1>
+    <p>Сайти для малого бізнесу: США й Харків. Кожен — свій візуальний характер, запис або калькулятор на першому екрані, Lighthouse 96–100.</p>
+    <ul>{{list}}</ul>
+    <p class="note">Частина проєктів — власні розробки студії під нішу.</p>
+  </div>
+  {{browsers}}
+</body></html>

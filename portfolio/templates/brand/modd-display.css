@@ -1,0 +1,15 @@
+/* modd Display v0.4 — заголовки. Текст — Fixel. */
+@font-face {
+  font-family: "modd Display";
+  src: url("moddDisplay-v0.4.woff2") format("woff2"),
+       url("moddDisplay-v0.4.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+  /* рядкова українська кирилиця й латиниця, цифри, знаки; великі літери поки з Fixel */
+  unicode-range: U+0020-007E, U+00AB, U+00B7, U+00BB, U+02BC, U+0400-04FF, U+2013-2014, U+2018-201D, U+20B4;
+}
+h1, h2, h3, .display {
+  font-family: "modd Display", "Fixel Display", "Fixel", system-ui, sans-serif;
+  text-transform: none; /* шрифт тільки рядковий — без капсу */
+}

@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="uk"><head><meta charset="utf-8"><link rel="stylesheet" href="base.css">
+<style>
+  /* geometry comes from render.ts per project: browser width/visible height and phone top,
+     so the phone only touches the browser's outer margin and never covers key content */
+  :root { --w: 1600px; --h: 1000px; }
+  .browser { left: 80px; top: 72px; width: {{bw}}px; }
+  .browser .view { height: {{vh}}px; }
+  .phone { right: 80px; top: {{pt}}px; width: 288px; --pr: 44px; --pb: 10px; --sb: 34px; }
+  .phone .notch { height: 22px; }
+  .caption { left: 80px; bottom: 44px; }
+  .mark { right: 80px; top: 30px; width: 92px; }
+</style></head>
+<body>
+  <div class="browser">
+    <div class="bar"><div class="dots"><i></i><i></i><i></i></div>
+      <div class="url"><svg viewBox="0 0 12 12"><path d="M3 5V3.5a3 3 0 0 1 6 0V5" fill="none" stroke="#565C66" stroke-width="1.4"/><rect x="2" y="5" width="8" height="6" rx="1" fill="#565C66"/></svg>{{domain}}</div>
+      <div class="dots-right"></div></div>
+    <div class="view"><img src="{{desktop}}" alt=""></div>
+  </div>
+  <div class="phone" style="--sbg:{{mobile_bg}}"><div class="notch"></div><div class="screen"><img src="{{mobile}}" alt=""></div></div>
+  <div class="caption"><span class="tab"></span><b>{{title}}</b><span class="sep">·</span>{{niche}}<span class="sep">·</span>{{geo}}</div>
+  <img class="mark" src="brand/modd-wordmark-ink.svg" alt="">
+</body></html>

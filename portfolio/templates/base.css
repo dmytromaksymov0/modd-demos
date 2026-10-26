@@ -1,0 +1,51 @@
+/* modd. portfolio presentation templates — shared styles.
+   Palette from modd brand files: ink #1B1E24, paper #F3F5F7, line #D5D9DF, muted #565C66,
+   yellow #FFC700, pine #0F5A48, lilac #CFC6F5. Headings: modd Display (lowercase only).
+   Text: Onest as a stand-in for Fixel until Fixel files are added to templates/brand/. */
+@font-face { font-family: "modd Display"; src: url("brand/moddDisplay-v0.4.woff2") format("woff2"); font-display: block;
+  unicode-range: U+0020-007E, U+00AB, U+00B7, U+00BB, U+02BC, U+0400-04FF, U+2013-2014, U+2018-201D, U+20B4; }
+@font-face { font-family: "Text"; src: url("brand/onest-latin-wght-normal.woff2") format("woff2"); font-weight: 100 900; font-display: block;
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+20AC, U+20B4, U+2122, U+2191, U+2193, U+2212, U+2215; }
+@font-face { font-family: "Text"; src: url("brand/onest-cyrillic-wght-normal.woff2") format("woff2"); font-weight: 100 900; font-display: block;
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116; }
+
+:root {
+  --ink: #1B1E24; --paper: #F3F5F7; --white: #fff; --line: #D5D9DF; --muted: #565C66;
+  --yellow: #FFC700; --pine: #0F5A48; --lilac: #CFC6F5;
+  --shadow: 0 1px 2px rgba(27,30,36,.06), 0 12px 32px -8px rgba(27,30,36,.18), 0 40px 80px -24px rgba(27,30,36,.22);
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { width: var(--w); height: var(--h); overflow: hidden; }
+body { background: var(--paper); color: var(--ink); font-family: "Text", system-ui, sans-serif; -webkit-font-smoothing: antialiased; position: relative; }
+.display { font-family: "modd Display", "Text", sans-serif; text-transform: none; font-weight: 400; letter-spacing: -0.01em; }
+
+/* corner-tab: the modd. period — a square with one rounded corner */
+.tab { display: inline-block; width: 1em; height: 1em; background: var(--yellow); border-top-right-radius: .38em; }
+.tab.pine { background: var(--pine); }
+
+/* ---------- browser window (neutral, drawn in CSS) ---------- */
+.browser { position: absolute; background: var(--white); border: 1px solid var(--line); border-radius: 10px; overflow: hidden; box-shadow: var(--shadow); }
+.browser .bar { height: var(--bar, 44px); display: flex; align-items: center; gap: 16px; padding: 0 16px; border-bottom: 1px solid var(--line); background: #FAFBFC; }
+.browser .dots { display: flex; gap: 7px; flex: none; }
+.browser .dots i { width: 11px; height: 11px; background: var(--line); border-radius: 2px; }
+.browser .url { flex: 1; max-width: 520px; margin: 0 auto; height: 26px; border-radius: 6px; background: var(--paper); display: flex; align-items: center; justify-content: center; gap: 6px;
+  font-size: 13px; color: var(--muted); letter-spacing: .01em; }
+.browser .url svg { width: 11px; height: 11px; flex: none; }
+.browser .dots-right { width: 47px; flex: none; }
+.browser .view { position: relative; overflow: hidden; background: var(--white); }
+.browser .view img { display: block; width: 100%; height: auto; }
+.browser .view.fill img { height: 100%; object-fit: cover; object-position: top; }
+
+/* ---------- phone (neutral, no brand marks) ---------- */
+.phone { position: absolute; background: var(--ink); border-radius: var(--pr, 52px); padding: var(--pb, 12px); box-shadow: var(--shadow); }
+.phone .screen { position: relative; display: flex; flex-direction: column; width: 100%; border-radius: calc(var(--pr, 52px) - var(--pb, 12px)); overflow: hidden; background: var(--white); }
+.phone .screen::before { content: ""; display: block; flex: none; height: var(--sb, 40px); background: var(--sbg, #fff); }
+.phone .screen img { display: block; width: 100%; height: auto; flex: none; }
+.phone .notch { position: absolute; top: calc(var(--pb, 12px) + 10px); left: 50%; transform: translateX(-50%); width: 28%; height: 24px; border-radius: 14px; background: var(--ink); z-index: 2; }
+
+/* ---------- caption: name · niche · geo ---------- */
+.caption { position: absolute; display: flex; align-items: center; gap: 12px; font-size: 18px; color: var(--muted); white-space: nowrap; }
+.caption b { color: var(--ink); font-weight: 600; }
+.caption .sep { color: var(--line); }
+.caption .tab { font-size: 12px; }
+.mark { position: absolute; display: block; }

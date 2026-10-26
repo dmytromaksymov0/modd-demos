@@ -1,0 +1,18 @@
+<!doctype html>
+<html lang="uk"><head><meta charset="utf-8"><link rel="stylesheet" href="base.css">
+<style>
+  :root { --w: 1600px; --h: 1000px; }
+  .card { position: absolute; left: 50%; top: 72px; transform: translateX(-50%); max-width: 1408px; max-height: 812px;
+    background: var(--white); border-radius: 14px; overflow: hidden; box-shadow: var(--shadow); border: 1px solid var(--line); }
+  .card img { display: block; max-width: 1408px; max-height: 812px; width: auto; height: auto; }
+  .card.top img { width: 1408px; max-height: none; }
+  .card.top { height: 812px; width: 1408px; }
+  .note { position: absolute; right: 96px; bottom: 50px; font-size: 18px; color: var(--ink); display: flex; gap: 10px; align-items: center; }
+  .note .tab { font-size: 12px; background: var(--pine); }
+  .caption { left: 96px; bottom: 50px; }
+</style></head>
+<body>
+  <div class="card {{fit}}"><img src="{{img}}" alt=""></div>
+  <div class="caption"><span class="tab"></span><b>{{title}}</b><span class="sep">·</span>{{niche}}<span class="sep">·</span>{{geo}}</div>
+  <div class="note"><span class="tab"></span>{{feature}}</div>
+</body></html>

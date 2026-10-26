@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="uk"><head><meta charset="utf-8"><link rel="stylesheet" href="base.css">
+<style>
+  :root { --w: 800px; --h: 600px; }
+  .browser { left: 48px; top: 48px; width: 704px; height: 440px; --bar: 30px; }
+  .browser .bar { gap: 10px; padding: 0 10px; }
+  .browser .dots i { width: 8px; height: 8px; }
+  .browser .url { height: 18px; font-size: 10px; max-width: 300px; }
+  .browser .dots-right { width: 34px; }
+  .phone { right: 40px; bottom: 26px; width: 150px; --pr: 24px; --pb: 6px; --sb: 18px; }
+  .phone .notch { height: 12px; top: 12px; }
+  .caption { left: 48px; bottom: 34px; font-size: 16px; gap: 9px; }
+  .caption .tab { font-size: 10px; }
+</style></head>
+<body>
+  <div class="browser">
+    <div class="bar"><div class="dots"><i></i><i></i><i></i></div><div class="url">{{domain}}</div><div class="dots-right"></div></div>
+    <div class="view"><img src="{{desktop}}" alt=""></div>
+  </div>
+  <div class="phone" style="--sbg:{{mobile_bg}}"><div class="notch"></div><div class="screen"><img src="{{mobile}}" alt=""></div></div>
+  <div class="caption"><span class="tab"></span><b>{{title}}</b><span class="sep">·</span>{{niche}}</div>
+</body></html>
